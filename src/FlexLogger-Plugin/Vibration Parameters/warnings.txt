@@ -1,0 +1,2 @@
+C:\Users\dihidalg\Documents\GIT\Demos\SnV-Flexlogger-Plugin-PoC\src\FlexLogger-Plugin\Vibration Parameters\Vibration Parameters.lvproj (Vibration Parameters.lvproj)
+    - The library expected to be at "C:\Users\dihidalg\Documents\GIT\Demos\SnV-Flexlogger-Plugin-PoC\src\FlexLogger-Plugin\Test_Plugin\Vibration Parameters.lvlib" was loaded from "C:\Users\dihidalg\Documents\GIT\Demos\SnV-Flexlogger-Plugin-PoC\src\FlexLogger-Plugin\Vibration Parameters\Vibration Parameters.lvlib".

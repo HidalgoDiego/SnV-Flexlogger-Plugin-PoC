@@ -1,0 +1,44 @@
+# General
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak
+*.swp
+
+# LabVIEW build artifacts
+*.lvlps
+*.aliases
+*.vi.bak
+*.llb
+*.gcomp
+*.lvproj
+*.lvclass
+*.pdb
+*.dll
+*.so
+*.dylib
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Editor / tooling
+.vscode/
+.idea/
+
+# Generated outputs
+build/
+dist/
+out/
+releases/*.zip
+releases/*.exe
+releases/*.dll
+
+# Keep only source documentation structure clean
+!src/**/.gitkeep
+!tests/**/.gitkeep
+!configs/**/.gitkeep

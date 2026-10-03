@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SourceFile Checksum="8B87F45BA1077528DF5F6F721E4A354ABE8AF9479FE0F652B4DF35A944C947E8A3CA50B1243F2D30A1B3CA1E34557567E751632B2339E8BC4A1C678EEC6DF97A" Timestamp="1DD527CDEDA71D3" xmlns="http://www.ni.com/PlatformFramework">
+	<SourceModelFeatureSet>
+		<ParsableNamespace AssemblyFileVersion="9.21.0.50035" FeatureSetName="Lumberjack Core" Name="http://www.ni.com/Lumberjack.Core" OldestCompatibleVersion="9.19.0.49152" Version="9.19.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.21.0.50035" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ApplicationVersionInfo Build="9.21.0.50035" Name="FlexLogger" Version="26.5.0.0" />
+	</SourceModelFeatureSet>
+	<LoggingSpecification xmlns="http://www.ni.com/Lumberjack.Core">
+		<LoggingConfigurationModel Id="5417e874c2094534a272dc69315480c6">
+			<ProcessingElementModelOwner Id="6f4c50ec421543d3aa14fae3b1c4a755">
+				<TriggeredLoggingProvider Id="93dcde1613914b66bef4c13f8e380534" ModelTypeId="[string]CBA104E4-2D21-4AC7-915B-D7DCC1243DCE" StartTime="2026-10-02T10:44:15.37303369999999999996435906535197091216105036437511444091796875-04:00" />
+				<TdmsLoggingProvider DataReductionStrategy="Decimate" Id="11d0036445414a79a760475bb32193b1" LogFileBackupPath="&quot;C:\\Users\\dihidalg\\Documents\\FlexLogger\\data\\backups&quot;" LogFileBasePath="&quot;C:\\Users\\dihidalg\\Documents\\FlexLogger\\data&quot;" ModelTypeId="[string]59163356-411F-436B-A6B6-82FB1EFB19E1">
+					<UserDefinedMetadata Id="cc3f7215b0714ed191283b659c2c9b7b">
+						<UserDefinedMetadataItem DataType="String" Id="3b76dd26de864fe1b94c4ac21fbc087c" Name="Operator">
+							<p.Value>dihidalg</p.Value>
+						</UserDefinedMetadataItem>
+						<UserDefinedMetadataItem DataType="String" Id="2fa1f283280748fd9c3148a971a6215b" Name="DUT">
+							<p.Value>""</p.Value>
+						</UserDefinedMetadataItem>
+					</UserDefinedMetadata>
+				</TdmsLoggingProvider>
+			</ProcessingElementModelOwner>
+		</LoggingConfigurationModel>
+	</LoggingSpecification>
+</SourceFile>
