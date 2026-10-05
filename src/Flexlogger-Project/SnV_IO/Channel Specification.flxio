@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SourceFile Checksum="A69902FC4FA2365A03868294E02FC31761E93FC144372F84495306C145E59C34305A789389F09DB9412D2F96AEB5DCCD648DAFDAEBD198852E7D19AD4A637635" Timestamp="1DD52EA71A4E157" xmlns="http://www.ni.com/PlatformFramework">
+<SourceFile Checksum="1BD38247EB547C65F4E3F5FF5F227BEE5A1E5DD667B6549A6DC704DA4202BD6AD648CDD4A8448F13AB7E9117C45D06F4BAD21D709FF5CF80A3D7AAAD0A98A370" Timestamp="1DD54E1DDFF5BC6" xmlns="http://www.ni.com/PlatformFramework">
 	<SourceModelFeatureSet>
 		<ParsableNamespace AssemblyFileVersion="9.21.0.50035" FeatureSetName="FlexLogger DAQmx" Name="http://www.ni.com/FlexLogger/DAQmx" OldestCompatibleVersion="9.9.0.49152" Version="9.9.0.49152" />
 		<ParsableNamespace AssemblyFileVersion="9.21.0.50035" FeatureSetName="Lumberjack Core" Name="http://www.ni.com/Lumberjack.Core" OldestCompatibleVersion="9.19.0.49152" Version="9.19.0.49152" />
@@ -10,162 +10,6 @@
 		<ChannelConfigurationModel Id="9b3af3eafe24e92b1e8f3130a33fad3">
 			<ProcessingElementModelOwner Id="b46b0ae9037d45bd8177e47bafc2e209">
 				<DAQmxProcessingElement Id="b061d6d374444f95ae98c37818e74f4e" xmlns="http://www.ni.com/FlexLogger/DAQmx">
-					<DAQmxChassisModelProxy DeviceName="[string]" Id="b9861a5992f4e548ea123d612cab6b1" SerialNumber="[string]">
-						<DAQmxModuleModel BusType="[BusType]Pxi" Chassis="[string]" ChassisSerialNumber="[string]" DeviceFamily="[DeviceFamily]DynamicSignalAcquisition" DeviceName="[string]PXIe-4464" Id="ddd369f93b8d4cb89f70a1036151e77c" IsSimulated="[bool]True" ProductIdentifier="[ulong]1997653188" ProductName="[string]NI PXIe-4464" SerialNumber="[string]" Slot="[ulong]2" StyleProviderId="[string]PxiModuleDisplayStrategyProvider">
-							<AnalogInputChannelSubsystemModel Id="2c10902cbdd44a94b1025531a67201f2" SampleRateLevel="[SampleRateLevel]Fast">
-								<InputChannelAdapter Id="752fca8c7a6b4dec858450a426c30a9a">
-									<AnalogInputChannel CriticalAlarm="5e319cc53b874f72adca3bdd01e8ac30" DataType="[Type]Wfm(Double)" ExpectedMaximum="[double]42.4" ExpectedMinimum="[double]-42.4" FullName="PXIe-4464/ai0" Id="66d45980f45846f194560dfc1934890c" LastTedsScanTimestamp="[DateTime]0001-01-01T05:00:00.0000000Z" PhysicalMeasurement="[PhysicalMeasurement]Acceleration" SampleRate="[double]100000.00002037268" SensorClass="[SensorClass]IEPE" Source="PXIe-4464/ai0" Units="[string]g" WarningAlarm="538ac0edeeb1436db434823d32bcd65a">
-										<DAQmxIepeInput ElectricalRange="[ValueAndUnit:Range:double]-42.4, 42.4, Volts" ElectricalUnits="[Unit]Volts" Filter="[Filter]None" Id="7135cc7ad10449f78368a11f89b1281b" TerminalConfiguration="[TerminalConfiguration]Pseudodifferential">
-											<IepeExcitationModel ExcitationSource="[ExcitationSource]Internal" ExcitationValue="[double]0.004" Id="f4b1b12866ca4cf1a0a2e98350ea87c5" />
-										</DAQmxIepeInput>
-										<IepeSensor ElectricalMaximum="[double]42.4" ElectricalMinimum="[double]-42.4" Id="f1b9b3b07c83410cb708a7e2b5f0204c" PhysicalMaximum="[double]42.4" PhysicalMinimum="[double]-42.4" ScaleType="[ScaleType]DynamicSensitivity">
-											<StandardUnitModel Id="bb0a8838762949eab3acc584f0db3967" Units="[Unit]Gravity" />
-											<DynamicSensitivityScaleModel Id="7ea4995c92e7416dacf2483d3f1ed4f9">
-												<SensitivityScalePropertyModel Id="815edd7dadad4a44b1df2706e439d074" Sensitivity="[double]1" SensitivityUnit="[string]V/g" />
-											</DynamicSensitivityScaleModel>
-										</IepeSensor>
-										<AlarmModel Id="5e319cc53b874f72adca3bdd01e8ac30" Severity="[AlarmSeverity]Critical" TriggerModel="92ac9cae8a1b49fab3ceacad235e118c" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]2aa62354-628a-48b5-a99a-c09315008769" AliasToMonitor="[string]PXIe-4464/ai0" Id="92ac9cae8a1b49fab3ceacad235e118c">
-												<AboveValueTriggerModel Id="1d752cd6a1c347f0988f5fc4f60bf2a9" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-										<AlarmModel Id="538ac0edeeb1436db434823d32bcd65a" Severity="[AlarmSeverity]Warning" TriggerModel="aa27f336c060401fbfb71db625c1c667" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]161967e5-b994-4f0a-b95d-113a507cb105" AliasToMonitor="[string]PXIe-4464/ai0" Id="aa27f336c060401fbfb71db625c1c667">
-												<AboveValueTriggerModel Id="eed872c46b1f4bfc954f40c3c239aae0" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-									</AnalogInputChannel>
-									<IntermediateProcessingElementProducerChannel CriticalAlarm="73d98137c064467ab127ded25fdae875" DataType="[Type]Wfm(Double)" FullName="PXIe-4464/ai0_Intermediate" Id="ee4aeb45956f4dc1b1b147173382c47e" IsTag="[bool]True" SampleRate="[double]100000.00002037268" Source="PXIe-4464/ai0" Units="[string]V" WarningAlarm="542f6c1a678e4b0cadc07567d469b70a">
-										<AlarmModel Id="73d98137c064467ab127ded25fdae875" Severity="[AlarmSeverity]Critical" TriggerModel="20994b7a31f8488ca00112b8100fe32f" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]fd520dd5-d1e5-44ff-81ca-f683cef0b80d" AliasToMonitor="[string]PXIe-4464/ai0_Intermediate" Id="20994b7a31f8488ca00112b8100fe32f">
-												<AboveValueTriggerModel Id="9833b5e0735347e2b55a6f9d5ad0718b" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-										<AlarmModel Id="542f6c1a678e4b0cadc07567d469b70a" Severity="[AlarmSeverity]Warning" TriggerModel="afc4e047725a428c97177922f1afa1b0" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]642317b1-3506-4728-9bce-26ef3e3a832e" AliasToMonitor="[string]PXIe-4464/ai0_Intermediate" Id="afc4e047725a428c97177922f1afa1b0">
-												<AboveValueTriggerModel Id="4a1baa38806048f6a25c240bdd07fbdc" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-									</IntermediateProcessingElementProducerChannel>
-								</InputChannelAdapter>
-								<InputChannelAdapter Id="b1bd4a3fee6d417086aa183ada7eccaa">
-									<AnalogInputChannel CriticalAlarm="fdc2d222587943a9ad4da960b7f78b56" DataType="[Type]Wfm(Double)" ExpectedMaximum="[double]42.4" ExpectedMinimum="[double]-42.4" FullName="PXIe-4464/ai1" Id="5ab61efc5022445c99ae9c0372eda0ba" LastTedsScanTimestamp="[DateTime]0001-01-01T05:00:00.0000000Z" PhysicalMeasurement="[PhysicalMeasurement]Acceleration" SampleRate="[double]100000.00002037268" SensorClass="[SensorClass]IEPE" Source="PXIe-4464/ai1" Units="[string]g" WarningAlarm="d7fe86ce0fb248d0b5d9447dd2a314a3">
-										<DAQmxIepeInput ElectricalRange="[ValueAndUnit:Range:double]-42.4, 42.4, Volts" ElectricalUnits="[Unit]Volts" Filter="[Filter]None" Id="1acc5df5c7b4441bbbe36791f0a99e90" TerminalConfiguration="[TerminalConfiguration]Pseudodifferential">
-											<IepeExcitationModel ExcitationSource="[ExcitationSource]Internal" ExcitationValue="[double]0.004" Id="37f22ed100e244c99acef1db81afe2b8" />
-										</DAQmxIepeInput>
-										<IepeSensor ElectricalMaximum="[double]42.4" ElectricalMinimum="[double]-42.4" Id="977b14f33fd440c5a0d73ce85ac85df1" PhysicalMaximum="[double]42.4" PhysicalMinimum="[double]-42.4" ScaleType="[ScaleType]DynamicSensitivity">
-											<StandardUnitModel Id="6b48852f194d43fdbe96a6bc4a07f72c" Units="[Unit]Gravity" />
-											<DynamicSensitivityScaleModel Id="b38b5834a90c456c81c6ea86058f96c2">
-												<SensitivityScalePropertyModel Id="da0243b9923d482f92716367a8b88819" Sensitivity="[double]1" SensitivityUnit="[string]V/g" />
-											</DynamicSensitivityScaleModel>
-										</IepeSensor>
-										<AlarmModel Id="fdc2d222587943a9ad4da960b7f78b56" Severity="[AlarmSeverity]Critical" TriggerModel="c8c743f23a0141f9abe76dd31a93bf7f" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]cc4fefea-87cc-42bb-bef9-949462a2e3ab" AliasToMonitor="[string]PXIe-4464/ai1" Id="c8c743f23a0141f9abe76dd31a93bf7f">
-												<AboveValueTriggerModel Id="ff354347408342f69ae3c0776e094239" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-										<AlarmModel Id="d7fe86ce0fb248d0b5d9447dd2a314a3" Severity="[AlarmSeverity]Warning" TriggerModel="68fb15cfc124ef185915176a1bc0dbd" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]77e6c390-e6ac-481d-9de4-2ad3b5cc26bd" AliasToMonitor="[string]PXIe-4464/ai1" Id="68fb15cfc124ef185915176a1bc0dbd">
-												<AboveValueTriggerModel Id="30840a78c6df486abf2a6b8da724ca0d" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-									</AnalogInputChannel>
-									<IntermediateProcessingElementProducerChannel CriticalAlarm="baffaf5d52b14307be6168bd37b4f8e9" DataType="[Type]Wfm(Double)" FullName="PXIe-4464/ai1_Intermediate" Id="421eee7f0c7f43d0946e812816e3010e" IsTag="[bool]True" SampleRate="[double]100000.00002037268" Source="PXIe-4464/ai1" Units="[string]V" WarningAlarm="169631d46d624d0ca351e3edf2cb22f2">
-										<AlarmModel Id="baffaf5d52b14307be6168bd37b4f8e9" Severity="[AlarmSeverity]Critical" TriggerModel="c5db6e0e490a463eb272d7ec6afa591d" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]7384c81c-1101-41c5-abd9-998b51f009e9" AliasToMonitor="[string]PXIe-4464/ai1_Intermediate" Id="c5db6e0e490a463eb272d7ec6afa591d">
-												<AboveValueTriggerModel Id="6bf304505d1f40a580bc1919f2bda0e9" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-										<AlarmModel Id="169631d46d624d0ca351e3edf2cb22f2" Severity="[AlarmSeverity]Warning" TriggerModel="73c443b2fbd49bb8b24aa72bcaeedc4" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]3fc40688-648b-46d1-8054-a150d539f50f" AliasToMonitor="[string]PXIe-4464/ai1_Intermediate" Id="73c443b2fbd49bb8b24aa72bcaeedc4">
-												<AboveValueTriggerModel Id="eec91de53d454bdaa8c6f77b3957783f" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-									</IntermediateProcessingElementProducerChannel>
-								</InputChannelAdapter>
-								<InputChannelAdapter Id="d63e09aad7294cbabcd2ea1e68edc470">
-									<AnalogInputChannel CriticalAlarm="2d7d4ea9dc164150a589c2e126453ef3" DataType="[Type]Wfm(Double)" ExpectedMaximum="[double]42.4" ExpectedMinimum="[double]-42.4" FullName="PXIe-4464/ai2" Id="4ebdc3c327ca4ab0afad1e5cdcd0fac6" LastTedsScanTimestamp="[DateTime]0001-01-01T05:00:00.0000000Z" PhysicalMeasurement="[PhysicalMeasurement]Acceleration" SampleRate="[double]100000.00002037268" SensorClass="[SensorClass]IEPE" Source="PXIe-4464/ai2" Units="[string]g" WarningAlarm="9a8022b8f7d849f5b7ea0503d0e15fcf">
-										<DAQmxIepeInput ElectricalRange="[ValueAndUnit:Range:double]-42.4, 42.4, Volts" ElectricalUnits="[Unit]Volts" Filter="[Filter]None" Id="ed8a5c4e03ae483cb89e8d1364300fb9" TerminalConfiguration="[TerminalConfiguration]Pseudodifferential">
-											<IepeExcitationModel ExcitationSource="[ExcitationSource]Internal" ExcitationValue="[double]0.004" Id="35290fa7513f45c680b6ca97ae897abb" />
-										</DAQmxIepeInput>
-										<IepeSensor ElectricalMaximum="[double]42.4" ElectricalMinimum="[double]-42.4" Id="8e4356659bba44bca3ad5d1ffa9b8c13" PhysicalMaximum="[double]42.4" PhysicalMinimum="[double]-42.4" ScaleType="[ScaleType]DynamicSensitivity">
-											<StandardUnitModel Id="f23b8f4b435f46d58b739e8a0f2a3bf6" Units="[Unit]Gravity" />
-											<DynamicSensitivityScaleModel Id="d2b138f43f474aad9857433d83d355f6">
-												<SensitivityScalePropertyModel Id="ae036ffc3c604230ba23109a6084c9e0" Sensitivity="[double]1" SensitivityUnit="[string]V/g" />
-											</DynamicSensitivityScaleModel>
-										</IepeSensor>
-										<AlarmModel Id="2d7d4ea9dc164150a589c2e126453ef3" Severity="[AlarmSeverity]Critical" TriggerModel="5b40c2b0770c4556901173d1f4811764" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]a9bbb085-63f7-4d81-8498-c6faf6866121" AliasToMonitor="[string]PXIe-4464/ai2" Id="5b40c2b0770c4556901173d1f4811764">
-												<AboveValueTriggerModel Id="3304e260fa6644f5bc332b61aa36d0e1" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-										<AlarmModel Id="9a8022b8f7d849f5b7ea0503d0e15fcf" Severity="[AlarmSeverity]Warning" TriggerModel="cc8900366fa84312ba7b8b903045a8bb" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]d70d4aa0-9081-458b-a294-b72c604d2932" AliasToMonitor="[string]PXIe-4464/ai2" Id="cc8900366fa84312ba7b8b903045a8bb">
-												<AboveValueTriggerModel Id="11dc14fbf592402490acc0d189a50923" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-									</AnalogInputChannel>
-									<IntermediateProcessingElementProducerChannel CriticalAlarm="3c4d8be22f4b4ca69f9d7cb1d1149180" DataType="[Type]Wfm(Double)" FullName="PXIe-4464/ai2_Intermediate" Id="6abebe8b97794334b41946d71636aa54" IsTag="[bool]True" SampleRate="[double]100000.00002037268" Source="PXIe-4464/ai2" Units="[string]V" WarningAlarm="992faf747c154882b533ec0f4346f04d">
-										<AlarmModel Id="3c4d8be22f4b4ca69f9d7cb1d1149180" Severity="[AlarmSeverity]Critical" TriggerModel="c25ec909428c4a3da8d2a49bf5f42c2b" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]8976f9ed-672e-4533-8ec6-7ba6f73da023" AliasToMonitor="[string]PXIe-4464/ai2_Intermediate" Id="c25ec909428c4a3da8d2a49bf5f42c2b">
-												<AboveValueTriggerModel Id="5e284edaa55e44058c1c672a3d1126e6" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-										<AlarmModel Id="992faf747c154882b533ec0f4346f04d" Severity="[AlarmSeverity]Warning" TriggerModel="44e59f801743480b9477ee663d16744f" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]017087e9-678a-4376-afff-f9b13956d848" AliasToMonitor="[string]PXIe-4464/ai2_Intermediate" Id="44e59f801743480b9477ee663d16744f">
-												<AboveValueTriggerModel Id="7b57d1090b134552959b8121bae7d460" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-									</IntermediateProcessingElementProducerChannel>
-								</InputChannelAdapter>
-								<InputChannelAdapter Id="c18e309ee20f445c86b8b6f1eefd1355">
-									<AnalogInputChannel CriticalAlarm="8b292d50f24745e38e58359727b7ee92" DataType="[Type]Wfm(Double)" ExpectedMaximum="[double]42.4" ExpectedMinimum="[double]-42.4" FullName="PXIe-4464/ai3" Id="6540e0f9fed945d3b7236e78cd45c3e1" LastTedsScanTimestamp="[DateTime]0001-01-01T05:00:00.0000000Z" PhysicalMeasurement="[PhysicalMeasurement]Acceleration" SampleRate="[double]100000.00002037268" SensorClass="[SensorClass]IEPE" Source="PXIe-4464/ai3" Units="[string]g" WarningAlarm="51763a4e5f2b4c7ab35521da93ddf213">
-										<DAQmxIepeInput ElectricalRange="[ValueAndUnit:Range:double]-42.4, 42.4, Volts" ElectricalUnits="[Unit]Volts" Filter="[Filter]None" Id="e68802148ede4bc189177822c767ea4e" TerminalConfiguration="[TerminalConfiguration]Pseudodifferential">
-											<IepeExcitationModel ExcitationSource="[ExcitationSource]Internal" ExcitationValue="[double]0.004" Id="7406970cd2d64efeb3daa36cc4663d8a" />
-										</DAQmxIepeInput>
-										<IepeSensor ElectricalMaximum="[double]42.4" ElectricalMinimum="[double]-42.4" Id="236da38f89e7412eb03036c85c0e7c1d" PhysicalMaximum="[double]42.4" PhysicalMinimum="[double]-42.4" ScaleType="[ScaleType]DynamicSensitivity">
-											<StandardUnitModel Id="f2412a8f1e374f90a700ead32f70e170" Units="[Unit]Gravity" />
-											<DynamicSensitivityScaleModel Id="343328235200402192da931f65bab690">
-												<SensitivityScalePropertyModel Id="6086653dd2f4be2b8ccc8929240a2d0" Sensitivity="[double]1" SensitivityUnit="[string]V/g" />
-											</DynamicSensitivityScaleModel>
-										</IepeSensor>
-										<AlarmModel Id="8b292d50f24745e38e58359727b7ee92" Severity="[AlarmSeverity]Critical" TriggerModel="f559e8e353ee40d3aef40e4f3fcfd6e6" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]6a34c7fe-95c4-4673-a221-11966e01d46e" AliasToMonitor="[string]PXIe-4464/ai3" Id="f559e8e353ee40d3aef40e4f3fcfd6e6">
-												<AboveValueTriggerModel Id="bfa37cb3d72e41b9ae3bbe924eb91414" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-										<AlarmModel Id="51763a4e5f2b4c7ab35521da93ddf213" Severity="[AlarmSeverity]Warning" TriggerModel="d02175b1ff0a41929283896d6f34f5c2" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]68beca0d-92d9-4f90-8416-8e0534146ff2" AliasToMonitor="[string]PXIe-4464/ai3" Id="d02175b1ff0a41929283896d6f34f5c2">
-												<AboveValueTriggerModel Id="5bfdd1eee9f34c8db693f3039ef6118b" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-									</AnalogInputChannel>
-									<IntermediateProcessingElementProducerChannel CriticalAlarm="64cfde79bd5242158cca5aab15fdbda0" DataType="[Type]Wfm(Double)" FullName="PXIe-4464/ai3_Intermediate" Id="b2e3aa6ab18e47c3b6dabccd47aad263" IsTag="[bool]True" SampleRate="[double]100000.00002037268" Source="PXIe-4464/ai3" Units="[string]V" WarningAlarm="1758f99b73ab4e6693c6608d58b53a67">
-										<AlarmModel Id="64cfde79bd5242158cca5aab15fdbda0" Severity="[AlarmSeverity]Critical" TriggerModel="cfce8e77421e4b21a8f10648883a705a" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]fa335f1c-5224-49bf-9163-5819d9533a67" AliasToMonitor="[string]PXIe-4464/ai3_Intermediate" Id="cfce8e77421e4b21a8f10648883a705a">
-												<AboveValueTriggerModel Id="c8d208612cd49248bb36e2580e466e1" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-										<AlarmModel Id="1758f99b73ab4e6693c6608d58b53a67" Severity="[AlarmSeverity]Warning" TriggerModel="e02c10fe6479462ca66644793bd00c94" xmlns="http://www.ni.com/Lumberjack.Core">
-											<ChannelMonitorTriggerModel Alias="[string]adc664b4-90a2-4e61-b5a0-58f95cfbe134" AliasToMonitor="[string]PXIe-4464/ai3_Intermediate" Id="e02c10fe6479462ca66644793bd00c94">
-												<AboveValueTriggerModel Id="bf75103087ca45918a534847b178f6b0" />
-											</ChannelMonitorTriggerModel>
-										</AlarmModel>
-									</IntermediateProcessingElementProducerChannel>
-								</InputChannelAdapter>
-							</AnalogInputChannelSubsystemModel>
-						</DAQmxModuleModel>
-						<ChassisTimingOwner Id="e7dff4491f8c413e8a3916d589311901">
-							<ChassisSampleTimingModel Id="5599651e52d4487e8570b50b5d65eb9d" Level="[SampleRateLevel]Slow" RequestedSampleClockTimebaseRate="[double]NaN" Units="[Unit]Hertz" Value="[double]10" />
-							<ChassisSampleTimingModel Id="7b923af99db14b36bb1fb10e154e73ad" Level="[SampleRateLevel]Medium" RequestedSampleClockTimebaseRate="[double]NaN" Units="[Unit]Hertz" Value="[double]1000" />
-							<ChassisSampleTimingModel Id="64d5a28c8464f4f8b6191d9c729de0a" Level="[SampleRateLevel]Fast" RequestedSampleClockTimebaseRate="[double]NaN" Units="[Unit]Hertz" Value="[double]100000" />
-							<ChassisSampleTimingModel Id="3b9d447700b4e398e2323aafe0ac384" Level="[SampleRateLevel]Counter" Units="[Unit]Hertz" Value="[double]100" />
-							<ChassisSampleTimingModel Id="d88471d4cca64f7d956bfbb73075a811" Level="[SampleRateLevel]LegacyCounter" Units="[Unit]Hertz" Value="[double]100" />
-							<ChassisSampleTimingModel Id="83945288db9241d6a6d19bc5684f46af" Level="[SampleRateLevel]Digital" Units="[Unit]Hertz" Value="[double]10" />
-							<ChassisOnDemandTimingModel Id="e58c682d28104001b7b96606ddee1b70" Level="[SampleRateLevel]OnDemand" />
-							<ChassisSampleTimingModel Id="15144b0737584dd086901e6148c3ece4" Level="[SampleRateLevel]AnalogOutput" Units="[Unit]Hertz" Value="[double]10" />
-						</ChassisTimingOwner>
-					</DAQmxChassisModelProxy>
 					<TopLevelTimingOwner FallbackMediumSampleRateLevel="[SampleRateLevel]Fast" Id="17740b86659d403899119da2d4a264ad">
 						<SampleTiming Id="5cdfc766bbae47e993cbcc4e4830dc29" Level="[SampleRateLevel]Slow" Units="[Unit]Hertz" Value="[double]10" />
 						<SampleTiming Id="77cfc30386d413aa5668b8e3b59b5ad" Level="[SampleRateLevel]Medium" Units="[Unit]Hertz" Value="[double]1000" />
@@ -179,8 +23,6 @@
 				</DAQmxProcessingElement>
 			</ProcessingElementModelOwner>
 		</ChannelConfigurationModel>
-		<ChassisModelOwner Id="3290449f901349209f0179d6ac9f9279">
-			<ChassisModel DeviceName="[string]" Id="f7107253c9444ef68b6a4a46097658ce" SerialNumber="[string]" StyleProviderId="[string]" />
-		</ChassisModelOwner>
+		<ChassisModelOwner Id="3290449f901349209f0179d6ac9f9279" />
 	</ChannelSpecification>
 </SourceFile>

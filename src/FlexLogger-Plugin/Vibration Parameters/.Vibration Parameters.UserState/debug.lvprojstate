@@ -1,5 +1,18 @@
 <Configuration>
   <Target name="My Computer">
     <EnableDebuggingForAllVIs>0</EnableDebuggingForAllVIs>
+    <VI name="Vibration Parameters.lvlib:Vibration Parameters.lvclass:Initialize.vi">
+      <Breakpoints>
+        <NodeIndexes>
+        </NodeIndexes>
+        <SignalIndexes>
+        </SignalIndexes>
+      </Breakpoints>
+      <Probes>
+        <Generic>
+          <SignalUID value="398"/>
+        </Generic>
+      </Probes>
+    </VI>
   </Target>
 </Configuration>

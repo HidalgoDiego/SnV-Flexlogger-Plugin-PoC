@@ -1,0 +1,494 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SourceFile Checksum="BA51BE1F3E125C36E464AD64AFF33C4E620EE97B60476037CB52530ADD15F185AC2D75FE8AC554511E7BEE030F8A4CB3A1E1E7FD8FC5C28CD90C7E15FF8AAEC7" Timestamp="1DD54EBE4C5F619" xmlns="http://www.ni.com/PlatformFramework">
+	<SourceModelFeatureSet>
+		<ParsableNamespace AssemblyFileVersion="9.21.0.50035" FeatureSetName="FlexLogger DAQmx" Name="http://www.ni.com/FlexLogger/DAQmx" OldestCompatibleVersion="9.9.0.49152" Version="9.9.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.21.0.50035" FeatureSetName="Lumberjack Core" Name="http://www.ni.com/Lumberjack.Core" OldestCompatibleVersion="9.19.0.49152" Version="9.19.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.21.0.50035" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ApplicationVersionInfo Build="9.21.0.50035" Name="FlexLogger" Version="26.5.0.0" />
+	</SourceModelFeatureSet>
+	<ChannelSpecification xmlns="http://www.ni.com/Lumberjack.Core">
+		<ChannelConfigurationModel Id="7ff9654e4f464bf1b29b4a424e5f45a0">
+			<ProcessingElementModelOwner Id="42b574b3b7784b9d86a68e67b0f32925">
+				<DAQmxProcessingElement Id="9167574be3c4870a420f8fa16c7e969" xmlns="http://www.ni.com/FlexLogger/DAQmx">
+					<DAQmxChassisModelProxy DeviceName="[string]" Id="c6efa96e94fc41ae9ec8666983149ab7" SerialNumber="[string]">
+						<DAQmxModuleModel BusType="[BusType]Pxi" Chassis="[string]" ChassisSerialNumber="[string]" DeviceFamily="[DeviceFamily]DynamicSignalAcquisition" DeviceName="[string]PXI2Slot3" Id="a3cf13fc5c4d466e8dc0c3c76472ca55" IsSimulated="[bool]True" ProductIdentifier="[ulong]1997653188" ProductName="[string]NI PXIe-4464" SerialNumber="[string]" Slot="[ulong]0" StyleProviderId="[string]PxiModuleDisplayStrategyProvider">
+							<AnalogInputChannelSubsystemModel Id="8b6108db0d09467bbe4874f4caa04a2e" SampleRateLevel="[SampleRateLevel]Fast">
+								<InputChannelAdapter Id="82ec3da70af94d3b9341a9d306afded0">
+									<AnalogInputChannel CriticalAlarm="f05a3d91539648cabbe88e7a19cd6d98" DataType="[Type]Wfm(Double)" ExpectedMaximum="[double]42.4" ExpectedMinimum="[double]-42.4" FullName="Acc01" Id="52512120bc3743e1b36ebb59e0895eeb" LastTedsScanTimestamp="[DateTime]0001-01-01T05:00:00.0000000Z" PhysicalMeasurement="[PhysicalMeasurement]Acceleration" SampleRate="[double]100000.00002037268" SensorClass="[SensorClass]IEPE" Source="PXI2Slot3/ai0" Units="[string]g" WarningAlarm="a4cdc8bfc8a24cccb14aeda68e799635">
+										<AlarmModel Id="a4cdc8bfc8a24cccb14aeda68e799635" Severity="[AlarmSeverity]Warning" TriggerModel="eaa3ea5ca6a7430bbc1e091b2629d40b" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]9e20f55c-d1e5-4b1b-b866-93e00321b8cb" AliasToMonitor="[string]Acc01" Id="eaa3ea5ca6a7430bbc1e091b2629d40b">
+												<AboveValueTriggerModel Id="3f59b8f3a67b4ac891d6ae84bd5a809c" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+										<AlarmModel Id="f05a3d91539648cabbe88e7a19cd6d98" Severity="[AlarmSeverity]Critical" TriggerModel="bc314c7f86b143a78e7489914f1650ac" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]1c133c61-6043-4345-9d69-f5cf4d4f5df1" AliasToMonitor="[string]Acc01" Id="bc314c7f86b143a78e7489914f1650ac">
+												<AboveValueTriggerModel Id="65569c5cf69e4092b1a728b59b3ecf4e" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+										<DAQmxIepeInput ElectricalRange="[ValueAndUnit:Range:double]-42.4, 42.4, Volts" ElectricalUnits="[Unit]Volts" Filter="[Filter]None" Id="26cab8ce388745eb8bdc3efcd9a2a2ff" TerminalConfiguration="[TerminalConfiguration]Pseudodifferential">
+											<IepeExcitationModel ExcitationSource="[ExcitationSource]Internal" ExcitationValue="[double]0.004" Id="c7d99fa794824ce39b219412fcbc72d7" />
+										</DAQmxIepeInput>
+										<IepeSensor ElectricalMaximum="[double]42.4" ElectricalMinimum="[double]-42.4" Id="c88835a9234743fa983896b245c1c96f" PhysicalMaximum="[double]42.4" PhysicalMinimum="[double]-42.4" ScaleType="[ScaleType]DynamicSensitivity">
+											<StandardUnitModel Id="a30a2eefadea4d9abb5ef51be0789b46" Units="[Unit]Gravity" />
+											<DynamicSensitivityScaleModel Id="a033de94a65b40b6a13095ea2af96d51">
+												<SensitivityScalePropertyModel Id="346294048da948e0847eedc990520fa1" Sensitivity="[double]1" SensitivityUnit="[string]V/g" />
+											</DynamicSensitivityScaleModel>
+										</IepeSensor>
+									</AnalogInputChannel>
+									<IntermediateProcessingElementProducerChannel CriticalAlarm="910b12682acb4441ac7df47657d3d549" DataType="[Type]Wfm(Double)" FullName="Acc01_Intermediate" Id="9b958032b73840e29ae2ed3750261e56" IsTag="[bool]True" SampleRate="[double]100000.00002037268" Source="PXI2Slot3/ai0" Units="[string]V" WarningAlarm="35162a8ce40946a9bf2185f2980840bb">
+										<AlarmModel Id="35162a8ce40946a9bf2185f2980840bb" Severity="[AlarmSeverity]Warning" TriggerModel="25e671034de341bc8cebc231ceb53cd7" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]67895de3-27a1-4d1b-9840-cfe106c05c69" AliasToMonitor="[string]Acc01_Intermediate" Id="25e671034de341bc8cebc231ceb53cd7">
+												<AboveValueTriggerModel Id="89de41bb8fb045b49e88dc9c97c5cf8b" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+										<AlarmModel Id="910b12682acb4441ac7df47657d3d549" Severity="[AlarmSeverity]Critical" TriggerModel="8d8dc07f936d4812b1fbf440599bb00e" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]7581c43c-bec0-4f5d-8f0a-3fe9128c0407" AliasToMonitor="[string]Acc01_Intermediate" Id="8d8dc07f936d4812b1fbf440599bb00e">
+												<AboveValueTriggerModel Id="846fd45e6d90479db48aad4509f15cc3" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+									</IntermediateProcessingElementProducerChannel>
+								</InputChannelAdapter>
+								<InputChannelAdapter Id="4a2b56088f6d4f739f7f367572ed208a">
+									<AnalogInputChannel CriticalAlarm="322ecb8d158d4a1789c669237e7c00d9" DataType="[Type]Wfm(Double)" ExpectedMaximum="[double]42.4" ExpectedMinimum="[double]-42.4" FullName="Acc02" Id="7d607200ee214218879e3a5eaa405e0c" LastTedsScanTimestamp="[DateTime]0001-01-01T05:00:00.0000000Z" PhysicalMeasurement="[PhysicalMeasurement]Acceleration" SampleRate="[double]100000.00002037268" SensorClass="[SensorClass]IEPE" Source="PXI2Slot3/ai1" Units="[string]g" WarningAlarm="9fea7cdfc44340a89cdc400c5de12877">
+										<IepeSensor ElectricalMaximum="[double]42.4" ElectricalMinimum="[double]-42.4" Id="37c4ace10f2f4bb6a8871d0bd4ce6b32" PhysicalMaximum="[double]42.4" PhysicalMinimum="[double]-42.4" ScaleType="[ScaleType]DynamicSensitivity">
+											<StandardUnitModel Id="ab73fd25f5c145e2838daf4ed579de5a" Units="[Unit]Gravity" />
+											<DynamicSensitivityScaleModel Id="e87d0eef7dcf4af7b28de6319cf98aae">
+												<SensitivityScalePropertyModel Id="7766a4fd1b874cdda128bda7fceaa153" Sensitivity="[double]1" SensitivityUnit="[string]V/g" />
+											</DynamicSensitivityScaleModel>
+										</IepeSensor>
+										<DAQmxIepeInput ElectricalRange="[ValueAndUnit:Range:double]-42.4, 42.4, Volts" ElectricalUnits="[Unit]Volts" Filter="[Filter]None" Id="947f9ec526e043b1ad2c26e8c47b8864" TerminalConfiguration="[TerminalConfiguration]Pseudodifferential">
+											<IepeExcitationModel ExcitationSource="[ExcitationSource]Internal" ExcitationValue="[double]0.004" Id="7fc7703e54864faea2f57976ad16080c" />
+										</DAQmxIepeInput>
+										<AlarmModel Id="9fea7cdfc44340a89cdc400c5de12877" Severity="[AlarmSeverity]Warning" TriggerModel="7e016cffb88d4a1a99c6423357f74cba" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]9e20f55c-d1e5-4b1b-b866-93e00321b8cb" AliasToMonitor="[string]Acc02" Id="7e016cffb88d4a1a99c6423357f74cba">
+												<AboveValueTriggerModel Id="8fe45a6987124b78b37fd140e71b0201" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+										<AlarmModel Id="322ecb8d158d4a1789c669237e7c00d9" Severity="[AlarmSeverity]Critical" TriggerModel="4ca77f1194d54490b847c210d8c93167" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]1c133c61-6043-4345-9d69-f5cf4d4f5df1" AliasToMonitor="[string]Acc02" Id="4ca77f1194d54490b847c210d8c93167">
+												<AboveValueTriggerModel Id="3165666c9c2b4d348fe3d0472d303534" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+									</AnalogInputChannel>
+									<IntermediateProcessingElementProducerChannel CriticalAlarm="e218697120054a9e95ef1701d2297c9f" DataType="[Type]Wfm(Double)" FullName="Acc02_Intermediate" Id="a40f806fd1bc45538ce7b26fda329762" IsTag="[bool]True" SampleRate="[double]100000.00002037268" Source="PXI2Slot3/ai1" Units="[string]V" WarningAlarm="c34648f29b654619846a199e90e93474">
+										<AlarmModel Id="c34648f29b654619846a199e90e93474" Severity="[AlarmSeverity]Warning" TriggerModel="a9f49ebd7bae4a05b7e8711f6f283d75" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]f3a77ade-8a9e-4b71-84a6-646c4d6d70c5" AliasToMonitor="[string]Acc02_Intermediate" Id="a9f49ebd7bae4a05b7e8711f6f283d75">
+												<AboveValueTriggerModel Id="3f1077dccf7040e69099dbf2a3dd8fd0" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+										<AlarmModel Id="e218697120054a9e95ef1701d2297c9f" Severity="[AlarmSeverity]Critical" TriggerModel="1eda979f5fa24383a10d3a8470829a9c" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]a94427a0-1352-40ce-96e9-00501003c2e7" AliasToMonitor="[string]Acc02_Intermediate" Id="1eda979f5fa24383a10d3a8470829a9c">
+												<AboveValueTriggerModel Id="f08159786dfa43b389e8cd4757f40487" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+									</IntermediateProcessingElementProducerChannel>
+								</InputChannelAdapter>
+								<InputChannelAdapter Id="90e93ea90e89439e85506c2d1b5a5772">
+									<AnalogInputChannel CriticalAlarm="78c9fda0e53c4c94a42062e6d4e057a6" DataType="[Type]Wfm(Double)" ExpectedMaximum="[double]42.4" ExpectedMinimum="[double]-42.4" FullName="Acc03" Id="6bd8ce47389c4340ab28b671b21aae9f" LastTedsScanTimestamp="[DateTime]0001-01-01T05:00:00.0000000Z" PhysicalMeasurement="[PhysicalMeasurement]Acceleration" SampleRate="[double]100000.00002037268" SensorClass="[SensorClass]IEPE" Source="PXI2Slot3/ai2" Units="[string]g" WarningAlarm="260f33289cd644a29f461589ed657607">
+										<IepeSensor ElectricalMaximum="[double]42.4" ElectricalMinimum="[double]-42.4" Id="aebbc43138714c3395dac9281af88052" PhysicalMaximum="[double]42.4" PhysicalMinimum="[double]-42.4" ScaleType="[ScaleType]DynamicSensitivity">
+											<StandardUnitModel Id="6a8a9c4ad09e438da0434c047c39bdb5" Units="[Unit]Gravity" />
+											<DynamicSensitivityScaleModel Id="eb871fced15240b3852fbd7d9f5245f1">
+												<SensitivityScalePropertyModel Id="77c47fd6e33f4a61a536516f0e8c11be" Sensitivity="[double]1" SensitivityUnit="[string]V/g" />
+											</DynamicSensitivityScaleModel>
+										</IepeSensor>
+										<DAQmxIepeInput ElectricalRange="[ValueAndUnit:Range:double]-42.4, 42.4, Volts" ElectricalUnits="[Unit]Volts" Filter="[Filter]None" Id="d7dbf431145240b29526ba8894c4f5aa" TerminalConfiguration="[TerminalConfiguration]Pseudodifferential">
+											<IepeExcitationModel ExcitationSource="[ExcitationSource]Internal" ExcitationValue="[double]0.004" Id="64254fd5f6a84b39bfb2e4132e133640" />
+										</DAQmxIepeInput>
+										<AlarmModel Id="260f33289cd644a29f461589ed657607" Severity="[AlarmSeverity]Warning" TriggerModel="d78860fb502c42828b55ada526e008ab" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]9e20f55c-d1e5-4b1b-b866-93e00321b8cb" AliasToMonitor="[string]Acc03" Id="d78860fb502c42828b55ada526e008ab">
+												<AboveValueTriggerModel Id="3a97beaa4f8f4a5aa4bea44d5d8aaaef" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+										<AlarmModel Id="78c9fda0e53c4c94a42062e6d4e057a6" Severity="[AlarmSeverity]Critical" TriggerModel="539ba6e65fab47699f824a55e8510b00" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]1c133c61-6043-4345-9d69-f5cf4d4f5df1" AliasToMonitor="[string]Acc03" Id="539ba6e65fab47699f824a55e8510b00">
+												<AboveValueTriggerModel Id="5e469aeeb97c481ca76fc0565e09830d" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+									</AnalogInputChannel>
+									<IntermediateProcessingElementProducerChannel CriticalAlarm="8f1d38bd593d4909beefc6fc2d578610" DataType="[Type]Wfm(Double)" FullName="Acc03_Intermediate" Id="8d2b5a439b44a61bb6229e27c4b046e" IsTag="[bool]True" SampleRate="[double]100000.00002037268" Source="PXI2Slot3/ai2" Units="[string]V" WarningAlarm="54d871800a9f4bc288f3fdcbd3a3bb41">
+										<AlarmModel Id="54d871800a9f4bc288f3fdcbd3a3bb41" Severity="[AlarmSeverity]Warning" TriggerModel="6dfa1ff37c3d4685bef4fa0e31dcac2c" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]fc988262-d3cb-4298-b452-995b08040b56" AliasToMonitor="[string]Acc03_Intermediate" Id="6dfa1ff37c3d4685bef4fa0e31dcac2c">
+												<AboveValueTriggerModel Id="b858f551b5654c31a64fd9b7d65a330b" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+										<AlarmModel Id="8f1d38bd593d4909beefc6fc2d578610" Severity="[AlarmSeverity]Critical" TriggerModel="37f5cf9233242f3aad7227a343b74d4" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]5b1550bd-2b13-4263-b1ce-b0f2f7b02f92" AliasToMonitor="[string]Acc03_Intermediate" Id="37f5cf9233242f3aad7227a343b74d4">
+												<AboveValueTriggerModel Id="ba0ad873bd6f4db28b033ce077067078" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+									</IntermediateProcessingElementProducerChannel>
+								</InputChannelAdapter>
+								<InputChannelAdapter Id="86cb636ffd944d54b51598bcae14bec0">
+									<AnalogInputChannel CriticalAlarm="c2cf28c3e2ca48519e815e599062f19c" DataType="[Type]Wfm(Double)" ExpectedMaximum="[double]42.4" ExpectedMinimum="[double]-42.4" FullName="PXI2Slot3/ai3" Id="33f37797097943dd9104384165335382" LastTedsScanTimestamp="[DateTime]0001-01-01T05:00:00.0000000Z" PhysicalMeasurement="[PhysicalMeasurement]Acceleration" SampleRate="[double]100000.00002037268" SensorClass="[SensorClass]IEPE" Source="PXI2Slot3/ai3" Units="[string]g" WarningAlarm="6f9837ceb2b048349f2eadbb020f9384">
+										<IepeSensor ElectricalMaximum="[double]42.4" ElectricalMinimum="[double]-42.4" Id="c42f24660c6d456ca1ddbc0c165009f4" PhysicalMaximum="[double]42.4" PhysicalMinimum="[double]-42.4" ScaleType="[ScaleType]DynamicSensitivity">
+											<StandardUnitModel Id="1847264d51db4a4d8db463ecec7ed972" Units="[Unit]Gravity" />
+											<DynamicSensitivityScaleModel Id="b44ae0fd619e43b1bc1e48cab381bff1">
+												<SensitivityScalePropertyModel Id="38053e9619064892993413db51108e47" Sensitivity="[double]1" SensitivityUnit="[string]V/g" />
+											</DynamicSensitivityScaleModel>
+										</IepeSensor>
+										<DAQmxIepeInput ElectricalRange="[ValueAndUnit:Range:double]-42.4, 42.4, Volts" ElectricalUnits="[Unit]Volts" Filter="[Filter]None" Id="2efbe8068e2b4295988d18b4b27ab834" TerminalConfiguration="[TerminalConfiguration]Pseudodifferential">
+											<IepeExcitationModel ExcitationSource="[ExcitationSource]Internal" ExcitationValue="[double]0.004" Id="53c1defe81404edc87175a00b64c5eee" />
+										</DAQmxIepeInput>
+										<AlarmModel Id="6f9837ceb2b048349f2eadbb020f9384" Severity="[AlarmSeverity]Warning" TriggerModel="8345d0e651b24512a0e712f5fbb0b7a1" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]9e20f55c-d1e5-4b1b-b866-93e00321b8cb" AliasToMonitor="[string]PXI2Slot3/ai3" Id="8345d0e651b24512a0e712f5fbb0b7a1">
+												<AboveValueTriggerModel Id="863ae83e07aa44178a504da224cc427d" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+										<AlarmModel Id="c2cf28c3e2ca48519e815e599062f19c" Severity="[AlarmSeverity]Critical" TriggerModel="7d37b1ae00e647d7bf7732f99d87fcbc" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]1c133c61-6043-4345-9d69-f5cf4d4f5df1" AliasToMonitor="[string]PXI2Slot3/ai3" Id="7d37b1ae00e647d7bf7732f99d87fcbc">
+												<AboveValueTriggerModel Id="625c579f4a024359b78548d24dc5004a" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+									</AnalogInputChannel>
+									<IntermediateProcessingElementProducerChannel CriticalAlarm="a058fabf03e4ce1a57928a0967f1ea3" DataType="[Type]Wfm(Double)" FullName="PXI2Slot3/ai3_Intermediate" Id="345eddddd02d4e3eaa62b3e2ae3ecb6f" IsTag="[bool]True" SampleRate="[double]100000.00002037268" Source="PXI2Slot3/ai3" Units="[string]V" WarningAlarm="3277f7f4134142e496038aa36c14295d">
+										<AlarmModel Id="3277f7f4134142e496038aa36c14295d" Severity="[AlarmSeverity]Warning" TriggerModel="aa3c8b3a8cc04b909e6060ee77a76769" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]ee0fe5ca-8e70-41dc-bddc-f0b1951eada4" AliasToMonitor="[string]PXI2Slot3/ai3_Intermediate" Id="aa3c8b3a8cc04b909e6060ee77a76769">
+												<AboveValueTriggerModel Id="af1b22bf28a14890897ced349026125e" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+										<AlarmModel Id="a058fabf03e4ce1a57928a0967f1ea3" Severity="[AlarmSeverity]Critical" TriggerModel="1b64885c7cf246e4ae31a5d2323d4d1f" xmlns="http://www.ni.com/Lumberjack.Core">
+											<ChannelMonitorTriggerModel Alias="[string]f0b13e1a-64a8-4e4e-9568-88c6c93abab6" AliasToMonitor="[string]PXI2Slot3/ai3_Intermediate" Id="1b64885c7cf246e4ae31a5d2323d4d1f">
+												<AboveValueTriggerModel Id="f8b6ce0feb8547c8bbaf0252cfdbc812" />
+											</ChannelMonitorTriggerModel>
+										</AlarmModel>
+									</IntermediateProcessingElementProducerChannel>
+								</InputChannelAdapter>
+							</AnalogInputChannelSubsystemModel>
+						</DAQmxModuleModel>
+						<ChassisTimingOwner Id="96878f73ff094f45a30eb6581feb9c02">
+							<ChassisSampleTimingModel Id="ecea52594f07416a8328470fed3ce350" Level="[SampleRateLevel]Slow" Units="[Unit]Hertz" Value="[double]1" />
+							<ChassisSampleTimingModel Id="54e2f4d4031a42e4af27f1a53f5e0943" Level="[SampleRateLevel]Medium" RequestedSampleClockTimebaseRate="[double]NaN" Units="[Unit]Hertz" Value="[double]1000" />
+							<ChassisSampleTimingModel Id="8095baa566ad4f278d5e69c0be6c9417" Level="[SampleRateLevel]Fast" RequestedSampleClockTimebaseRate="[double]NaN" Units="[Unit]KiloHertz" Value="[double]100" />
+							<ChassisSampleTimingModel Id="cbf4f507846c47e5b170c5270ddee823" Level="[SampleRateLevel]Counter" Units="[Unit]Hertz" Value="[double]100" />
+							<ChassisSampleTimingModel Id="c43abaf6d88c407aa080c18465ca2c9d" Level="[SampleRateLevel]LegacyCounter" Units="[Unit]Hertz" Value="[double]100" />
+							<ChassisSampleTimingModel Id="28218e2c48034658b24640a80d6dc570" Level="[SampleRateLevel]Digital" Units="[Unit]Hertz" Value="[double]10" />
+							<ChassisOnDemandTimingModel Id="fb0c2c5819b84ce4b64c12d280e78b61" Level="[SampleRateLevel]OnDemand" />
+							<ChassisSampleTimingModel Id="1f8a709218d64b618a65de1a45dfb70b" Level="[SampleRateLevel]AnalogOutput" Units="[Unit]Hertz" Value="[double]10" />
+						</ChassisTimingOwner>
+					</DAQmxChassisModelProxy>
+					<TopLevelTimingOwner FallbackMediumSampleRateLevel="[SampleRateLevel]Fast" Id="3f30bcf4eae14a12b7880dac054ede7b">
+						<SampleTiming Id="8096976c88e9483fa3a32076a2a356f3" Level="[SampleRateLevel]Slow" Units="[Unit]Hertz" Value="[double]1" />
+						<SampleTiming Id="ccee96841dc944a5a8428564087f2856" Level="[SampleRateLevel]Medium" Units="[Unit]Hertz" Value="[double]1000" />
+						<SampleTiming Id="265417e044f147b1a2ff7fbc0d41d091" Level="[SampleRateLevel]Fast" Units="[Unit]KiloHertz" Value="[double]100" />
+						<SampleTiming Id="555417859e04f4b8b457a44cc3feb3b" Level="[SampleRateLevel]Counter" Units="[Unit]Hertz" Value="[double]100" />
+						<SampleTiming Id="265589ed87b04f7fb1ec25adc343ee60" Level="[SampleRateLevel]LegacyCounter" Units="[Unit]Hertz" Value="[double]100" />
+						<SampleTiming Id="8d45518fd90d43f6a1fd1a416618388c" Level="[SampleRateLevel]Digital" Units="[Unit]Hertz" Value="[double]10" />
+						<OnDemandTiming Id="a6153a90dfd493ab1e3ae6040a9e041" Level="[SampleRateLevel]OnDemand" />
+						<SampleTiming Id="c0a4bcc0e27249649d2896fc0dfc4817" Level="[SampleRateLevel]AnalogOutput" Units="[Unit]Hertz" Value="[double]10" />
+					</TopLevelTimingOwner>
+				</DAQmxProcessingElement>
+				<AddonModel AddonCustomIconPath="[string]" AddonIcon="[AddonIconType]Mixed" AddonInstanceName="[string]Vibration Parameters" AddonType="[string]DC603489-E1FE-4012-A41B-E0CD5414BE94" DevelopmentKitVersion="26.5" DisplayName="[string]Vibration Parameters" Id="222c4db7dd88493fa277ba2d1c905f98" UserDisplayName="[string]Vibration Parameters">
+					<PeAddonOutputInfo CriticalAlarm="4847fedeb6e6479184dd1db50f25a0a7" DataType="[Type]@649d71bf739f41a68c47f1b52d5531cd" FullName="5e91b797-1ef0-4aa2-a8b7-7da8c43b7fe5" HasLiveData="[bool]False" Id="32a319a7343645749b0ee648f125e30e" SampleRate="[double]1" Source="LogEvents" Units="[string]" WarningAlarm="2468d982db1241368b25dedc4c06d254">
+						<AlarmModel Id="2468d982db1241368b25dedc4c06d254" Severity="[AlarmSeverity]Warning" TriggerModel="c24e7dc5f93e4b9ea2f42b0938d03159">
+							<ChannelMonitorTriggerModel Alias="[string]b071855e-c7f9-42d5-9a28-70671ac176b0" AliasToMonitor="[string]5e91b797-1ef0-4aa2-a8b7-7da8c43b7fe5" Id="c24e7dc5f93e4b9ea2f42b0938d03159">
+								<AboveValueTriggerModel Id="568c1d9da7a346f4acd83d376c5a229c" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="4847fedeb6e6479184dd1db50f25a0a7" Severity="[AlarmSeverity]Critical" TriggerModel="8ae04f47c3464fd6bed39ae196b5631d">
+							<ChannelMonitorTriggerModel Alias="[string]6577af5f-d0bf-45e6-b1a5-aca6b8547cea" AliasToMonitor="[string]5e91b797-1ef0-4aa2-a8b7-7da8c43b7fe5" Id="8ae04f47c3464fd6bed39ae196b5631d">
+								<AboveValueTriggerModel Id="a0d8d1e5757744fabea9be2e4849622b" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<Keyword Id="97a55c7fd4594d4fa5b4f912cd9ee189" Name="DoNotTriggerChannel" />
+					</PeAddonOutputInfo>
+					<ProviderParameter Id="1954416ab1314623886d2fbd707a0721" ParameterName="[string]Window" Type="[Type]@9203fcce98ce4d15895a89d5c852409a" Value="[string]1[&quot;None&quot;,&quot;Hanning&quot;,&quot;Hamming&quot;,&quot;Blackman-Harris&quot;,&quot;Exact Blackman&quot;,&quot;Blackman&quot;,&quot;Flat Top&quot;,&quot;4 Term B-Harris &quot;,&quot;7 Term B-Harris&quot;,&quot;Low Sidelobe&quot;,&quot;Force&quot;,&quot;Exponential&quot;,&quot;Blackman Nuttall&quot;,&quot;Triangle&quot;,&quot;Bartlett-Hanning&quot;,&quot;Bohman&quot;,&quot;Parzen&quot;,&quot;Welch&quot;,&quot;Kaiser&quot;,&quot;Dolph-Chebyshev&quot;,&quot;Gaussian&quot;]" />
+					<ProviderParameter Id="5713643687044d30aa767b90a576988c" ParameterName="[string]X Axis" Type="[Type]@c1bb5e19e5e8409886afc9e169fb45cc" Value="[string]Acc01" />
+					<ProviderParameter Id="fd4fcababe2645c3ae58bced517a6983" ParameterName="[string]Y Axis" Type="[Type]@c1bb5e19e5e8409886afc9e169fb45cc" Value="[string]Acc02" />
+					<ProviderParameter Id="396be61605634e308db6f8c231965a82" ParameterName="[string]Z Axis" Type="[Type]@c1bb5e19e5e8409886afc9e169fb45cc" Value="[string]Acc03" />
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="3b7a8dbb97c04629800a56a892576110" DataType="[Type]Wfm(Double)" FullName="Powers in Band  X Axis" GroupName="[string]X Axis" Id="fc44aee2a7d743c29f5fd637adc8a06e" InheritsTiming="[bool]False" SampleRate="[double]10" Source="PBand  X Axis" Units="[string]" WarningAlarm="5add33bf01114940b4f5ad2cdcb1a071">
+						<AlarmModel Id="5add33bf01114940b4f5ad2cdcb1a071" Severity="[AlarmSeverity]Warning" TriggerModel="2380892255984302a8bdc130816f46c2">
+							<ChannelMonitorTriggerModel Alias="[string]c1553e8a-22fb-4274-960d-93c0b448cf03" AliasToMonitor="[string]Powers in Band  X Axis" Id="2380892255984302a8bdc130816f46c2">
+								<AboveValueTriggerModel Id="10d8ae7d10e44f908a027912e9077a19" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="3b7a8dbb97c04629800a56a892576110" Severity="[AlarmSeverity]Critical" TriggerModel="9a4ced8f121c44c986bf27c3fba32f86">
+							<ChannelMonitorTriggerModel Alias="[string]dd87ca0b-2439-4db8-b84a-cb50d4809f33" AliasToMonitor="[string]Powers in Band  X Axis" Id="9a4ced8f121c44c986bf27c3fba32f86">
+								<AboveValueTriggerModel Id="acb202c341334661bdbc75ded4060320" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="fd251e98ddc4468c8a7ce99386bd3c10" DataType="[Type]Wfm(Double)" FullName="Crest Factors  X Axis" GroupName="[string]X Axis" Id="9f850ad0846b4f4894291936fe954952" InheritsTiming="[bool]False" SampleRate="[double]10" Source="Crest  X Axis" Units="[string]" WarningAlarm="f109a6165aa94b79bedcdbc5a6ff56ea">
+						<AlarmModel Id="f109a6165aa94b79bedcdbc5a6ff56ea" Severity="[AlarmSeverity]Warning" TriggerModel="e5f84a4fd51545fb88e4b36d21d8ce42">
+							<ChannelMonitorTriggerModel Alias="[string]5d21653a-1cb8-4df0-9cee-e94e3356d2e6" AliasToMonitor="[string]Crest Factors  X Axis" Id="e5f84a4fd51545fb88e4b36d21d8ce42">
+								<AboveValueTriggerModel Id="c54a802ed6e848ee9c17aa5497955468" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="fd251e98ddc4468c8a7ce99386bd3c10" Severity="[AlarmSeverity]Critical" TriggerModel="c77efff6b1524f25955f413523fe21a2">
+							<ChannelMonitorTriggerModel Alias="[string]014466a8-17c7-4daa-ac1e-988d0d0ea7d7" AliasToMonitor="[string]Crest Factors  X Axis" Id="c77efff6b1524f25955f413523fe21a2">
+								<AboveValueTriggerModel Id="a1bea51be9d248869c4cc24a4a2f5ff7" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="1d3466a2b21c447dab6eec7f429c3902" DataType="[Type]Wfm(Double)" FullName="Peak Levels  X Axis" GroupName="[string]X Axis" Id="1d68c4f4e1e47c5a138d6f306797560" InheritsTiming="[bool]False" SampleRate="[double]10" Source="Peak  X Axis" Units="[string]" WarningAlarm="ea0910e1262d415d874b2488e5e35543">
+						<AlarmModel Id="ea0910e1262d415d874b2488e5e35543" Severity="[AlarmSeverity]Warning" TriggerModel="120884d6e17a4c4b9a6ffda576efaa9c">
+							<ChannelMonitorTriggerModel Alias="[string]a8b24777-5fae-4551-867b-93ca92191da8" AliasToMonitor="[string]Peak Levels  X Axis" Id="120884d6e17a4c4b9a6ffda576efaa9c">
+								<AboveValueTriggerModel Id="142bb7ff1c6649e9907b525b0cdb6b14" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="1d3466a2b21c447dab6eec7f429c3902" Severity="[AlarmSeverity]Critical" TriggerModel="d912e48aae04c2cabf65c100e38a6d9">
+							<ChannelMonitorTriggerModel Alias="[string]a8d798c1-e5ec-4fdc-a84a-25dc27a8f4a3" AliasToMonitor="[string]Peak Levels  X Axis" Id="d912e48aae04c2cabf65c100e38a6d9">
+								<AboveValueTriggerModel Id="6c6f1197cee744e794890709ed9b5eb6" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="1a53cb0e2dac4ba9a0c033db76a97abf" DataType="[Type]Wfm(Double)" FullName="RMS Levels  X Axis" GroupName="[string]X Axis" Id="51e486d9807b40d1ada59244929ce84c" InheritsTiming="[bool]False" SampleRate="[double]10" Source="RMS  X Axis" Units="[string]" WarningAlarm="981306c6868f415b90ccfb59624f78f2">
+						<AlarmModel Id="981306c6868f415b90ccfb59624f78f2" Severity="[AlarmSeverity]Warning" TriggerModel="ae1a4646946c412786fe68ebedcb8489">
+							<ChannelMonitorTriggerModel Alias="[string]81f57c60-1652-4c4c-9cc3-d5ad4c04ab50" AliasToMonitor="[string]RMS Levels  X Axis" Id="ae1a4646946c412786fe68ebedcb8489">
+								<AboveValueTriggerModel Id="1588bf6a156f4f848fec79724d6e40c8" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="1a53cb0e2dac4ba9a0c033db76a97abf" Severity="[AlarmSeverity]Critical" TriggerModel="ca76504552f8406b87c370ec3b711885">
+							<ChannelMonitorTriggerModel Alias="[string]4e29b937-ffb3-4b45-afe6-bcd11e51c9cb" AliasToMonitor="[string]RMS Levels  X Axis" Id="ca76504552f8406b87c370ec3b711885">
+								<AboveValueTriggerModel Id="986e8cda2d474da9a66ffb96d85c9b12" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="b9458e615af94a52b19bc84ec196a6a4" DataType="[Type]Wfm(Double)" FullName="Max Level  X Axis" GroupName="[string]X Axis" Id="1435462b3acc4e9e889a281e7c1b4a5b" InheritsTiming="[bool]False" SampleRate="[double]10" Source="MaxX Axis" Units="[string]" WarningAlarm="7c674eec996b4b678e2fdad294e891b7">
+						<AlarmModel Id="7c674eec996b4b678e2fdad294e891b7" Severity="[AlarmSeverity]Warning" TriggerModel="96f885148b3e4a39bee7b8eb633ec047">
+							<ChannelMonitorTriggerModel Alias="[string]acfe3fca-9642-4ddc-bdce-9505aaeaca0f" AliasToMonitor="[string]Max Level  X Axis" Id="96f885148b3e4a39bee7b8eb633ec047">
+								<AboveValueTriggerModel Id="e6f9b96bb200461abd827d72bd00e23a" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="b9458e615af94a52b19bc84ec196a6a4" Severity="[AlarmSeverity]Critical" TriggerModel="5c825c4dfe6a4b17b64cbebe04e4ef74">
+							<ChannelMonitorTriggerModel Alias="[string]ee630eb6-6ba2-4623-89ee-94a6eb1f6a9b" AliasToMonitor="[string]Max Level  X Axis" Id="5c825c4dfe6a4b17b64cbebe04e4ef74">
+								<AboveValueTriggerModel Id="dd905499ef5a4e5981fb89a24e672b37" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="9711a1755edb43a59d391fe99ca6357f" DataType="[Type]Wfm(Double)" FullName="Min Level  X Axis" GroupName="[string]X Axis" Id="fdc2d192fa954285811180f5a06a7d10" InheritsTiming="[bool]False" SampleRate="[double]10" Source="MinX Axis" Units="[string]" WarningAlarm="cfbdc5e658e94cd0830ea2afb5cb1da7">
+						<AlarmModel Id="cfbdc5e658e94cd0830ea2afb5cb1da7" Severity="[AlarmSeverity]Warning" TriggerModel="65c6cf36960b40c2b1cd0905f4fd6fdb">
+							<ChannelMonitorTriggerModel Alias="[string]782ef8e2-1488-43a7-a86e-93ba1345dae9" AliasToMonitor="[string]Min Level  X Axis" Id="65c6cf36960b40c2b1cd0905f4fd6fdb">
+								<AboveValueTriggerModel Id="a0883fdbc2074e6a8dcede321e0b6c12" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="9711a1755edb43a59d391fe99ca6357f" Severity="[AlarmSeverity]Critical" TriggerModel="107367af76524b38aaf79a825815704f">
+							<ChannelMonitorTriggerModel Alias="[string]d4beec5f-ef33-4fe6-b3d6-ed679eda6814" AliasToMonitor="[string]Min Level  X Axis" Id="107367af76524b38aaf79a825815704f">
+								<AboveValueTriggerModel Id="935e3785bd1a49c2a9b13fc99b1de118" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="dcb073e592ab4691a4f741800217e09d" DataType="[Type]Wfm(Double)" FullName="Max-Min Level   X Axis" GroupName="[string]X Axis" Id="9dc38fa94da541008750665e597b3056" InheritsTiming="[bool]False" SampleRate="[double]10" Source="Max-MinX Axis" Units="[string]" WarningAlarm="8f15aa51cb7f4d438d90d0750be6800e">
+						<AlarmModel Id="8f15aa51cb7f4d438d90d0750be6800e" Severity="[AlarmSeverity]Warning" TriggerModel="2b49cbeada8c458bbfbd22cd7448f710">
+							<ChannelMonitorTriggerModel Alias="[string]b3ab2b5e-996a-4c12-816f-197293203f95" AliasToMonitor="[string]Max-Min Level   X Axis" Id="2b49cbeada8c458bbfbd22cd7448f710">
+								<AboveValueTriggerModel Id="21c2805538e548758d2264bfb3cdc104" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="dcb073e592ab4691a4f741800217e09d" Severity="[AlarmSeverity]Critical" TriggerModel="e41814fce7e84289a574466887b42a66">
+							<ChannelMonitorTriggerModel Alias="[string]330d086c-b77e-4216-ba66-7ace650de287" AliasToMonitor="[string]Max-Min Level   X Axis" Id="e41814fce7e84289a574466887b42a66">
+								<AboveValueTriggerModel Id="779a82624dfe458586efc9857a54ebd5" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="3e68dd765f5c48bcabf12f38ad55572b" DataType="[Type]Wfm(Double)" FullName="Powers in Band  Y Axis" GroupName="[string]Y Axis" Id="ae5027cb25624668b7bad44c9968deb6" InheritsTiming="[bool]False" SampleRate="[double]10" Source="PBand  Y Axis" Units="[string]" WarningAlarm="134512f8d2f741559c00106430d9b72f">
+						<AlarmModel Id="134512f8d2f741559c00106430d9b72f" Severity="[AlarmSeverity]Warning" TriggerModel="4a9749afac14b08a6d0cf2fc79f5a05">
+							<ChannelMonitorTriggerModel Alias="[string]bbb3cee9-8f96-4950-98c3-1569eb5512d1" AliasToMonitor="[string]Powers in Band  Y Axis" Id="4a9749afac14b08a6d0cf2fc79f5a05">
+								<AboveValueTriggerModel Id="ff42c9fef2c84c839f5eddbabe51c0b6" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="3e68dd765f5c48bcabf12f38ad55572b" Severity="[AlarmSeverity]Critical" TriggerModel="1e673fad3e08497cbd714b5efa8384aa">
+							<ChannelMonitorTriggerModel Alias="[string]bf29f564-893d-4d50-a594-63738a26f1d7" AliasToMonitor="[string]Powers in Band  Y Axis" Id="1e673fad3e08497cbd714b5efa8384aa">
+								<AboveValueTriggerModel Id="c611444634034e4193a0edae7b4fa946" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="56866f329ab24cf88e37fd9af316a562" DataType="[Type]Wfm(Double)" FullName="Crest Factors  Y Axis" GroupName="[string]Y Axis" Id="b95af5655d744879b6698e434253c7f" InheritsTiming="[bool]False" SampleRate="[double]10" Source="Crest  Y Axis" Units="[string]" WarningAlarm="790248c1eae14548afc36c7f081c2cdb">
+						<AlarmModel Id="790248c1eae14548afc36c7f081c2cdb" Severity="[AlarmSeverity]Warning" TriggerModel="db0cf099898648fd8a95dbfd67fdb4fc">
+							<ChannelMonitorTriggerModel Alias="[string]edd65ac0-9962-495f-96b0-b45f0c3be4b6" AliasToMonitor="[string]Crest Factors  Y Axis" Id="db0cf099898648fd8a95dbfd67fdb4fc">
+								<AboveValueTriggerModel Id="c8a11c8f506241bf9cedc68807f4e13a" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="56866f329ab24cf88e37fd9af316a562" Severity="[AlarmSeverity]Critical" TriggerModel="80d28ee6e0fb48d1be8d985802c71e6c">
+							<ChannelMonitorTriggerModel Alias="[string]9f08f06f-9fe6-4e20-a0fa-d7d5aeca9379" AliasToMonitor="[string]Crest Factors  Y Axis" Id="80d28ee6e0fb48d1be8d985802c71e6c">
+								<AboveValueTriggerModel Id="dee6f205cccf4c91b2a0bcae3358da16" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="8453d9ccf621421c8b90f1b3e16b5489" DataType="[Type]Wfm(Double)" FullName="Peak Levels  Y Axis" GroupName="[string]Y Axis" Id="23a04f1d61174c18a86ae0fb3cc472ad" InheritsTiming="[bool]False" SampleRate="[double]10" Source="Peak  Y Axis" Units="[string]" WarningAlarm="b81ddc7e018a40208547618d4036fe8d">
+						<AlarmModel Id="b81ddc7e018a40208547618d4036fe8d" Severity="[AlarmSeverity]Warning" TriggerModel="ac1c637999374f66bca41982a5855e19">
+							<ChannelMonitorTriggerModel Alias="[string]1ef597f1-9fcd-49c9-bc5b-79a4cd9f71ab" AliasToMonitor="[string]Peak Levels  Y Axis" Id="ac1c637999374f66bca41982a5855e19">
+								<AboveValueTriggerModel Id="c3a98f3448744202a3e396d7aa436795" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="8453d9ccf621421c8b90f1b3e16b5489" Severity="[AlarmSeverity]Critical" TriggerModel="f5edf23a22564d38b1d1a91016348c73">
+							<ChannelMonitorTriggerModel Alias="[string]fe1d28d0-bff2-4633-8d78-dc1e327adb02" AliasToMonitor="[string]Peak Levels  Y Axis" Id="f5edf23a22564d38b1d1a91016348c73">
+								<AboveValueTriggerModel Id="18c275b2bae54a61b82bb024a07d1adc" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="d14c3bf4ad1847c29e5f39f1446a2499" DataType="[Type]Wfm(Double)" FullName="RMS Levels  Y Axis" GroupName="[string]Y Axis" Id="39afd99d1aa4903953ee278fd47c59b" InheritsTiming="[bool]False" SampleRate="[double]10" Source="RMS  Y Axis" Units="[string]" WarningAlarm="c78f228cbd0d4baea25321a78ccb95c7">
+						<AlarmModel Id="c78f228cbd0d4baea25321a78ccb95c7" Severity="[AlarmSeverity]Warning" TriggerModel="aee49d2b03d744029d6af59f4c6c491f">
+							<ChannelMonitorTriggerModel Alias="[string]f68faa0e-d516-4692-8700-7381595166b6" AliasToMonitor="[string]RMS Levels  Y Axis" Id="aee49d2b03d744029d6af59f4c6c491f">
+								<AboveValueTriggerModel Id="3b6d913632834001aec3be1b1910b079" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="d14c3bf4ad1847c29e5f39f1446a2499" Severity="[AlarmSeverity]Critical" TriggerModel="c739613bec7545519ae7f013f51f219d">
+							<ChannelMonitorTriggerModel Alias="[string]8123b1c9-385d-4a9e-a362-85ac05654d92" AliasToMonitor="[string]RMS Levels  Y Axis" Id="c739613bec7545519ae7f013f51f219d">
+								<AboveValueTriggerModel Id="f8670116ed8e411d8569cbf9a230c916" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="d0d8db9a2c5d4da3ae26a01a815b9924" DataType="[Type]Wfm(Double)" FullName="Max Level  Y Axis" GroupName="[string]Y Axis" Id="1ad3e8945dc246ddb34167834e025d09" InheritsTiming="[bool]False" SampleRate="[double]10" Source="MaxY Axis" Units="[string]" WarningAlarm="c20025c1ae29451b9636bafffbb9e6e9">
+						<AlarmModel Id="c20025c1ae29451b9636bafffbb9e6e9" Severity="[AlarmSeverity]Warning" TriggerModel="eb43aeac8b8243ddbfcd42f71d30a341">
+							<ChannelMonitorTriggerModel Alias="[string]e836c825-13f1-451c-a450-ed434bd3c0f6" AliasToMonitor="[string]Max Level  Y Axis" Id="eb43aeac8b8243ddbfcd42f71d30a341">
+								<AboveValueTriggerModel Id="2fa43624063047358e78110233212540" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="d0d8db9a2c5d4da3ae26a01a815b9924" Severity="[AlarmSeverity]Critical" TriggerModel="216e2da5ae7849778b82e0ce3e0e908c">
+							<ChannelMonitorTriggerModel Alias="[string]9c1af75b-7652-4240-9013-64a9f1d5aab4" AliasToMonitor="[string]Max Level  Y Axis" Id="216e2da5ae7849778b82e0ce3e0e908c">
+								<AboveValueTriggerModel Id="9cb2a2357b7a4e56930402c2d2a7468d" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="6e6bccf592db40829f7325fab991aba8" DataType="[Type]Wfm(Double)" FullName="Min Level  Y Axis" GroupName="[string]Y Axis" Id="df15294b4bc4463cbd77a6b2e1b9ed7c" InheritsTiming="[bool]False" SampleRate="[double]10" Source="MinY Axis" Units="[string]" WarningAlarm="d35ec5f4bc644f7db27222fc390507ed">
+						<AlarmModel Id="d35ec5f4bc644f7db27222fc390507ed" Severity="[AlarmSeverity]Warning" TriggerModel="df0ebd9d362a4c719b40c5e5638f4930">
+							<ChannelMonitorTriggerModel Alias="[string]03e160d5-037c-4c9c-ad64-c5b4b1915818" AliasToMonitor="[string]Min Level  Y Axis" Id="df0ebd9d362a4c719b40c5e5638f4930">
+								<AboveValueTriggerModel Id="915405d01f154a11a6f8b5ec0aa60704" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="6e6bccf592db40829f7325fab991aba8" Severity="[AlarmSeverity]Critical" TriggerModel="65145c744b0144258496ee03fcb312c5">
+							<ChannelMonitorTriggerModel Alias="[string]12f824f7-83cf-4c93-aacc-073e1854caf4" AliasToMonitor="[string]Min Level  Y Axis" Id="65145c744b0144258496ee03fcb312c5">
+								<AboveValueTriggerModel Id="b77c09f111134e82a3c558aefa7efcf2" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="e6e3de50af164ba6ae6a3da64fb22928" DataType="[Type]Wfm(Double)" FullName="Max-Min Level   Y Axis" GroupName="[string]Y Axis" Id="46c05d0df3a7487ea5f2d057340c5e35" InheritsTiming="[bool]False" SampleRate="[double]10" Source="Max-MinY Axis" Units="[string]" WarningAlarm="550085be15ad465d95dca72834be6246">
+						<AlarmModel Id="550085be15ad465d95dca72834be6246" Severity="[AlarmSeverity]Warning" TriggerModel="f20f9f84e49141518ec308534f2f34ae">
+							<ChannelMonitorTriggerModel Alias="[string]765dee1d-3cbf-446f-a00c-c6747e2b838b" AliasToMonitor="[string]Max-Min Level   Y Axis" Id="f20f9f84e49141518ec308534f2f34ae">
+								<AboveValueTriggerModel Id="c0af8e95d3d04e19ac2d1c3aee040a5c" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="e6e3de50af164ba6ae6a3da64fb22928" Severity="[AlarmSeverity]Critical" TriggerModel="8c065ff99ca440a98780cf98e47a332f">
+							<ChannelMonitorTriggerModel Alias="[string]4514f89f-f95b-4d48-b2d8-7790eca2062c" AliasToMonitor="[string]Max-Min Level   Y Axis" Id="8c065ff99ca440a98780cf98e47a332f">
+								<AboveValueTriggerModel Id="c3a1e004daf042fbafb725537a416adb" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="dd7cd73bbe3946b4ba7aafc7de473186" DataType="[Type]Wfm(Double)" FullName="Powers in Band  Z Axis" GroupName="[string]Z Axis" Id="66b169483e7f4f2f820a2b8f107319c1" InheritsTiming="[bool]False" SampleRate="[double]10" Source="PBand  Z Axis" Units="[string]" WarningAlarm="93aba758def24816b8d503e69d29211b">
+						<AlarmModel Id="93aba758def24816b8d503e69d29211b" Severity="[AlarmSeverity]Warning" TriggerModel="4205bed869a248778a8c90b620aa6e1e">
+							<ChannelMonitorTriggerModel Alias="[string]f5efe795-b4f1-4837-848b-5935cbd32335" AliasToMonitor="[string]Powers in Band  Z Axis" Id="4205bed869a248778a8c90b620aa6e1e">
+								<AboveValueTriggerModel Id="2e140b4d6cf34d84b11bf475590f261c" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="dd7cd73bbe3946b4ba7aafc7de473186" Severity="[AlarmSeverity]Critical" TriggerModel="abc7787719154b71910366ca7fd4d7c6">
+							<ChannelMonitorTriggerModel Alias="[string]b31005ed-3e9a-4094-84a6-f4f08879e358" AliasToMonitor="[string]Powers in Band  Z Axis" Id="abc7787719154b71910366ca7fd4d7c6">
+								<AboveValueTriggerModel Id="8e502967c2f64094a83c292e1a931de4" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="c4925c377430439f9b2795356af1f178" DataType="[Type]Wfm(Double)" FullName="Crest Factors  Z Axis" GroupName="[string]Z Axis" Id="8a8e7a70daf44269b0e9af2f9709c03d" InheritsTiming="[bool]False" SampleRate="[double]10" Source="Crest  Z Axis" Units="[string]" WarningAlarm="775f4af17f714c1690ce8c705b1d2556">
+						<AlarmModel Id="775f4af17f714c1690ce8c705b1d2556" Severity="[AlarmSeverity]Warning" TriggerModel="ec073f84ae0c4e6db4cacafefb84f926">
+							<ChannelMonitorTriggerModel Alias="[string]38071019-3a48-4ea0-a80c-468d5163b999" AliasToMonitor="[string]Crest Factors  Z Axis" Id="ec073f84ae0c4e6db4cacafefb84f926">
+								<AboveValueTriggerModel Id="6c4b0cb62fa64711a2e1bf4316370398" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="c4925c377430439f9b2795356af1f178" Severity="[AlarmSeverity]Critical" TriggerModel="bbc4b43e292a4bf685d6efd8f270ce3e">
+							<ChannelMonitorTriggerModel Alias="[string]623f793c-8c04-4066-b021-7c824f3ec780" AliasToMonitor="[string]Crest Factors  Z Axis" Id="bbc4b43e292a4bf685d6efd8f270ce3e">
+								<AboveValueTriggerModel Id="f07da72e76ab4230a2d3d8739e79252c" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="6ccfcbfffc84326bad7a063cd4b30f2" DataType="[Type]Wfm(Double)" FullName="Peak Levels  Z Axis" GroupName="[string]Z Axis" Id="82f4d9862a4f41eaa9c9d11e5f352a15" InheritsTiming="[bool]False" SampleRate="[double]10" Source="Peak  Z Axis" Units="[string]" WarningAlarm="42be4a70f19e46a2845db4b142032ffa">
+						<AlarmModel Id="42be4a70f19e46a2845db4b142032ffa" Severity="[AlarmSeverity]Warning" TriggerModel="217be1cd8e834fd9980f137a8d06d9c1">
+							<ChannelMonitorTriggerModel Alias="[string]f7b7e156-119f-464c-aea8-47f9618d698f" AliasToMonitor="[string]Peak Levels  Z Axis" Id="217be1cd8e834fd9980f137a8d06d9c1">
+								<AboveValueTriggerModel Id="b044fd154eb04846ac188edc5816f88b" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="6ccfcbfffc84326bad7a063cd4b30f2" Severity="[AlarmSeverity]Critical" TriggerModel="23e3a02a1f5543c6aafba4f3da403a25">
+							<ChannelMonitorTriggerModel Alias="[string]4267018a-adc8-44ff-96b8-80bade06cfd0" AliasToMonitor="[string]Peak Levels  Z Axis" Id="23e3a02a1f5543c6aafba4f3da403a25">
+								<AboveValueTriggerModel Id="9f61ac218cc64a28970e0f211e2c9fc4" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="7350b31983624e43aa5bf24caa03a220" DataType="[Type]Wfm(Double)" FullName="RMS Levels  Z Axis" GroupName="[string]Z Axis" Id="2a107c888e564621871846d8cd058173" InheritsTiming="[bool]False" SampleRate="[double]10" Source="RMS  Z Axis" Units="[string]" WarningAlarm="aa9f11936a194a4bacc8dc9fa89ed90c">
+						<AlarmModel Id="aa9f11936a194a4bacc8dc9fa89ed90c" Severity="[AlarmSeverity]Warning" TriggerModel="869e640feeab422c89f411cdca03cd86">
+							<ChannelMonitorTriggerModel Alias="[string]9caeb43b-181e-4191-8ab7-ce8bbc4cb40d" AliasToMonitor="[string]RMS Levels  Z Axis" Id="869e640feeab422c89f411cdca03cd86">
+								<AboveValueTriggerModel Id="394270cc6f974cfdbef6a47c5a6898e6" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="7350b31983624e43aa5bf24caa03a220" Severity="[AlarmSeverity]Critical" TriggerModel="d553f5cac07b4cf7b4e6b4e42c3c2e0d">
+							<ChannelMonitorTriggerModel Alias="[string]2b47dc9e-7813-4d16-bd2a-22055db3c73c" AliasToMonitor="[string]RMS Levels  Z Axis" Id="d553f5cac07b4cf7b4e6b4e42c3c2e0d">
+								<AboveValueTriggerModel Id="725c73e42ca48e184e4156b21e10fa3" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="23997b2acbd44062835995b772748df6" DataType="[Type]Wfm(Double)" FullName="Max Level  Z Axis" GroupName="[string]Z Axis" Id="56aa09164a3340c1b2e982f226ce66b3" InheritsTiming="[bool]False" SampleRate="[double]10" Source="MaxZ Axis" Units="[string]" WarningAlarm="9586da27f8924f4383a094f699542202">
+						<AlarmModel Id="9586da27f8924f4383a094f699542202" Severity="[AlarmSeverity]Warning" TriggerModel="e8c6a934891845f8a67ef9a866e7473c">
+							<ChannelMonitorTriggerModel Alias="[string]837e62e2-0cea-4b02-914c-dc15bd24bcd8" AliasToMonitor="[string]Max Level  Z Axis" Id="e8c6a934891845f8a67ef9a866e7473c">
+								<AboveValueTriggerModel Id="b5c068fd3d334e6fa8a2a9f4db1c5dfb" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="23997b2acbd44062835995b772748df6" Severity="[AlarmSeverity]Critical" TriggerModel="4ae6f86eb2049129c6c82a7e25646a8">
+							<ChannelMonitorTriggerModel Alias="[string]9048c694-cb0a-4558-889a-c516e460cefa" AliasToMonitor="[string]Max Level  Z Axis" Id="4ae6f86eb2049129c6c82a7e25646a8">
+								<AboveValueTriggerModel Id="4a90ed87175144e8954a5a93c18d0f56" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="b4bce239fa004a6ebae25ed2a42a525e" DataType="[Type]Wfm(Double)" FullName="Min Level  Z Axis" GroupName="[string]Z Axis" Id="542cff0e0d6e4730a7a6824a3a56f8c3" InheritsTiming="[bool]False" SampleRate="[double]10" Source="MinZ Axis" Units="[string]" WarningAlarm="4648a260d52c4ca0a117f60ebdbf2622">
+						<AlarmModel Id="4648a260d52c4ca0a117f60ebdbf2622" Severity="[AlarmSeverity]Warning" TriggerModel="3819fcb23c047bebcb19e38a6082986">
+							<ChannelMonitorTriggerModel Alias="[string]f31943ad-3165-4f5e-94a5-6b1b4136e6b6" AliasToMonitor="[string]Min Level  Z Axis" Id="3819fcb23c047bebcb19e38a6082986">
+								<AboveValueTriggerModel Id="c2c8000958244c54b043beb22f42c637" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="b4bce239fa004a6ebae25ed2a42a525e" Severity="[AlarmSeverity]Critical" TriggerModel="b04a42fc3fc34803a28af4c1a00941f3">
+							<ChannelMonitorTriggerModel Alias="[string]e5bdf833-a209-4374-8a9a-f6f73bce31f4" AliasToMonitor="[string]Min Level  Z Axis" Id="b04a42fc3fc34803a28af4c1a00941f3">
+								<AboveValueTriggerModel Id="89bbc609b1f4fb3ae851db68cca0c86" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonOutputInfo CanDisable="[bool]False" CriticalAlarm="e9f25397347448e7b3afe890537ca2af" DataType="[Type]Wfm(Double)" FullName="Max-Min Level   Z Axis" GroupName="[string]Z Axis" Id="ae794d004f914975b5bd20c078ac7003" InheritsTiming="[bool]False" SampleRate="[double]10" Source="Max-MinZ Axis" Units="[string]" WarningAlarm="1b102a7973ca448d9d7a5edaf61b22b1">
+						<AlarmModel Id="1b102a7973ca448d9d7a5edaf61b22b1" Severity="[AlarmSeverity]Warning" TriggerModel="428506bbec7148d098ad9d03c54c5635">
+							<ChannelMonitorTriggerModel Alias="[string]0d972e6a-1135-4e6c-86d1-abed863e3ca1" AliasToMonitor="[string]Max-Min Level   Z Axis" Id="428506bbec7148d098ad9d03c54c5635">
+								<AboveValueTriggerModel Id="29cea909ce514ccab27fec23b10b3b8d" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+						<AlarmModel Id="e9f25397347448e7b3afe890537ca2af" Severity="[AlarmSeverity]Critical" TriggerModel="c84d7ba09cb649638a90c5380638b37f">
+							<ChannelMonitorTriggerModel Alias="[string]1b764653-bfd1-4f1d-aec5-05acec70ab9a" AliasToMonitor="[string]Max-Min Level   Z Axis" Id="c84d7ba09cb649638a90c5380638b37f">
+								<AboveValueTriggerModel Id="b490ed834edd4e5ba0325e10a4e11ea3" />
+							</ChannelMonitorTriggerModel>
+						</AlarmModel>
+					</PeAddonOutputInfo>
+					<PeAddonInputInfo CanDisable="[bool]False" FullName="1768a84d-4122-4596-b709-f6ff8d9a034c" GroupName="[string]" Id="6badce3d7e014f5ab2f78293e359bb2b" IsUserVisible="[bool]False" MappingAlias="[string]Acc01" Source="b77feac4-9a64-408a-8327-8871379b04e7" Units="[string]">
+						<SupportedDataType />
+					</PeAddonInputInfo>
+					<PeAddonInputInfo CanDisable="[bool]False" FullName="e7a5b3ce-fa07-4c7c-98f2-4a1aa7905933" GroupName="[string]" Id="8cbc8ebc6c0b4279835817e266d991ff" IsUserVisible="[bool]False" MappingAlias="[string]Acc02" Source="cf0d1834-dbd9-4956-b968-e188688a2242" Units="[string]">
+						<SupportedDataType />
+					</PeAddonInputInfo>
+					<PeAddonInputInfo CanDisable="[bool]False" FullName="8a01fe9d-f39c-48d2-9524-a9628b119c1f" GroupName="[string]" Id="85ca15dc845648fa801d52c709c3a5f3" IsUserVisible="[bool]False" MappingAlias="[string]Acc03" Source="dca0a6d2-eec6-4337-962a-83bd1d012b54" Units="[string]">
+						<SupportedDataType />
+					</PeAddonInputInfo>
+				</AddonModel>
+			</ProcessingElementModelOwner>
+		</ChannelConfigurationModel>
+		<ChassisModelOwner Id="9d6ee5d8a4ea4679803dfa6fcda85270">
+			<ChassisModel DeviceName="[string]" Id="e8d865c3ba84cba9e07307d98cf69af" SerialNumber="[string]" />
+		</ChassisModelOwner>
+	</ChannelSpecification>
+	<DataTypeReferenceTable xmlns="http://www.ni.com/PlatformFramework">
+		<p.TypeReference TypeId="649d71bf739f41a68c47f1b52d5531cd">
+			<Composite Id="1" Name="" Cluster="" GenericTypeDefinition="Void" BaseType="Void">
+				<Members>
+					<Field FieldAccessPolicy="ReadWrite" Name="Name" DataType="String" />
+					<Field FieldAccessPolicy="ReadWrite" Name="Value" DataType="@654ad21f01e14b74bc837c2992fa1874" />
+				</Members>
+			</Composite>
+		</p.TypeReference>
+		<p.TypeReference TypeId="9203fcce98ce4d15895a89d5c852409a">
+			<Composite Id="1" Name="" Cluster="" GenericTypeDefinition="Void" BaseType="Void">
+				<Members>
+					<Field FieldAccessPolicy="ReadWrite" Name="Index" DataType="Int32" />
+					<Field FieldAccessPolicy="ReadWrite" Name="PossibleOptions" DataType="String[]" />
+				</Members>
+			</Composite>
+		</p.TypeReference>
+		<p.TypeReference TypeId="c1bb5e19e5e8409886afc9e169fb45cc">
+			<Composite Id="1" Name="" Cluster="" GenericTypeDefinition="Void" BaseType="Void">
+				<Members>
+					<Field FieldAccessPolicy="ReadWrite" Name="Channel" DataType="String[]" />
+				</Members>
+			</Composite>
+		</p.TypeReference>
+		<p.TypeReference TypeId="654ad21f01e14b74bc837c2992fa1874">
+			<Composite Id="1" Name="Variant" Sealed="" GenericTypeDefinition="Void" BaseType="Void" />
+		</p.TypeReference>
+	</DataTypeReferenceTable>
+</SourceFile>
