@@ -1,0 +1,72 @@
+<VI _name="eDyno NVH Accel + RPM Simulator.vi" description="eDyno NVH simulator for ORDER ANALYSIS - PXIe-4468 AO0 + AO1 in ONE task (the 4468 AO channels share one timing engine\2C so they cannot run as two separate tasks).\0A\0AAO0 = accelerometer\3A PCB 356A15 (one axis) at Sensitivity mV/g\2C with the same speed profile and Fault Injection as eDyno NVH Accel Simulator.vi.\0AAO1 = motor-shaft speed reference\2C phase-locked to AO0 (same shaft phase\2C same samples)\3A\0A- Pulse Tach OFF (default)\3A analog voltage proportional to rpm\2C Tach Scale V per 1000 rpm (default 1 V/1000 rpm\2C so 4500 rpm = 4.5 V).\0A- Pulse Tach ON\3A once-per-rev square wave\2C 0 / Pulse High V (default 5 V)\2C 50 % duty\2C rising edge at shaft angle 0 - a keyphasor for SVT tach-to-speed conversion (1 pulse/rev).\0A\0AAcquire in a separate VI\3A AO0 -&gt; an accel AI channel (IEPE OFF\2C same mV/g)\2C AO1 -&gt; a voltage AI channel (IEPE OFF)\2C both in one AI task so they share the sample clock. Analog mode\3A rpm = V x 1000 / Tach Scale. Orders are referred to the MOTOR shaft (1x = rpm/60 Hz). Fault Frequencies is the answer key at the current speed.\0A\0ADefaults\3A run-up 500 -&gt; 4500 rpm over 30 s (Speed Profile / Run-up Enabled)\2C or constant 3000 rpm. Timing\3A 3-block AO buffer\2C DAQmx Write paces the loop\2C the first write auto-starts the task.">
+  <Control _name="DAQ Settings" type="cluster{string.Device,string.AO Channels (accel+tach),double.Sample Rate (S/s),int32.Samples per Block,double.Sensitivity (mV/g),double.AO Range (V)}" uid="6099" uid_parent="root" value="[PXI1Slot2,ao0:1,51200,5120,100,10]" outputs="value:6099.value" />
+  <Constant _name="slash" type="string" uid="6004" uid_parent="root" value="/" outputs="value:6004.value" />
+  <Constant _name="3 blocks" type="int32" uid="6013" uid_parent="root" value="3" outputs="value:6013.value" />
+  <Constant _name="no error" type="cluster{bool.status,int32.code,string.source}" uid="6015" uid_parent="root" value="[false,0,]" outputs="value:6015.value" />
+  <Constant _name="1000" type="double" uid="6016" uid_parent="root" value="1000" outputs="value:6016.value" />
+  <Constant _name="initial synth state" type="cluster{double.Shaft Rev,double.Sample Index}" uid="6040" uid_parent="root" value="[0,0]" outputs="value:6040.value" />
+  <Constant _name="run-up t0 (s)" type="double" uid="6041" uid_parent="root" value="0" outputs="value:6041.value" />
+  <Structure _name="While Loop" uid="7000" uid_parent="root" count="" label="Synthesize block -&gt; [accel V\2C tach V] -&gt; AO0\3A1 (paced by DAQmx Write)">
+    <Control _name="Fault Injection" type="cluster{bool.Imbalance ON,double.Imbalance (g),bool.Misalignment ON,double.Misalignment (g),bool.Bearing BPFO ON,double.Bearing Impact (g),bool.Motor Ripple ON,double.Torque Ripple (g),bool.PWM Noise ON,double.PWM Level (g)}" uid="7001" uid_parent="7000" value="[false,0.5,false,0.20000000000000001,false,2,false,0.29999999999999999,false,0.050000000000000003]" outputs="value:7001.value" />
+    <Control _name="Sim Config" type="cluster{double.Sample Rate (Hz),double.Ref Speed (rpm),double.Baseline 1x (g),double.Noise Floor (g rms),double.BPFO Order,double.Resonance (Hz),double.Decay (ms),double.Pole Pairs,double.PWM Carrier (Hz)}" uid="7002" uid_parent="7000" value="[51200,3000,0.02,0.01,3.5699999999999998,3500,0.80000000000000004,4,16000]" outputs="value:7002.value" />
+    <Control _name="Speed Profile" type="cluster{bool.Run-up Enabled,double.Constant Speed (rpm),double.Run-up Start (rpm),double.Run-up End (rpm),double.Run-up Duration (s)}" uid="7003" uid_parent="7000" value="[false,3000,500,4500,30]" outputs="value:7003.value" />
+    <Control _name="Tach Output" type="cluster{bool.Pulse Tach 1ppr (OFF = analog rpm),double.Tach Scale (V per 1000 rpm),double.Pulse High (V)}" uid="7009" uid_parent="7000" value="[false,1,5]" outputs="value:7009.value" />
+    <Control _name="STOP" type="bool" style="latched" uid="7008" uid_parent="7000" value="false" outputs="value:7008.value" />
+    <Indicator _name="Shaft Speed (rpm)" type="double" uid="7137" uid_parent="7000" value="0" inputs="value:7120.rpm end" />
+    <Indicator _name="Fault Frequencies (Hz)" type="cluster{double.1x Shaft,double.2x Misalign,double.BPFO,double.Torque Ripple,double.PWM Carrier}" uid="7151" uid_parent="7000" value="[0,0,0,0,0]" inputs="value:7150.Fault Frequencies (Hz)" />
+    <Indicator _name="Simulated Acceleration (g)" type="array{double.g}" style="graph21703" uid="7152" uid_parent="7000" value="[]" inputs="value:7150.Accel (g)" />
+    <Indicator _name="Tach Output (V)" type="array{double.V}" style="graph21703" uid="7164" uid_parent="7000" value="[]" inputs="value:7163.s? t\3Af" />
+    <Constant _name="auto start" type="bool" uid="7166" uid_parent="7000" value="true" outputs="value:7166.value" />
+    <Node _name="Unbundle By Name" uid="7010" uid_parent="7000" fields="Pulse Tach 1ppr (OFF = analog rpm),Tach Scale (V per 1000 rpm),Pulse High (V)" inputs="input cluster:7009.value" outputs="Pulse Tach 1ppr (OFF = analog rpm):7010.Pulse Tach 1ppr (OFF = analog rpm),Tach Scale (V per 1000 rpm):7010.Tach Scale (V per 1000 rpm),Pulse High (V):7010.Pulse High (V)" />
+    <Node _name="Bundle By Name" uid="7140" uid_parent="7000" fields="Sample Rate (Hz)" inputs="input cluster:7002.value,Sample Rate (Hz):21138.value" outputs="output cluster:7140.output cluster" />
+    <Call uid="7120" uid_parent="7000" target="eDyno Speed Profile.vi" inputs="Speed Profile:7003.value,t in (s):21088.value,Block Duration (s):21231.value" outputs="rpm start:7120.rpm start,rpm end:7120.rpm end,t out (s):7120.t out (s)" />
+    <Call uid="7150" uid_parent="7000" target="eDyno Accel Synth.vi" inputs="Fault Injection:7001.value,Sim Config:7140.output cluster,rpm start:7120.rpm start,rpm end:7120.rpm end,Samples:21141.value,State in:21094.value" outputs="Accel (g):7150.Accel (g),Fault Frequencies (Hz):7150.Fault Frequencies (Hz),Speed (rpm):7150.Speed (rpm),Tach Pulse 1ppr (0/1):7150.Tach Pulse 1ppr (0/1),State out:7150.State out" />
+    <Node _name="Multiply" uid="7154" uid_parent="7000" inputs="y:21217.value,x:7150.Accel (g)" outputs="x*y:7154.x*y" />
+    <Node _name="Multiply" uid="7160" uid_parent="7000" inputs="y:7010.Tach Scale (V per 1000 rpm),x:7150.Speed (rpm)" outputs="x*y:7160.x*y" />
+    <Node _name="Multiply" uid="7162" uid_parent="7000" inputs="y:7010.Pulse High (V),x:7150.Tach Pulse 1ppr (0/1)" outputs="x*y:7162.x*y" />
+    <Node _name="Divide" uid="7161" uid_parent="7000" inputs="y:21082.value,x:7160.x*y" outputs="x/y:7161.x/y" />
+    <Node _name="Select" uid="7163" uid_parent="7000" inputs="f:7161.x/y,s:7010.Pulse Tach 1ppr (OFF = analog rpm),t:7162.x*y" outputs="s? t\3Af:7163.s? t\3Af" />
+    <Node _name="Build Array" uid="7165" uid_parent="7000" inputs="element:7154.x*y,element:7163.s? t\3Af" outputs="appended array:7165.appended array" />
+    <Call uid="7155" uid_parent="7000" target="DAQmx Write (Analog 2D DBL NChan NSamp).vi" inputs="task/channels in:21228.value,auto start:7166.value,data:7165.appended array,timeout:,error in:21237.value" outputs="task out:7155.task out,number of samples written per channel:,error out:7155.error out" />
+    <Node _name="Or" uid="7261" uid_parent="7000" inputs="y:7008.value,x:7155.error out" outputs="x .or. y?:7261.x .or. y?" />
+    <Tunnel _id="In1" uid="21082" uid_parent="7000" inputs="value:6016.value" outputs="value:21082.value" />
+    <Tunnel _id="In2" uid="21138" uid_parent="7000" inputs="value:6000.Sample Rate (S/s)" outputs="value:21138.value" />
+    <Tunnel _id="In3" uid="21141" uid_parent="7000" inputs="value:6000.Samples per Block" outputs="value:21141.value" />
+    <Tunnel _id="In4" uid="21217" uid_parent="7000" inputs="value:6017.x/y" outputs="value:21217.value" />
+    <Tunnel _id="In5" uid="21228" uid_parent="7000" inputs="value:6020.task out" outputs="value:21228.value" />
+    <Tunnel _id="In6" uid="21231" uid_parent="7000" inputs="value:6019.x/y" outputs="value:21231.value" />
+    <Tunnel _id="Out1" uid="21477" uid_parent="7000" outputs="value:21477.value" inputs="value:7155.task out" />
+    <ShiftReg uid="21086" uid_parent="7000">
+      <Left uid="21088" uid_parent="21086" inputs="value:6041.value" outputs="value:21088.value" />
+      <Right uid="21089" uid_parent="21086" inputs="value:7120.t out (s)" outputs="value:" />
+    </ShiftReg>
+    <ShiftReg uid="21092" uid_parent="7000">
+      <Left uid="21094" uid_parent="21092" inputs="value:6040.value" outputs="value:21094.value" />
+      <Right uid="21095" uid_parent="21092" inputs="value:7150.State out" outputs="value:" />
+    </ShiftReg>
+    <ShiftReg uid="21235" uid_parent="7000">
+      <Left uid="21237" uid_parent="21235" inputs="value:6020.error out" outputs="value:21237.value" />
+      <Right uid="21238" uid_parent="21235" outputs="value:21238.value" inputs="value:7155.error out" />
+    </ShiftReg>
+    <Condition uid="20062" uid_parent="7000" value="stop" inputs="value:7261.x .or. y?" />
+  </Structure>
+  <Node _name="Unbundle By Name" uid="6000" uid_parent="root" fields="Device,AO Channels (accel+tach),Sample Rate (S/s),Samples per Block,Sensitivity (mV/g),AO Range (V)" inputs="input cluster:6099.value" outputs="Device:6000.Device,AO Channels (accel+tach):6000.AO Channels (accel+tach),Sample Rate (S/s):6000.Sample Rate (S/s),Samples per Block:6000.Samples per Block,Sensitivity (mV/g):6000.Sensitivity (mV/g),AO Range (V):6000.AO Range (V)" />
+  <Node _name="Concatenate Strings" uid="6005" uid_parent="root" inputs="string:6000.Device,string:6004.value,string:6000.AO Channels (accel+tach)" outputs="concatenated string:6005.concatenated string" />
+  <Node _name="Multiply" uid="6012" uid_parent="root" inputs="y:6013.value,x:6000.Samples per Block" outputs="x*y:6012.x*y" />
+  <Node _name="Divide" uid="6017" uid_parent="root" inputs="y:6016.value,x:6000.Sensitivity (mV/g)" outputs="x/y:6017.x/y" />
+  <Node _name="To Double Precision Float" uid="6018" uid_parent="root" inputs="number:6000.Samples per Block" outputs="double precision float:6018.double precision float" />
+  <Node _name="Divide" uid="6019" uid_parent="root" inputs="y:6000.Sample Rate (S/s),x:6018.double precision float" outputs="x/y:6019.x/y" />
+  <Call uid="6020" uid_parent="root" target="eDyno AO Setup.vi" inputs="AO Physical Channel:6005.concatenated string,AO Range (V):6000.AO Range (V),Sample Rate (S/s):6000.Sample Rate (S/s),Buffer Samples:6012.x*y,error in:6015.value" outputs="task out:6020.task out,error out:6020.error out" />
+  <Call uid="7310" uid_parent="root" target="DAQmx Stop Task.vi" inputs="task/channels in:21477.value,error in:21238.value" outputs="task out:7310.task out,error out:7310.error out" />
+  <Call uid="7311" uid_parent="root" target="DAQmx Clear Task.vi" inputs="task in:7310.task out,error in:7310.error out" outputs="error out:7311.error out" />
+  <Call uid="7314" uid_parent="root" target="Simple Error Handler.vi" inputs="error code (no error\3A0):,error source (&quot; &quot;):,type of dialog (OK msg\3A1):,error in (no error):7311.error out" outputs="error?:,code out:,source out:,error out:,message:" />
+</VI>
+<?lvmcp pane="4833"?>
+<?lvmcp exec IsReentrant="0" PooledReentrancy="0" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>
+<?lvmcp calllink uid="7120" tp="1" path="|SubVIs|eDyno Speed Profile.vi"?>
+<?lvmcp calllink uid="7150" tp="1" path="|SubVIs|eDyno Accel Synth.vi"?>
+<?lvmcp calllink uid="7155" tp="0" path="&lt;vilib&gt;|DAQmx|write.llb|DAQmx Write (Analog 2D DBL NChan NSamp).vi"?>
+<?lvmcp calllink uid="6020" tp="1" path="|SubVIs|eDyno AO Setup.vi"?>
+<?lvmcp calllink uid="7310" tp="0" path="&lt;vilib&gt;|DAQmx|configure|task.llb|DAQmx Stop Task.vi"?>
+<?lvmcp calllink uid="7311" tp="0" path="&lt;vilib&gt;|DAQmx|configure|task.llb|DAQmx Clear Task.vi"?>
+<?lvmcp calllink uid="7314" tp="0" path="&lt;vilib&gt;|Utility|error.llb|Simple Error Handler.vi"?>

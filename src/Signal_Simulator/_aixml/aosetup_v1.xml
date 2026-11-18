@@ -1,0 +1,17 @@
+<VI _name="eDyno AO Setup.vi" description="Creates the AO task that plays the simulated accelerometer voltage: AO voltage channel (+/- AO Range)\2C continuous sample clock at Sample Rate with a buffer of Buffer Samples\2C regeneration DISABLED (each block is new data). Returns the coerced sample rate. Not started.">
+  <Control _name="AO Physical Channel" conIdx="0" connection="required" type="string" value="PXI1Slot2/ao0" outputs="value:5010.value" uid="5010" uid_parent="root"/>
+  <Control _name="AO Range (V)" conIdx="1" connection="recommended" type="double" value="10" outputs="value:5011.value" uid="5011" uid_parent="root"/>
+  <Control _name="Sample Rate (S/s)" conIdx="2" connection="required" type="double" value="51200" outputs="value:5012.value" uid="5012" uid_parent="root"/>
+  <Control _name="Buffer Samples" conIdx="3" connection="recommended" type="int32" value="20480" outputs="value:5013.value" uid="5013" uid_parent="root"/>
+  <Control _name="error in" conIdx="5" connection="recommended" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" outputs="value:5014.value" uid="5014" uid_parent="root"/>
+  <Indicator _name="task out" conIdx="14" connection="recommended" type="ref{GenClassTag.Task.NIDAQ}" value="" inputs="value:5024.task out" uid="5015" uid_parent="root"/>
+  <Indicator _name="Actual Sample Rate (S/s)" conIdx="15" connection="recommended" type="double" value="0" inputs="value:5024.Sample Clock\3ARate" uid="5016" uid_parent="root"/>
+  <Indicator _name="error out" conIdx="19" connection="recommended" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" inputs="value:5024.error out" uid="5017" uid_parent="root"/>
+  <Node _name="Negate" inputs="x:5011.value" outputs="-x:5019.-x" uid="5019" uid_parent="root"/>
+  <Constant _name="Sample Mode" type="int32" items="Finite Samples,Continuous Samples,Hardware Timed Single Point" style="Ring" values="[10178,10123,12522]" value="10123" outputs="value:5020.value" uid="5020" uid_parent="root"/>
+  <Constant _name="RegenMode" type="int32" items="Allow Regeneration,Do Not Allow Regeneration" style="Ring" values="[10097,10158]" value="10158" outputs="value:5021.value" uid="5021" uid_parent="root"/>
+  <Call target="DAQmx Create Virtual Channel.vi" instance="DAQmx Create Channel (AO-Voltage-Basic).vi" inputs="task in:,maximum value:5011.value,minimum value:5019.-x,output terminal configuration:,physical channels:5010.value,name to assign:,units:,error in:5014.value,custom scale name:" outputs="task out:5022.task out,error out:5022.error out" uid="5022" uid_parent="root"/>
+  <Call target="DAQmx Timing.vi" adapt="true" instance="DAQmx Timing (Sample Clock).vi" inputs="task/channels in:5022.task out,sample mode:5020.value,samples per channel:5013.value,rate:5012.value,source:,active edge:,error in:5022.error out" outputs="task out:5023.task out,error out:5023.error out" uid="5023" uid_parent="root"/>
+  <Node _name="Property Node" fields="write+RegenMode" type="{GenClassTag.DAQmx Write.NIDAQ}" inputs="task out:5023.task out,error in (no error):5023.error out,RegenMode:5021.value" outputs="task out:5025.task out,error out:5025.error out" uid="5025" uid_parent="root"/>
+  <Node _name="Property Node" fields="read+Sample Clock\3ARate" type="{GenClassTag.DAQmx Timing.NIDAQ}" inputs="task out:5025.task out,error in (no error):5025.error out" outputs="task out:5024.task out,error out:5024.error out,Sample Clock\3ARate:5024.Sample Clock\3ARate" uid="5024" uid_parent="root"/>
+</VI>

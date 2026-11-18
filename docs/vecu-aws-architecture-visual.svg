@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="980" viewBox="0 0 1700 980">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#e6edf7"/>
+    </marker>
+    <style>
+      .title { font: 700 30px 'Segoe UI', Arial, sans-serif; fill: #eef6ff; }
+      .label { font: 600 18px 'Segoe UI', Arial, sans-serif; fill: #eef6ff; }
+      .small { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #e7f0ff; }
+      .tiny { font: 500 12px 'Segoe UI', Arial, sans-serif; fill: #dfeaff; }
+      .box { rx: 18; ry: 18; stroke-width: 2; }
+      .cloud { fill: #143d5d; stroke: #7bd0ff; }
+      .edge { fill: #352848; stroke: #d7a8ff; }
+      .host { fill: #1b463d; stroke: #6fe5c6; }
+      .net { fill: #43342b; stroke: #ffbf7a; }
+      .ni { fill: #2f4455; stroke: #9bbce9; }
+      .line { stroke: #edf3ff; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .dashed { stroke: #f6d77a; stroke-width: 2; fill: none; stroke-dasharray: 8 8; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1700" height="980" fill="#0b1220"/>
+  <text x="850" y="60" text-anchor="middle" class="title">AWS control plane to shared vehicle network</text>
+
+  <!-- AWS -->
+  <rect x="55" y="125" width="290" height="310" class="box cloud"/>
+  <text x="200" y="170" text-anchor="middle" class="label">AWS</text>
+  <text x="200" y="230" text-anchor="middle" class="small">Amazon EKS</text>
+  <text x="200" y="285" text-anchor="middle" class="small">Harness Control</text>
+  <text x="200" y="340" text-anchor="middle" class="small">Provisioning</text>
+  <text x="200" y="395" text-anchor="middle" class="small">Access / Telemetry</text>
+
+  <!-- Secure link -->
+  <rect x="410" y="170" width="220" height="220" class="box edge"/>
+  <text x="520" y="215" text-anchor="middle" class="label">Secure Link</text>
+  <text x="520" y="260" text-anchor="middle" class="small">Control tunnel</text>
+  <text x="520" y="300" text-anchor="middle" class="small">VPC / network path</text>
+  <text x="520" y="340" text-anchor="middle" class="small">Access + telemetry</text>
+
+  <!-- NI VeriStand standalone -->
+  <rect x="700" y="110" width="260" height="150" class="box ni"/>
+  <text x="830" y="160" text-anchor="middle" class="label">NI VeriStand</text>
+  <text x="830" y="190" text-anchor="middle" class="small">Runtime / HIL</text>
+  <text x="830" y="215" text-anchor="middle" class="tiny">Outside AWS</text>
+
+  <!-- Bare-metal host -->
+  <rect x="700" y="300" width="890" height="230" class="box host"/>
+  <text x="1145" y="345" text-anchor="middle" class="label">On-Prem Bare-Metal Host</text>
+
+  <rect x="760" y="390" width="170" height="110" class="box host"/>
+  <text x="845" y="430" text-anchor="middle" class="small">rig-user-1</text>
+  <text x="845" y="458" text-anchor="middle" class="small">Android + vECU</text>
+
+  <rect x="965" y="390" width="170" height="110" class="box host"/>
+  <text x="1050" y="430" text-anchor="middle" class="small">rig-user-2</text>
+  <text x="1050" y="458" text-anchor="middle" class="small">Android + vECU</text>
+
+  <rect x="1170" y="390" width="170" height="110" class="box host"/>
+  <text x="1255" y="430" text-anchor="middle" class="small">rig-user-3</text>
+  <text x="1255" y="458" text-anchor="middle" class="small">Android + vECU</text>
+
+  <rect x="1375" y="390" width="170" height="110" class="box host"/>
+  <text x="1460" y="430" text-anchor="middle" class="small">rig-user-4</text>
+  <text x="1460" y="458" text-anchor="middle" class="small">Android + vECU</text>
+
+  <!-- Shared vehicle network -->
+  <rect x="130" y="610" width="1450" height="260" class="box net"/>
+  <text x="855" y="655" text-anchor="middle" class="label">Shared Vehicle Network</text>
+
+  <rect x="180" y="695" width="220" height="100" class="box net"/>
+  <text x="290" y="736" text-anchor="middle" class="small">Vehicle L2 segment</text>
+  <text x="290" y="762" text-anchor="middle" class="small">shared Ethernet fabric</text>
+
+  <rect x="455" y="695" width="220" height="100" class="box net"/>
+  <text x="565" y="736" text-anchor="middle" class="small">Multicast</text>
+  <text x="565" y="762" text-anchor="middle" class="small">SOME/IP</text>
+
+  <rect x="730" y="695" width="220" height="100" class="box net"/>
+  <text x="840" y="736" text-anchor="middle" class="small">NATS</text>
+  <text x="840" y="762" text-anchor="middle" class="small">service discovery</text>
+
+  <rect x="1005" y="695" width="220" height="100" class="box net"/>
+  <text x="1115" y="736" text-anchor="middle" class="small">Peer vECU</text>
+  <text x="1115" y="762" text-anchor="middle" class="small">ECU endpoints</text>
+
+  <rect x="1280" y="695" width="220" height="100" class="box net"/>
+  <text x="1390" y="736" text-anchor="middle" class="small">NI VeriStand</text>
+  <text x="1390" y="762" text-anchor="middle" class="small">system interface</text>
+
+  <!-- Main flow arrows -->
+  <path d="M345 280 L410 280" class="line"/>
+  <path d="M630 280 L700 280" class="line"/>
+  <path d="M830 260 L830 390" class="dashed"/>
+
+  <path d="M845 500 L845 610" class="line"/>
+  <path d="M1050 500 L1050 610" class="line"/>
+  <path d="M1255 500 L1255 610" class="line"/>
+  <path d="M1460 500 L1460 610" class="line"/>
+
+  <path d="M1195 260 L1195 610" class="line"/>
+  <path d="M1195 610 L1115 695" class="line"/>
+
+  <!-- dashed note -->
+  <path d="M960 260 L1515 290" class="dashed"/>
+  <text x="1532" y="295" text-anchor="start" class="tiny">NI VeriStand is outside AWS</text>
+  <text x="1532" y="313" text-anchor="start" class="tiny">and connects to the shared network</text>
+
+  <!-- labels -->
+  <text x="200" y="110" text-anchor="middle" class="tiny">AWS control</text>
+  <text x="855" y="910" text-anchor="middle" class="tiny">vehicle traffic and service exchange</text>
+</svg>

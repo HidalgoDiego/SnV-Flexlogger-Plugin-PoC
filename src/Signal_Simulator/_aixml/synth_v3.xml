@@ -1,0 +1,159 @@
+<VI _name="eDyno Accel Synth.vi" description="Synthesizes one block of eDyno drivetrain acceleration (g) as seen by a PCB 356A15 ICP accelerometer (one axis) on an e-bike motor housing.\0A\0ASpeed ramps linearly from rpm start to rpm end across the block\2C and every order tracks speed. Shaft phase (revolutions) and the sample counter travel in State in/State out: feed State out back into State in through a shift register in the caller so consecutive blocks are phase-continuous.\0A\0ABaseline: a small 1x residual plus broadband noise. Injectable faults (Fault Injection cluster):\0A- Imbalance: 1x order\2C amplitude scales with (rpm/ref)^2\0A- Misalignment: 2x order\0A- Bearing outer race (BPFO): impacts every 1/(BPFO order x shaft Hz) ringing the housing resonance with exponential decay\0A- Motor torque ripple: 6 x pole-pairs order\0A- Inverter PWM: carrier with sidebands at carrier +/- 2 x electrical frequency\0A\0AFault Frequencies returns the expected frequencies at rpm end\2C for the engineer to check against the spectrum. Speed (rpm) returns the instantaneous shaft speed per sample\2C and Tach Pulse 1ppr a 50 % duty once-per-rev square wave whose rising edge is at shaft angle 0 - both phase-locked to Accel (g) for order analysis.">
+  <Control _name="Fault Injection" conIdx="0" connection="required" type="cluster{bool.Imbalance ON,double.Imbalance (g),bool.Misalignment ON,double.Misalignment (g),bool.Bearing BPFO ON,double.Bearing Impact (g),bool.Motor Ripple ON,double.Torque Ripple (g),bool.PWM Noise ON,double.PWM Level (g)}" value="[false,0.5,false,0.2,false,2,false,0.3,false,0.05]" outputs="value:5010.value" uid="5010" uid_parent="root"/>
+  <Control _name="Sim Config" conIdx="1" connection="required" type="cluster{double.Sample Rate (Hz),double.Ref Speed (rpm),double.Baseline 1x (g),double.Noise Floor (g rms),double.BPFO Order,double.Resonance (Hz),double.Decay (ms),double.Pole Pairs,double.PWM Carrier (Hz)}" value="[51200,3000,0.02,0.01,3.57,3500,0.8,4,16000]" outputs="value:5011.value" uid="5011" uid_parent="root"/>
+  <Control _name="rpm start" conIdx="2" connection="required" type="double" value="3000" outputs="value:5012.value" uid="5012" uid_parent="root"/>
+  <Control _name="rpm end" conIdx="3" connection="required" type="double" value="3000" outputs="value:5013.value" uid="5013" uid_parent="root"/>
+  <Control _name="Samples" conIdx="4" connection="required" type="int32" value="5120" outputs="value:5014.value" uid="5014" uid_parent="root"/>
+  <Indicator _name="Accel (g)" conIdx="14" connection="recommended" type="array{double.Accel}" value="[]" inputs="value:5199.value" uid="5015" uid_parent="root"/>
+  <Indicator _name="Fault Frequencies (Hz)" conIdx="15" connection="recommended" type="cluster{double.1x Shaft,double.2x Misalign,double.BPFO,double.Torque Ripple,double.PWM Carrier}" value="[0,0,0,0,0]" inputs="value:5074.output cluster" uid="5016" uid_parent="root"/>
+
+  <Control _name="State in" conIdx="5" connection="recommended" type="cluster{double.Shaft Rev,double.Sample Index}" value="[0,0]" outputs="value:5017.value" uid="5017" uid_parent="root"/>
+  <Indicator _name="State out" conIdx="19" connection="recommended" type="cluster{double.Shaft Rev,double.Sample Index}" value="[0,0]" inputs="value:5078.output cluster" uid="5018" uid_parent="root"/>
+  <Indicator _name="Speed (rpm)" conIdx="16" connection="recommended" type="array{double.rpm}" value="[]" inputs="value:5197.value" uid="5019" uid_parent="root"/>
+  <Indicator _name="Tach Pulse 1ppr (0/1)" conIdx="17" connection="recommended" type="array{double.pulse}" value="[]" inputs="value:5198.value" uid="5020" uid_parent="root"/>
+  <Node _name="Unbundle By Name" fields="Shaft Rev,Sample Index" inputs="input cluster:5017.value" outputs="Shaft Rev:5076.Shaft Rev,Sample Index:5076.Sample Index" uid="5076" uid_parent="root"/>
+  <Node _name="Bundle By Name" fields="Shaft Rev,Sample Index" inputs="Shaft Rev:5302.final,Sample Index:5312.final,input cluster:5017.value" outputs="output cluster:5078.output cluster" uid="5078" uid_parent="root"/>
+  <Node _name="Unbundle By Name" fields="Imbalance ON,Imbalance (g),Misalignment ON,Misalignment (g),Bearing BPFO ON,Bearing Impact (g),Motor Ripple ON,Torque Ripple (g),PWM Noise ON,PWM Level (g)" inputs="input cluster:5010.value" outputs="Imbalance ON:5020.Imbalance ON,Imbalance (g):5020.Imbalance (g),Misalignment ON:5020.Misalignment ON,Misalignment (g):5020.Misalignment (g),Bearing BPFO ON:5020.Bearing BPFO ON,Bearing Impact (g):5020.Bearing Impact (g),Motor Ripple ON:5020.Motor Ripple ON,Torque Ripple (g):5020.Torque Ripple (g),PWM Noise ON:5020.PWM Noise ON,PWM Level (g):5020.PWM Level (g)" uid="5020" uid_parent="root"/>
+  <Node _name="Unbundle By Name" fields="Sample Rate (Hz),Ref Speed (rpm),Baseline 1x (g),Noise Floor (g rms),BPFO Order,Resonance (Hz),Decay (ms),Pole Pairs,PWM Carrier (Hz)" inputs="input cluster:5011.value" outputs="Sample Rate (Hz):5021.Sample Rate (Hz),Ref Speed (rpm):5021.Ref Speed (rpm),Baseline 1x (g):5021.Baseline 1x (g),Noise Floor (g rms):5021.Noise Floor (g rms),BPFO Order:5021.BPFO Order,Resonance (Hz):5021.Resonance (Hz),Decay (ms):5021.Decay (ms),Pole Pairs:5021.Pole Pairs,PWM Carrier (Hz):5021.PWM Carrier (Hz)" uid="5021" uid_parent="root"/>
+
+  <Constant _name="zero" type="double" value="0" outputs="value:5022.value" uid="5022" uid_parent="root"/>
+  <Constant _name="60" type="double" value="60" outputs="value:5023.value" uid="5023" uid_parent="root"/>
+  <Constant _name="1000" type="double" value="1000" outputs="value:5025.value" uid="5025" uid_parent="root"/>
+  <Constant _name="6" type="double" value="6" outputs="value:5026.value" uid="5026" uid_parent="root"/>
+  <Constant _name="2" type="double" value="2" outputs="value:5027.value" uid="5027" uid_parent="root"/>
+  <Constant _name="sqrt12" type="double" value="3.4641016151377544" outputs="value:5028.value" uid="5028" uid_parent="root"/>
+
+  <Node _name="Select" inputs="t:5020.Imbalance (g),s:5020.Imbalance ON,f:5022.value" outputs="s? t\3Af:5030.s? t\3Af" uid="5030" uid_parent="root"/>
+  <Node _name="Select" inputs="t:5020.Misalignment (g),s:5020.Misalignment ON,f:5022.value" outputs="s? t\3Af:5031.s? t\3Af" uid="5031" uid_parent="root"/>
+  <Node _name="Select" inputs="t:5020.Bearing Impact (g),s:5020.Bearing BPFO ON,f:5022.value" outputs="s? t\3Af:5032.s? t\3Af" uid="5032" uid_parent="root"/>
+  <Node _name="Select" inputs="t:5020.Torque Ripple (g),s:5020.Motor Ripple ON,f:5022.value" outputs="s? t\3Af:5033.s? t\3Af" uid="5033" uid_parent="root"/>
+  <Node _name="Select" inputs="t:5020.PWM Level (g),s:5020.PWM Noise ON,f:5022.value" outputs="s? t\3Af:5034.s? t\3Af" uid="5034" uid_parent="root"/>
+
+  <Node _name="To Double Precision Float" inputs="number:5014.value" outputs="double precision float:5040.double precision float" uid="5040" uid_parent="root"/>
+  <Node _name="Subtract" inputs="x:5013.value,y:5012.value" outputs="x-y:5041.x-y" uid="5041" uid_parent="root"/>
+  <Node _name="Divide" inputs="x:5041.x-y,y:5040.double precision float" outputs="x/y:5042.x/y" uid="5042" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:5021.Sample Rate (Hz),y:5023.value" outputs="x*y:5043.x*y" uid="5043" uid_parent="root"/>
+  <Node _name="Divide" inputs="x:5021.Decay (ms),y:5025.value" outputs="x/y:5044.x/y" uid="5044" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:5021.Pole Pairs,y:5026.value" outputs="x*y:5045.x*y" uid="5045" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:5021.Pole Pairs,y:5027.value" outputs="x*y:5046.x*y" uid="5046" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:5021.Noise Floor (g rms),y:5028.value" outputs="x*y:5047.x*y" uid="5047" uid_parent="root"/>
+
+  <Node _name="Divide" inputs="x:5013.value,y:5023.value" outputs="x/y:5070.x/y" uid="5070" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:5070.x/y,y:5027.value" outputs="x*y:5071.x*y" uid="5071" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:5070.x/y,y:5021.BPFO Order" outputs="x*y:5072.x*y" uid="5072" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:5070.x/y,y:5045.x*y" outputs="x*y:5073.x*y" uid="5073" uid_parent="root"/>
+  <Constant _name="freq template" type="cluster{double.1x Shaft,double.2x Misalign,double.BPFO,double.Torque Ripple,double.PWM Carrier}" value="[0,0,0,0,0]" outputs="value:5075.value" uid="5075" uid_parent="root"/>
+  <Node _name="Bundle By Name" fields="1x Shaft,2x Misalign,BPFO,Torque Ripple,PWM Carrier" inputs="1x Shaft:5070.x/y,2x Misalign:5071.x*y,BPFO:5072.x*y,Torque Ripple:5073.x*y,PWM Carrier:5021.PWM Carrier (Hz),input cluster:5075.value" outputs="output cluster:5074.output cluster" uid="5074" uid_parent="root"/>
+
+  <Structure _name="For Loop" count="5100.value" maxin="5014.value" maxout="" uid="5100" uid_parent="root" label="Per-sample synthesis">
+    <Tunnel _id="In1" inputs="value:5012.value" outputs="value:5201.value" uid="5201" uid_parent="5100"/>
+    <Tunnel _id="In2" inputs="value:5042.x/y" outputs="value:5202.value" uid="5202" uid_parent="5100"/>
+    <Tunnel _id="In3" inputs="value:5043.x*y" outputs="value:5203.value" uid="5203" uid_parent="5100"/>
+    <Tunnel _id="In4" inputs="value:5021.Sample Rate (Hz)" outputs="value:5204.value" uid="5204" uid_parent="5100"/>
+    <Tunnel _id="In5" inputs="value:5021.Ref Speed (rpm)" outputs="value:5205.value" uid="5205" uid_parent="5100"/>
+    <Tunnel _id="In6" inputs="value:5021.Baseline 1x (g)" outputs="value:5206.value" uid="5206" uid_parent="5100"/>
+    <Tunnel _id="In7" inputs="value:5030.s? t\3Af" outputs="value:5207.value" uid="5207" uid_parent="5100"/>
+    <Tunnel _id="In8" inputs="value:5031.s? t\3Af" outputs="value:5208.value" uid="5208" uid_parent="5100"/>
+    <Tunnel _id="In9" inputs="value:5021.BPFO Order" outputs="value:5209.value" uid="5209" uid_parent="5100"/>
+    <Tunnel _id="In10" inputs="value:5044.x/y" outputs="value:5210.value" uid="5210" uid_parent="5100"/>
+    <Tunnel _id="In11" inputs="value:5021.Resonance (Hz)" outputs="value:5211.value" uid="5211" uid_parent="5100"/>
+    <Tunnel _id="In12" inputs="value:5032.s? t\3Af" outputs="value:5212.value" uid="5212" uid_parent="5100"/>
+    <Tunnel _id="In13" inputs="value:5045.x*y" outputs="value:5213.value" uid="5213" uid_parent="5100"/>
+    <Tunnel _id="In14" inputs="value:5033.s? t\3Af" outputs="value:5214.value" uid="5214" uid_parent="5100"/>
+    <Tunnel _id="In15" inputs="value:5021.PWM Carrier (Hz)" outputs="value:5215.value" uid="5215" uid_parent="5100"/>
+    <Tunnel _id="In16" inputs="value:5046.x*y" outputs="value:5216.value" uid="5216" uid_parent="5100"/>
+    <Tunnel _id="In17" inputs="value:5034.s? t\3Af" outputs="value:5217.value" uid="5217" uid_parent="5100"/>
+    <Tunnel _id="In18" inputs="value:5047.x*y" outputs="value:5218.value" uid="5218" uid_parent="5100"/>
+
+    <ShiftReg uid="5300" uid_parent="5100">
+      <Left inputs="value:5076.Shaft Rev" outputs="value:5301.value" uid="5301" uid_parent="5300"/>
+      <Right inputs="value:5105.x+y" outputs="value:5302.final" uid="5302" uid_parent="5300"/>
+    </ShiftReg>
+    <ShiftReg uid="5310" uid_parent="5100">
+      <Left inputs="value:5076.Sample Index" outputs="value:5311.value" uid="5311" uid_parent="5310"/>
+      <Right inputs="value:5108.x+1" outputs="value:5312.final" uid="5312" uid_parent="5310"/>
+    </ShiftReg>
+
+    <Constant _name="2pi" type="double" value="6.2831853071795862" outputs="value:5090.value" uid="5090" uid_parent="5100"/>
+    <Constant _name="one" type="double" value="1" outputs="value:5091.value" uid="5091" uid_parent="5100"/>
+    <Constant _name="sixty" type="double" value="60" outputs="value:5092.value" uid="5092" uid_parent="5100"/>
+    <Constant _name="imb phase" type="double" value="0.6" outputs="value:5093.value" uid="5093" uid_parent="5100"/>
+    <Constant _name="mis phase" type="double" value="0.9" outputs="value:5094.value" uid="5094" uid_parent="5100"/>
+    <Constant _name="two" type="double" value="2" outputs="value:5095.value" uid="5095" uid_parent="5100"/>
+    <Constant _name="min fB" type="double" value="0.001" outputs="value:5096.value" uid="5096" uid_parent="5100"/>
+    <Constant _name="half" type="double" value="0.5" outputs="value:5097.value" uid="5097" uid_parent="5100"/>
+
+    <Node _name="To Double Precision Float" inputs="number:5100.value" outputs="double precision float:5101.double precision float" uid="5101" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5202.value,y:5101.double precision float" outputs="x*y:5102.x*y" uid="5102" uid_parent="5100"/>
+    <Node _name="Add" inputs="x:5201.value,y:5102.x*y" outputs="x+y:5103.x+y" uid="5103" uid_parent="5100"/>
+    <Node _name="Divide" inputs="x:5103.x+y,y:5203.value" outputs="x/y:5104.x/y" uid="5104" uid_parent="5100"/>
+    <Node _name="Add" inputs="x:5301.value,y:5104.x/y" outputs="x+y:5105.x+y" uid="5105" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5090.value,y:5301.value" outputs="x*y:5106.x*y" uid="5106" uid_parent="5100"/>
+    <Node _name="Divide" inputs="x:5103.x+y,y:5205.value" outputs="x/y:5107.x/y" uid="5107" uid_parent="5100"/>
+    <Node _name="Increment" inputs="x:5311.value" outputs="x+1:5108.x+1" uid="5108" uid_parent="5100"/>
+    <Node _name="Divide" inputs="x:5311.value,y:5204.value" outputs="x/y:5109.x/y" uid="5109" uid_parent="5100"/>
+
+    <Node _name="Sine" inputs="x:5106.x*y" outputs="sin(x):5120.sin(x)" uid="5120" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5206.value,y:5120.sin(x)" outputs="x*y:5121.x*y" uid="5121" uid_parent="5100"/>
+
+    <Node _name="Add" inputs="x:5106.x*y,y:5093.value" outputs="x+y:5122.x+y" uid="5122" uid_parent="5100"/>
+    <Node _name="Sine" inputs="x:5122.x+y" outputs="sin(x):5123.sin(x)" uid="5123" uid_parent="5100"/>
+    <Node _name="Square" inputs="x:5107.x/y" outputs="x^2:5124.x^2" uid="5124" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5207.value,y:5124.x^2" outputs="x*y:5125.x*y" uid="5125" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5125.x*y,y:5123.sin(x)" outputs="x*y:5126.x*y" uid="5126" uid_parent="5100"/>
+
+    <Node _name="Multiply" inputs="x:5106.x*y,y:5095.value" outputs="x*y:5127.x*y" uid="5127" uid_parent="5100"/>
+    <Node _name="Add" inputs="x:5127.x*y,y:5094.value" outputs="x+y:5128.x+y" uid="5128" uid_parent="5100"/>
+    <Node _name="Sine" inputs="x:5128.x+y" outputs="sin(x):5129.sin(x)" uid="5129" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5208.value,y:5129.sin(x)" outputs="x*y:5130.x*y" uid="5130" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5130.x*y,y:5107.x/y" outputs="x*y:5131.x*y" uid="5131" uid_parent="5100"/>
+
+    <Node _name="Multiply" inputs="x:5301.value,y:5209.value" outputs="x*y:5132.x*y" uid="5132" uid_parent="5100"/>
+    <Node _name="Quotient &amp; Remainder" inputs="x:5132.x*y,y:5091.value" outputs="x-y*floor(x/y):5133.x-y*floor(x/y),floor(x/y):" uid="5133" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5103.x+y,y:5209.value" outputs="x*y:5134.x*y" uid="5134" uid_parent="5100"/>
+    <Node _name="Divide" inputs="x:5134.x*y,y:5092.value" outputs="x/y:5135.x/y" uid="5135" uid_parent="5100"/>
+    <Node _name="Max &amp; Min" inputs="x:5135.x/y,y:5096.value" outputs="max(x\2Cy):5136.max(x\2Cy),min(x\2Cy):" uid="5136" uid_parent="5100"/>
+    <Node _name="Divide" inputs="x:5133.x-y*floor(x/y),y:5136.max(x\2Cy)" outputs="x/y:5137.x/y" uid="5137" uid_parent="5100"/>
+    <Node _name="Divide" inputs="x:5137.x/y,y:5210.value" outputs="x/y:5138.x/y" uid="5138" uid_parent="5100"/>
+    <Node _name="Negate" inputs="x:5138.x/y" outputs="-x:5139.-x" uid="5139" uid_parent="5100"/>
+    <Node _name="Exponential" inputs="x:5139.-x" outputs="exp(x):5140.exp(x)" uid="5140" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5090.value,y:5211.value" outputs="x*y:5141.x*y" uid="5141" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5141.x*y,y:5137.x/y" outputs="x*y:5142.x*y" uid="5142" uid_parent="5100"/>
+    <Node _name="Sine" inputs="x:5142.x*y" outputs="sin(x):5143.sin(x)" uid="5143" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5140.exp(x),y:5143.sin(x)" outputs="x*y:5144.x*y" uid="5144" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5144.x*y,y:5212.value" outputs="x*y:5145.x*y" uid="5145" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5145.x*y,y:5107.x/y" outputs="x*y:5146.x*y" uid="5146" uid_parent="5100"/>
+
+    <Node _name="Multiply" inputs="x:5106.x*y,y:5213.value" outputs="x*y:5147.x*y" uid="5147" uid_parent="5100"/>
+    <Node _name="Sine" inputs="x:5147.x*y" outputs="sin(x):5148.sin(x)" uid="5148" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5214.value,y:5148.sin(x)" outputs="x*y:5149.x*y" uid="5149" uid_parent="5100"/>
+
+    <Node _name="Multiply" inputs="x:5090.value,y:5215.value" outputs="x*y:5150.x*y" uid="5150" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5150.x*y,y:5109.x/y" outputs="x*y:5151.x*y" uid="5151" uid_parent="5100"/>
+    <Node _name="Sine" inputs="x:5151.x*y" outputs="sin(x):5152.sin(x)" uid="5152" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5106.x*y,y:5216.value" outputs="x*y:5153.x*y" uid="5153" uid_parent="5100"/>
+    <Node _name="Sine &amp; Cosine" inputs="x:5153.x*y" outputs="sin(x):,cos(x):5154.cos(x)" uid="5154" uid_parent="5100"/>
+    <Node _name="Add" inputs="x:5154.cos(x),y:5097.value" outputs="x+y:5155.x+y" uid="5155" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5152.sin(x),y:5155.x+y" outputs="x*y:5156.x*y" uid="5156" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5156.x*y,y:5217.value" outputs="x*y:5157.x*y" uid="5157" uid_parent="5100"/>
+
+    <Node _name="Random Number (0-1)" outputs="number\3A 0 to 1:5158.number\3A 0 to 1" uid="5158" uid_parent="5100"/>
+    <Node _name="Subtract" inputs="x:5158.number\3A 0 to 1,y:5097.value" outputs="x-y:5159.x-y" uid="5159" uid_parent="5100"/>
+    <Node _name="Multiply" inputs="x:5159.x-y,y:5218.value" outputs="x*y:5160.x*y" uid="5160" uid_parent="5100"/>
+
+    <Node _name="Add" inputs="x:5121.x*y,y:5126.x*y" outputs="x+y:5161.x+y" uid="5161" uid_parent="5100"/>
+    <Node _name="Add" inputs="x:5161.x+y,y:5131.x*y" outputs="x+y:5162.x+y" uid="5162" uid_parent="5100"/>
+    <Node _name="Add" inputs="x:5162.x+y,y:5146.x*y" outputs="x+y:5163.x+y" uid="5163" uid_parent="5100"/>
+    <Node _name="Add" inputs="x:5163.x+y,y:5149.x*y" outputs="x+y:5164.x+y" uid="5164" uid_parent="5100"/>
+    <Node _name="Add" inputs="x:5164.x+y,y:5157.x*y" outputs="x+y:5165.x+y" uid="5165" uid_parent="5100"/>
+    <Node _name="Add" inputs="x:5165.x+y,y:5160.x*y" outputs="x+y:5166.x+y" uid="5166" uid_parent="5100"/>
+
+    <Constant _name="zero" type="double" value="0" outputs="value:5089.value" uid="5089" uid_parent="5100"/>
+    <Node _name="Quotient &amp; Remainder" inputs="x:5301.value,y:5091.value" outputs="x-y*floor(x/y):5170.x-y*floor(x/y),floor(x/y):" uid="5170" uid_parent="5100"/>
+    <Node _name="Less?" inputs="x:5170.x-y*floor(x/y),y:5097.value" outputs="x &lt; y?:5171.x &lt; y?" uid="5171" uid_parent="5100"/>
+    <Node _name="Select" inputs="t:5091.value,s:5171.x &lt; y?,f:5089.value" outputs="s? t\3Af:5172.s? t\3Af" uid="5172" uid_parent="5100"/>
+    <Tunnel _id="Out2" inputs="value:5103.x+y" mode="index" outputs="value:5197.value" uid="5197" uid_parent="5100"/>
+    <Tunnel _id="Out3" inputs="value:5172.s? t\3Af" mode="index" outputs="value:5198.value" uid="5198" uid_parent="5100"/>
+    <Tunnel _id="Out1" inputs="value:5166.x+y" mode="index" outputs="value:5199.value" uid="5199" uid_parent="5100"/>
+  </Structure>
+</VI>

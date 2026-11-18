@@ -1,0 +1,36 @@
+<HTML>
+<HEAD>
+<TITLE>eDyno NVH Accel Simulator.vi</TITLE>
+<META NAME="Author" CONTENT="">
+<META NAME="GENERATOR" CONTENT="G Development Environment">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<A NAME="eDyno NVH Accel Simulator.vi"></A><H2>eDyno NVH Accel Simulator.vi</H2>
+<P>eDyno NVH bench self-validation (SW + HW) on a PXIe-4468.</P>
+<P></P>
+<P>AO0 generates a continuous, non-regenerated voltage that emulates a PCB 356A15 ICP accelerometer (one axis, 100 mV/g) on an e-bike drive unit. AI0 acquires it back through a BNC loopback (AO0 -&gt; AI0) as an acceleration channel with IEPE excitation OFF (never drive an AO into an IEPE-powered input).</P>
+<P></P>
+<P>Speed: constant, or a linear run-up when Run-up Enabled is ON (all orders track speed). Faults can be switched on live from the Fault Injection cluster:</P>
+<P>1) Imbalance (1x, grows with rpm^2) / Misalignment (2x)</P>
+<P>2) Bearing outer-race defect (BPFO impacts ringing the housing resonance -&gt; crest factor and kurtosis rise, sidebands around the resonance)</P>
+<P>3) Motor torque ripple (6 x pole pairs order) and inverter PWM carrier with +/-2fe sidebands.</P>
+<P></P>
+<P>The Fault Frequencies indicator shows where each fault should appear in the spectrum at the current speed. Wiring: BNC from AO0 to AI0 on the 4468.</P>
+<P></P>
+<P>Latency: AO is kept about two blocks ahead of AI, so a front-panel change shows up in the acquired data after roughly 2 x (Samples per Block / Sample Rate).</P>
+<HR>
+<H3>Connector Pane</H3>
+<P><IMG SRC="eDynoNVHAccelSimulatorc.png" ALT="eDyno NVH Accel Simulator.vi"></P>
+<HR>
+<H3>Front Panel</H3>
+<P><IMG SRC="eDynoNVHAccelSimulatorp.png" ALT="eDyno NVH Accel Simulator.vi"></P>
+<HR>
+<H3>Block Diagram</H3>
+<P><IMG SRC="eDynoNVHAccelSimulatord.png" ALT="eDyno NVH Accel Simulator.vi"></P>
+<P><IMG SRC="eDynoNVHAccelSimulatord1.png" ALT="eDyno NVH Accel Simulator.vi"></P>
+<HR>
+<H3></H3>
+<Table>
+</Table>
+</BODY>
+</HTML>

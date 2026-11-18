@@ -1,0 +1,24 @@
+<VI _name="eDyno Speed Profile.vi" description="Speed for the next block. Constant: rpm start = rpm end = Constant Speed. Run-up (Run-up Enabled ON): linear ramp from Run-up Start to Run-up End over Run-up Duration\2C then holds at Run-up End. Elapsed run-up time travels in t in / t out (keep it in a shift register in the caller); it resets to 0 whenever Run-up Enabled is OFF\2C so switching it ON restarts the run-up.">
+  <Control _name="Speed Profile" conIdx="11" connection="required" type="cluster{bool.Run-up Enabled,double.Constant Speed (rpm),double.Run-up Start (rpm),double.Run-up End (rpm),double.Run-up Duration (s)}" value="[false,3000,500,4500,30]" outputs="value:5010.value" uid="5010" uid_parent="root"/>
+  <Control _name="t in (s)" conIdx="10" connection="recommended" type="double" value="0" outputs="value:5011.value" uid="5011" uid_parent="root"/>
+  <Control _name="Block Duration (s)" conIdx="9" connection="required" type="double" value="0.1" outputs="value:5012.value" uid="5012" uid_parent="root"/>
+  <Indicator _name="rpm start" conIdx="3" connection="recommended" type="double" value="0" inputs="value:5035.s? t\3Af" uid="5013" uid_parent="root"/>
+  <Indicator _name="rpm end" conIdx="2" connection="recommended" type="double" value="0" inputs="value:5036.s? t\3Af" uid="5014" uid_parent="root"/>
+  <Indicator _name="t out (s)" conIdx="1" connection="recommended" type="double" value="0" inputs="value:5024.s? t\3Af" uid="5015" uid_parent="root"/>
+  <Node _name="Unbundle By Name" fields="Run-up Enabled,Constant Speed (rpm),Run-up Start (rpm),Run-up End (rpm),Run-up Duration (s)" inputs="input cluster:5010.value" outputs="Run-up Enabled:5020.Run-up Enabled,Constant Speed (rpm):5020.Constant Speed (rpm),Run-up Start (rpm):5020.Run-up Start (rpm),Run-up End (rpm):5020.Run-up End (rpm),Run-up Duration (s):5020.Run-up Duration (s)" uid="5020" uid_parent="root"/>
+  <Node _name="Add" inputs="x:5011.value,y:5012.value" outputs="x+y:5022.x+y" uid="5022" uid_parent="root"/>
+  <Constant _name="zero" type="double" value="0" outputs="value:5023.value" uid="5023" uid_parent="root"/>
+  <Node _name="Select" inputs="t:5022.x+y,s:5020.Run-up Enabled,f:5023.value" outputs="s? t\3Af:5024.s? t\3Af" uid="5024" uid_parent="root"/>
+  <Constant _name="one" type="double" value="1" outputs="value:5027.value" uid="5027" uid_parent="root"/>
+  <Node _name="Divide" inputs="x:5011.value,y:5020.Run-up Duration (s)" outputs="x/y:5025.x/y" uid="5025" uid_parent="root"/>
+  <Node _name="Max &amp; Min" inputs="x:5025.x/y,y:5027.value" outputs="max(x\2Cy):,min(x\2Cy):5026.min(x\2Cy)" uid="5026" uid_parent="root"/>
+  <Node _name="Divide" inputs="x:5022.x+y,y:5020.Run-up Duration (s)" outputs="x/y:5028.x/y" uid="5028" uid_parent="root"/>
+  <Node _name="Max &amp; Min" inputs="x:5028.x/y,y:5027.value" outputs="max(x\2Cy):,min(x\2Cy):5029.min(x\2Cy)" uid="5029" uid_parent="root"/>
+  <Node _name="Subtract" inputs="x:5020.Run-up End (rpm),y:5020.Run-up Start (rpm)" outputs="x-y:5030.x-y" uid="5030" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:5030.x-y,y:5026.min(x\2Cy)" outputs="x*y:5031.x*y" uid="5031" uid_parent="root"/>
+  <Node _name="Add" inputs="x:5020.Run-up Start (rpm),y:5031.x*y" outputs="x+y:5032.x+y" uid="5032" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:5030.x-y,y:5029.min(x\2Cy)" outputs="x*y:5033.x*y" uid="5033" uid_parent="root"/>
+  <Node _name="Add" inputs="x:5020.Run-up Start (rpm),y:5033.x*y" outputs="x+y:5034.x+y" uid="5034" uid_parent="root"/>
+  <Node _name="Select" inputs="t:5032.x+y,s:5020.Run-up Enabled,f:5020.Constant Speed (rpm)" outputs="s? t\3Af:5035.s? t\3Af" uid="5035" uid_parent="root"/>
+  <Node _name="Select" inputs="t:5034.x+y,s:5020.Run-up Enabled,f:5020.Constant Speed (rpm)" outputs="s? t\3Af:5036.s? t\3Af" uid="5036" uid_parent="root"/>
+</VI>

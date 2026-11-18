@@ -1,0 +1,51 @@
+<VI _name="Power Spectrum Measurement.vi" description="Computes the averaged power spectrum of a simulated input signal. This example allows you to specify various averaging modes for your measurement\2C such as RMS averaging\2C vector averaging\2C or peak hold\2C as well as the number of averages. You can observe the influence of these averaging parameters\2C typically on the noise floor\2C and notice that vector averaging requires the use of a trigger in order to lower the noise floor without lowering the fundamental along with it.  You also can specify the type of window to use in this measurement\2C such as a Hanning or Flat Top window.">
+  <Constant _name="dB" type="bool" uid="39" uid_parent="root" value="false" outputs="value:39.value" />
+  <Structure _name="While Loop" uid="590" uid_parent="root" count="" label="Perform Power Spectrum Measurement">
+    <Indicator _name="Power Spectrum" type="cluster{double.f0,double.df,array{double.Numeric}.magnitude}" style="graph21703" uid="5171" uid_parent="590" value="[0,0,[]]" inputs="value:53.Power Spectrum / PSD" />
+    <Control _name="sine frequency" type="double" description="Controls the frequency\2C in Hz\2C of the simulated sine wave." uid="5958" uid_parent="590" value="2409.6320656484827" outputs="value:5958.value" />
+    <Indicator _name="linear averaging done" type="bool" description="&lt;B&gt;averaging done&lt;/B&gt; returns TRUE when the number of &lt;B&gt;averages completed&lt;/B&gt; equals or exceeds the number of averages specified in &lt;B&gt;averaging parameters&lt;/B&gt;. Otherwise\2C &lt;B&gt;averaging done&lt;/B&gt; returns FALSE. &lt;B&gt;averaging done&lt;/B&gt; is always TRUE if the selected &lt;B&gt;averaging mode&lt;/B&gt; is No averaging." uid="5599" uid_parent="590" value="true" inputs="value:53.averaging done" />
+    <Indicator _name="averages completed" type="double" description="&lt;B&gt;averages completed&lt;/B&gt; is the number of averages completed so far." uid="5460" uid_parent="590" value="27" inputs="value:53.averages completed" />
+    <Control _name="restart averaging" type="bool" style="latched" uid="5447" uid_parent="590" value="false" outputs="value:5447.value" />
+    <Control _name="dB" type="bool" uid="5691" uid_parent="590" value="true" outputs="value:5691.value" />
+    <Control _name="Trigger" type="bool" style="latched" uid="1198" uid_parent="590" value="false" outputs="value:1198.value" />
+    <Control _name="sine amplitude" type="double" description="Controls the amplitude\2C in V\2C of the simulated sine wave." uid="318" uid_parent="590" value="1" outputs="value:318.value" />
+    <Constant _name="noise amplitude" type="double" uid="428" uid_parent="590" value="0.001" outputs="value:428.value" />
+    <Control _name="Stop" type="bool" style="latched" uid="948" uid_parent="590" value="false" outputs="value:948.value" />
+    <Constant _name="sampling info" type="cluster{double.Fs,double.#s}" uid="534" uid_parent="590" value="[25600,2048]" outputs="value:534.value" />
+    <Constant _name="millisecond multiple" type="uint32" uid="550" uid_parent="590" value="50" outputs="value:550.value" />
+    <Control _name="window" type="int32" items="Rectangle,Hanning,Hamming,Blackman-Harris,Exact Blackman,Blackman,Flat Top,4 Term B-Harris ,7 Term B-Harris,Low Sidelobe,Blackman Nuttall,Triangle,Bartlett-Hanning,Bohman,Parzen,Welch,Kaiser,Dolph-Chebyshev,Gaussian" style="Ring" uid="5915" uid_parent="590" value="1" outputs="value:5915.value" />
+    <Control _name="averaging parameters" type="cluster{uint16{No averaging,Vector averaging,RMS averaging,Peak hold}.averaging mode,uint16{Linear,Exponential}.weighting mode,uint32.number of averages}" description="&lt;B&gt;averaging parameters&lt;/B&gt; is a cluster that defines how the averaging is computed." uid="5786" uid_parent="590" value="[2,1,10]" outputs="value:5786.value" />
+    <Node _name="Not Equal?" uid="476" uid_parent="590" inputs="y:3790.previous value,x:5691.value" outputs="x != y?:476.x != y?" />
+    <Call uid="646" uid_parent="590" target="NI_MABase.lvlib:Sine Waveform.vi" inputs="offset:,sampling info:534.value,reset signal:1198.value,error in (no error):,phase:,amplitude:318.value,frequency:5958.value" outputs="error out:646.error out,signal out:646.signal out" />
+    <Call uid="685" uid_parent="590" target="NI_MABase.lvlib:Uniform White Noise Waveform.vi" outputs="error out:685.error out,signal out:685.signal out" inputs="sampling info:534.value,reset signal:,error in (no error):,seed:,amplitude:428.value" />
+    <Node _name="Wait (ms)" uid="731" uid_parent="590" inputs="milliseconds to wait:550.value" outputs="millisecond timer value:" />
+    <Structure _name="Case Structure" uid="557" uid_parent="590" selectin="476.x != y?">
+      <Tunnel _id="In1" uid="1132" uid_parent="557" inputs="value:53.Power Spectrum / PSD" />
+      <CaseFrame selector="True" uid="493" uid_parent="557" selectout="">
+        <Tunnel _id="In1" uid="1124" uid_parent="493" outputs="value:" />
+        <Constant _name="Y Scale.Scale Fit" type="uint8" uid="3690" uid_parent="493" value="1" outputs="value:3690.value" />
+        <Node _name="Property Node" uid="444" uid_parent="493" fields="write+Y Scale.Scale Fit" link="Power Spectrum" type="{LV.WaveformGraph}" inputs="error in (no error):,Y Scale.Scale Fit:3690.value" outputs="error out:" />
+      </CaseFrame>
+      <CaseFrame selector="False" uid="568" uid_parent="557" selectout="">
+        <Tunnel _id="In1" uid="1128" uid_parent="568" outputs="value:" />
+      </CaseFrame>
+    </Structure>
+    <Call uid="53" uid_parent="590" adapt="true" instance="NI_MAPro.lvlib:FFT Power Spectrum and PSD for 1 Chan.vi" target="NI_MAPro.lvlib:FFT Power Spectrum and PSD.vi" outputs="error out:53.error out,averages completed:53.averages completed,averaging done:53.averaging done,Power Spectrum / PSD:53.Power Spectrum / PSD" inputs="window parameter:,export mode:,averaging parameters:5786.value,restart averaging (F):5447.value,error in (no error):569.error out,dB On (F):5691.value,window:5915.value,time signal:753.x+y" />
+    <Node _name="Add with Error Terminals" uid="753" uid_parent="590" outputs="x+y:753.x+y,error out:753.error out" inputs="y:685.signal out,x:646.signal out,error in (no error):646.error out" />
+    <Node _name="Merge Errors" uid="569" uid_parent="590" inputs="error in:753.error out,error in:685.error out" outputs="error out:569.error out" />
+    <Node _name="Or" uid="2656" uid_parent="590" outputs="x .or. y?:2656.x .or. y?" inputs="y:948.value,x:53.error out" />
+    <Node _name="Feedback Node" uid="3790" uid_parent="590" inputs="next value:5691.value,initializer:39.value" outputs="previous value:3790.previous value" />
+    <FreeLabel comment="The Feedback Node is used to keep track of the dB value. If the value changes\2C autoscale the Y Axis once by setting the ScaleFit property to &quot;1&quot;. The Power Spectrum cluster is wired to the case structure to ensure the graph has been updated before the Y Axis is autoscaled." uid="291" uid_parent="590" />
+    <FreeLabel comment="Compute and display the averaged power spectrum." uid="517" uid_parent="590" />
+    <FreeLabel comment="Generate a sine wave with noise." uid="518" uid_parent="590" />
+    <Tunnel _id="Out1" uid="1727" uid_parent="590" outputs="value:1727.value" inputs="value:53.error out" />
+    <Condition uid="404" uid_parent="590" value="stop" inputs="value:2656.x .or. y?" />
+  </Structure>
+  <Call uid="810" uid_parent="root" target="Simple Error Handler.vi" inputs="error code (no error\3A0):,error source (&quot; &quot;):,type of dialog (OK msg\3A1):,error in (no error):1727.value" outputs="error?:,code out:,source out:,error out:,message:" />
+</VI>
+<?lvmcp pane="4815"?>
+<?lvmcp exec IsReentrant="0" PooledReentrancy="0" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>
+<?lvmcp calllink uid="646" tp="0" path="&lt;vilib&gt;|measure|masignal.llb|Sine Waveform.vi"?>
+<?lvmcp calllink uid="685" tp="0" path="&lt;vilib&gt;|measure|manoise.llb|Uniform White Noise Waveform.vi"?>
+<?lvmcp calllink uid="53" tp="0" path="&lt;vilib&gt;|measure|maspectr.llb|FFT Power Spectrum and PSD for 1 Chan.vi"?>
+<?lvmcp calllink uid="810" tp="0" path="&lt;vilib&gt;|Utility|error.llb|Simple Error Handler.vi"?>

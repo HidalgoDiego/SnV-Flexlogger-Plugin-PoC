@@ -1,0 +1,21 @@
+<VI _name="eDyno Vibration Stats.vi" description="Overall time-domain metrics of one acquired block (g): RMS\2C absolute Peak\2C Crest Factor = Peak/RMS\2C and Kurtosis = mean(x^4)/mean(x^2)^2 (about 3 for Gaussian noise; rises well above 3 with impulsive content such as a bearing defect). Assumes an AC (zero-mean) signal.">
+  <Control _name="Acceleration (g)" conIdx="0" connection="required" type="array{double.g}" value="[]" outputs="value:5010.value" uid="5010" uid_parent="root"/>
+  <Indicator _name="RMS (g)" conIdx="4" connection="recommended" type="double" value="0" inputs="value:5026.sqrt(x)" uid="5011" uid_parent="root"/>
+  <Indicator _name="Peak (g)" conIdx="6" connection="recommended" type="double" value="0" inputs="value:5033.max value" uid="5012" uid_parent="root"/>
+  <Indicator _name="Crest Factor" conIdx="8" connection="recommended" type="double" value="0" inputs="value:5034.x/y" uid="5013" uid_parent="root"/>
+  <Indicator _name="Kurtosis" conIdx="10" connection="recommended" type="double" value="0" inputs="value:5031.x/y" uid="5014" uid_parent="root"/>
+  <Node _name="Square" inputs="x:5010.value" outputs="x^2:5021.x^2" uid="5021" uid_parent="root"/>
+  <Node _name="Add Array Elements" inputs="numeric array:5021.x^2" outputs="sum:5022.sum" uid="5022" uid_parent="root"/>
+  <Node _name="Array Size" inputs="array:5010.value" outputs="size(s):5023.size(s)" uid="5023" uid_parent="root"/>
+  <Node _name="To Double Precision Float" inputs="number:5023.size(s)" outputs="double precision float:5024.double precision float" uid="5024" uid_parent="root"/>
+  <Node _name="Divide" inputs="x:5022.sum,y:5024.double precision float" outputs="x/y:5025.x/y" uid="5025" uid_parent="root"/>
+  <Node _name="Square Root" inputs="x:5025.x/y" outputs="sqrt(x):5026.sqrt(x)" uid="5026" uid_parent="root"/>
+  <Node _name="Square" inputs="x:5021.x^2" outputs="x^2:5027.x^2" uid="5027" uid_parent="root"/>
+  <Node _name="Add Array Elements" inputs="numeric array:5027.x^2" outputs="sum:5028.sum" uid="5028" uid_parent="root"/>
+  <Node _name="Divide" inputs="x:5028.sum,y:5024.double precision float" outputs="x/y:5029.x/y" uid="5029" uid_parent="root"/>
+  <Node _name="Square" inputs="x:5025.x/y" outputs="x^2:5030.x^2" uid="5030" uid_parent="root"/>
+  <Node _name="Divide" inputs="x:5029.x/y,y:5030.x^2" outputs="x/y:5031.x/y" uid="5031" uid_parent="root"/>
+  <Node _name="Absolute Value" inputs="x:5010.value" outputs="abs(x):5032.abs(x)" uid="5032" uid_parent="root"/>
+  <Node _name="Array Max &amp; Min" inputs="array:5032.abs(x)" outputs="max value:5033.max value,max index (indices):,min value:,min index (indices):" uid="5033" uid_parent="root"/>
+  <Node _name="Divide" inputs="x:5033.max value,y:5026.sqrt(x)" outputs="x/y:5034.x/y" uid="5034" uid_parent="root"/>
+</VI>

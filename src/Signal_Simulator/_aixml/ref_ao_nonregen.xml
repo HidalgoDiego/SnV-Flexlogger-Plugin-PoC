@@ -1,0 +1,180 @@
+<VI _name="Voltage (non-regeneration) - Continuous Output.vi" description="This example demonstrates how to continuously generate an analog output waveform by providing new data to the output buffer as the task is running.\0A\0AThis example is useful if you want to generate a non-repeating waveform\2C make updates on-the-fly\2C or generate a frequency that is not an even divide-down of your sample clock. In this example\2C the default frequency value is 17 to demonstrate that non-regenerative output can be used to create a signal with a frequency that is not an even divide-down of your sample clock.">
+  <Constant _name="Sample Mode" type="int32" uid="542" uid_parent="root" items="Finite Samples,Continuous Samples,Hardware Timed Single Point" style="Ring" values="[10178,10123,12522]" value="10123" outputs="value:542.value" />
+  <Indicator _name="Actual Sample Rate" type="double" description="&lt;B&gt;Actual Sample Rate&lt;/B&gt; returns the coerced value of the sample clock.\0A\0AIf using OnboardClock as your Sample Clock Source\2C your hardware will attempt to derive the sample clock from one of its internal timebases.  If it is unable to derive the exact frequency you require\2C the rate will be coerced." uid="1118" uid_parent="root" value="1000" inputs="value:686.Sample Clock\3ARate" />
+  <Control _name="Physical Channel(s)" type="tag{14}" description="&lt;B&gt;Physical Channel(s)&lt;/B&gt; specifies the names of the physical channels to use to create virtual channels. The DAQmx physical channel constant lists all physical channels on devices and modules installed in the system.\0A\0ATo specify a range of physical channels\2C use a colon between two channel numbers or two physical channel names\3A\0A Dev1/ao0\3A3\0A Dev1/ao0\3ADev1/ao3\0A\0AYou can specify channel ranges in reverse order\3A\0A Dev1/ao4\3A0\0A\0AUse commas to separate physical channel names and ranges in a list as follows\3A\0A Dev1/ao0\2C Dev1/ao2\3A3" uid="1132" uid_parent="root" value="Dev1/ao0" outputs="value:1132.value" />
+  <Control _name="Min Voltage" type="double" description="&lt;B&gt;Min Voltage&lt;/B&gt; specifies the minimum value you will generate.\0A\0AThis value is used to help determine the range of the DAC.  The actual range will be coerced to one that your hardware supports.  Refer to your device documentation for a list of available ranges." uid="1599" uid_parent="root" value="-5" outputs="value:1599.value" />
+  <Control _name="Max Voltage" type="double" description="&lt;B&gt;Max Voltage&lt;/B&gt; specifies the maximum value you expect to generate.\0A\0AThis value is used to help determine the range of the DAC.  The actual range will be coerced to one that your hardware supports.  Refer to your device documentation for a list of available ranges." uid="1764" uid_parent="root" value="5" outputs="value:1764.value" />
+  <Control _name="Sample Clock Source" type="tag{13}" description="&lt;B&gt;Sample Clock Source&lt;/B&gt; specifies the source terminal of the Sample Clock.\0A\0ARefer to the Device Routes table in Measurement and Automation Explorer to determine eligible sample clock sources." uid="26" uid_parent="root" value="OnboardClock" outputs="value:26.value" />
+  <Control _name="Sample Rate" type="double" description="&lt;B&gt;Sample Rate&lt;/B&gt; specifies the sampling rate in samples per channel per second. If you use an external source for the Sample Clock\2C set this input to the maximum expected rate of that clock." uid="2889" uid_parent="root" value="1000" outputs="value:2889.value" />
+  <Constant _name="RegenMode" type="int32" uid="1341" uid_parent="root" items="Allow Regeneration,Do Not Allow Regeneration" style="Ring" values="[10097,10158]" value="10158" outputs="value:1341.value" />
+  <Constant _name="type of dialog (OK msg\3A1)" type="uint16" uid="706" uid_parent="root" value="3" outputs="value:706.value" />
+  <Constant _name="element" type="double" uid="1033" uid_parent="root" value="0" outputs="value:1033.value" />
+  <Control _name="Trigger Type" type="uint32{No Trigger,Digital Start,Digital Pause,Digital Reference,Analog Start,Analog Pause,Analog Reference,Time Start}" description="The &lt;B&gt;Trigger Type&lt;/B&gt;  tab control selects which trigger type you wish to use.  Depending on the tab that is currently selected\2C when you run the VI your task will configure the desired trigger type.\0A\0ANote that not all hardware supports triggering--refer to your device documentation for more info." uid="2997" uid_parent="root" value="0" outputs="value:2997.value" />
+  <Call uid="104" uid_parent="root" instance="DAQmx Create Channel (AO-Voltage-Basic).vi" target="DAQmx Create Virtual Channel.vi" outputs="task out:104.task out,error out:104.error out" inputs="task in:,maximum value:1764.value,minimum value:1599.value,output terminal configuration:,physical channels:1132.value,name to assign:,units:,error in:,custom scale name:" />
+  <Call uid="1250" uid_parent="root" adapt="true" instance="DAQmx Timing (Sample Clock).vi" target="DAQmx Timing.vi" outputs="task out:1250.task out,error out:1250.error out" inputs="task/channels in:1209.task out,sample mode:542.value,samples per channel:,rate:2889.value,source:26.value,active edge:,error in:1209.error out" />
+  <Node _name="Property Node" uid="686" uid_parent="root" fields="read+Sample Clock\3ARate" type="{GenClassTag.DAQmx Timing.NIDAQ}" inputs="task out:3087.value,error in (no error):3095.value" outputs="task out:686.task out,error out:686.error out,Sample Clock\3ARate:686.Sample Clock\3ARate" />
+  <Call uid="1554" uid_parent="root" target="DAQmx Clear Task.vi" inputs="task in:592.task out,error in:592.error out" outputs="error out:1554.error out" />
+  <Call uid="578" uid_parent="root" target="Simple Error Handler.vi" inputs="error code (no error\3A0):,error source (&quot; &quot;):,type of dialog (OK msg\3A1):706.value,error in (no error):1554.error out" outputs="error?:,code out:,source out:,error out:,message:" />
+  <Node _name="Property Node" uid="1209" uid_parent="root" fields="write+RegenMode" type="{GenClassTag.DAQmx Write.NIDAQ}" outputs="task out:1209.task out,error out:1209.error out" inputs="task out:104.task out,error in (no error):104.error out,RegenMode:1341.value" />
+  <Structure _name="While Loop" uid="1735" uid_parent="root" count="">
+    <Constant _name="sampling info" type="cluster{double.Fs,double.#s}" uid="4451" uid_parent="1735" value="[1000,1000]" outputs="value:4451.value" />
+    <Control _name="Number of Samples" type="int32" description="&lt;B&gt;Number of Samples&lt;/B&gt; specifies how many samples to write to the output buffer.\0A\0AIf the Number of Samples does not result in a complete period of output waveform\2C the output will have discontinuities since the buffer is re-generated.  If this is an issue\2C you should instead look into using the AO Continuous Non-Regeneration.vi example." uid="1761" uid_parent="1735" value="1000" outputs="value:1761.value" />
+    <Control _name="Output Array" type="array{cluster{uint16.Waveform Type,double.Amplitude,double.Frequency}.Cluster}" description="&lt;B&gt;Output Array&lt;/B&gt; specifies an output waveform for each channel in the task.\0A\0AThe number of channels in the task must be equal to the number of initialized elements in Output Array." uid="946" uid_parent="1735" value="[[0,1,17]]" outputs="value:946.value" />
+    <Indicator _name="Waveform Graph" type="array{doublewaveform.signal out}" description="&lt;B&gt;Waveform Graph&lt;/B&gt; displays the most recent acquired data." style="graph21703" uid="648" uid_parent="1735" value="" inputs="value:783.value" />
+    <Control _name="Stop" type="bool" description="&lt;B&gt;Stop&lt;/B&gt; stops the acquisition.\0A\0AIt is recommended to stop your VI through this stop button so the DAQmx task can be properly cleared." style="latched" uid="23" uid_parent="1735" value="false" outputs="value:23.value" />
+    <Constant type="int32" uid="1590" uid_parent="1735" value="1000" outputs="value:1590.value" />
+    <Node _name="Bundle By Name" uid="635" uid_parent="1735" fields="#s,Fs" inputs="input cluster:4451.value,#s:1025.double precision float,Fs:2192.value" outputs="output cluster:635.output cluster" />
+    <Call uid="1315" uid_parent="1735" instance="DAQmx Write (Analog 1D Wfm NChan NSamp).vi" target="DAQmx Write.vi" inputs="task/channels in:2204.value,auto start:,data:783.value,timeout:,error in:705.value" outputs="task out:1315.task out,number of samples written per channel:,error out:1315.error out" />
+    <Structure _name="For Loop" uid="1911" uid_parent="1735" count="" maxin="" maxout="">
+      <Constant _name="reset signal" type="bool" uid="781" uid_parent="1911" value="true" outputs="value:781.value" />
+      <Call uid="558" uid_parent="1911" target="NI_MABase.lvlib:Basic Function Generator.vi" inputs="offset:,square wave duty cycle (%):,reset signal:781.value,sampling info:4542.value,signal type:2991.Waveform Type,error in (no error):700.value,phase:762.value,amplitude:2991.Amplitude,frequency:2991.Frequency" outputs="error out:558.error out,phase out:558.phase out,signal out:558.signal out" />
+      <Node _name="Unbundle By Name" uid="2991" uid_parent="1911" fields="Waveform Type,Frequency,Amplitude" outputs="Waveform Type:2991.Waveform Type,Frequency:2991.Frequency,Amplitude:2991.Amplitude" inputs="input cluster:2306.value" />
+      <Tunnel _id="In1" uid="4542" uid_parent="1911" mode="index" inputs="value:635.output cluster" outputs="value:4542.value" />
+      <Tunnel _id="In2" uid="2306" uid_parent="1911" mode="index" inputs="value:946.value" outputs="value:2306.value" />
+      <Tunnel _id="Out1" uid="783" uid_parent="1911" mode="index" outputs="value:783.value" inputs="value:558.signal out" />
+      <Tunnel _id="Out2" uid="584" uid_parent="1911" mode="index" outputs="value:584.value" inputs="value:558.phase out" />
+      <Tunnel _id="In3" uid="762" uid_parent="1911" mode="index" inputs="value:611.value" outputs="value:762.value" />
+      <ShiftReg uid="680" uid_parent="1911">
+        <Left uid="700" uid_parent="680" inputs="value:2179.value" outputs="value:700.value" />
+        <Right uid="705" uid_parent="680" outputs="value:705.value" inputs="value:558.error out" />
+      </ShiftReg>
+    </Structure>
+    <Node _name="To Double Precision Float" uid="1025" uid_parent="1735" outputs="double precision float:1025.double precision float" inputs="number:1761.value" />
+    <Structure _name="Case Structure" uid="2418" uid_parent="1735" selectin="2482.First Call?\3A T/F">
+      <Tunnel _id="In1" uid="2458" uid_parent="2418" inputs="value:1315.task out" />
+      <Tunnel _id="In2" uid="2470" uid_parent="2418" inputs="value:1315.error out" />
+      <CaseFrame selector="False" uid="2430" uid_parent="2418" selectout="">
+        <Tunnel _id="In1" uid="2456" uid_parent="2430" outputs="value:2456.value" />
+        <Tunnel _id="In2" uid="2468" uid_parent="2430" outputs="value:2468.value" />
+        <Tunnel _id="Out1" uid="2570" uid_parent="2430" inputs="value:2456.value" />
+        <Tunnel _id="Out2" uid="2632" uid_parent="2430" inputs="value:2468.value" />
+      </CaseFrame>
+      <CaseFrame selector="True" uid="2437" uid_parent="2418" selectout="">
+        <Tunnel _id="In1" uid="2457" uid_parent="2437" outputs="value:2457.value" />
+        <Tunnel _id="In2" uid="2469" uid_parent="2437" outputs="value:2469.value" />
+        <Tunnel _id="Out1" uid="2576" uid_parent="2437" inputs="value:415.task out" />
+        <Tunnel _id="Out2" uid="2639" uid_parent="2437" inputs="value:415.error out" />
+        <Call uid="415" uid_parent="2437" target="DAQmx Start Task.vi" outputs="task out:415.task out,error out:415.error out" inputs="task/channels in:2457.value,error in:2469.value" />
+      </CaseFrame>
+      <Tunnel _id="Out1" uid="2580" uid_parent="2418" outputs="value:2580.value" />
+      <Tunnel _id="Out2" uid="2644" uid_parent="2418" outputs="value:2644.value" />
+    </Structure>
+    <Node _name="First Call?" uid="2482" uid_parent="1735" outputs="First Call?\3A T/F:2482.First Call?\3A T/F" />
+    <Node _name="Unbundle By Name" uid="2543" uid_parent="1735" fields="status" outputs="status:2543.status" inputs="input cluster:2644.value" />
+    <Node _name="Or" uid="3368" uid_parent="1735" inputs="y:23.value,x:2543.status" outputs="x .or. y?:3368.x .or. y?" />
+    <Node _name="Wait (ms)" uid="1212" uid_parent="1735" inputs="milliseconds to wait:1415.x*y" outputs="millisecond timer value:" />
+    <Node _name="Divide" uid="1289" uid_parent="1735" outputs="x/y:1289.x/y" inputs="y:2192.value,x:1025.double precision float" />
+    <Node _name="Multiply" uid="1415" uid_parent="1735" outputs="x*y:1415.x*y" inputs="y:1289.x/y,x:1590.value" />
+    <FreeLabel comment="Pass the phase of each channel to the next loop iteration so that the function generator will generate a continuous waveform" uid="1439" uid_parent="1735" />
+    <Tunnel _id="In1" uid="2179" uid_parent="1735" inputs="value:889.error out" outputs="value:2179.value" />
+    <Tunnel _id="In2" uid="2192" uid_parent="1735" inputs="value:686.Sample Clock\3ARate" outputs="value:2192.value" />
+    <Tunnel _id="In3" uid="2204" uid_parent="1735" inputs="value:889.task out" outputs="value:2204.value" />
+    <Tunnel _id="Out1" uid="2558" uid_parent="1735" outputs="value:2558.value" inputs="value:2580.value" />
+    <Tunnel _id="Out2" uid="2620" uid_parent="1735" outputs="value:2620.value" inputs="value:2644.value" />
+    <ShiftReg uid="582" uid_parent="1735">
+      <Left uid="611" uid_parent="582" inputs="value:952.initialized array" outputs="value:611.value" />
+      <Right uid="623" uid_parent="582" inputs="value:584.value" outputs="value:" />
+    </ShiftReg>
+    <Condition uid="2149" uid_parent="1735" value="stop" inputs="value:3368.x .or. y?" />
+  </Structure>
+  <Call uid="592" uid_parent="root" target="DAQmx Stop Task.vi" inputs="task/channels in:2558.value,error in:2620.value" outputs="task out:592.task out,error out:592.error out" />
+  <Node _name="Property Node" uid="889" uid_parent="root" fields="read+NumChans" type="{GenClassTag.DAQmx Task.NIDAQ}" outputs="task out:889.task out,error out:889.error out,NumChans:889.NumChans" inputs="task out:686.task out,error in (no error):686.error out" />
+  <Node _name="Initialize Array" uid="952" uid_parent="root" inputs="element:1033.value,dimension size:543.32bit integer" outputs="initialized array:952.initialized array" />
+  <Node _name="To Long Integer" uid="543" uid_parent="root" outputs="32bit integer:543.32bit integer" inputs="number:889.NumChans" />
+  <Structure _name="Case Structure" uid="3051" uid_parent="root" selectin="2997.value">
+    <Tunnel _id="In1" uid="3065" uid_parent="3051" inputs="value:1250.task out" />
+    <Tunnel _id="In2" uid="3079" uid_parent="3051" inputs="value:1250.error out" />
+    <CaseFrame selector="&quot;No Trigger&quot;\2C Default" uid="3106" uid_parent="3051" selectout="">
+      <Tunnel _id="In1" uid="3074" uid_parent="3106" outputs="value:3074.value" />
+      <Tunnel _id="In2" uid="3082" uid_parent="3106" outputs="value:3082.value" />
+      <Tunnel _id="Out1" uid="3090" uid_parent="3106" inputs="value:3074.value" />
+      <Tunnel _id="Out2" uid="3098" uid_parent="3106" inputs="value:3082.value" />
+    </CaseFrame>
+    <CaseFrame selector="&quot;Digital Start&quot;" uid="3118" uid_parent="3051" selectout="">
+      <Tunnel _id="In1" uid="3075" uid_parent="3118" outputs="value:3075.value" />
+      <Tunnel _id="In2" uid="3083" uid_parent="3118" outputs="value:3083.value" />
+      <Tunnel _id="Out1" uid="3091" uid_parent="3118" inputs="value:3124.task out" />
+      <Tunnel _id="Out2" uid="3099" uid_parent="3118" inputs="value:3124.error out" />
+      <Control _name="Digital Start Trigger Edge" type="int32" description="&lt;B&gt;Edge&lt;/B&gt; specifies on which edge of the digital signal to start acquiring or generating samples." items="Rising,Falling" style="Ring" values="[10280,10171]" uid="2417" uid_parent="3118" value="10280" outputs="value:2417.value" />
+      <Control _name="Digital Start Trigger Source" type="tag{13}" description="&lt;B&gt;Digital Trigger Source&lt;/B&gt; specifies the name of a terminal where there is a digital signal to use as the source of the trigger.\0A\0ARefer to the Device Routes table in Measurement and Automation Explorer to determine eligible trigger sources." uid="943" uid_parent="3118" value="/Dev1/PFI0" outputs="value:943.value" />
+      <Call uid="3124" uid_parent="3118" instance="DAQmx Start Trigger (Digital Edge).vi" target="DAQmx Trigger.vi" inputs="task/channels in:3075.value,source:943.value,edge:2417.value,error in:3083.value" outputs="task out:3124.task out,error out:3124.error out" />
+    </CaseFrame>
+    <CaseFrame selector="&quot;Time Start&quot;" uid="3550" uid_parent="3051" selectout="">
+      <Tunnel _id="In1" uid="3557" uid_parent="3550" outputs="value:3557.value" />
+      <Tunnel _id="In2" uid="3560" uid_parent="3550" outputs="value:3560.value" />
+      <Tunnel _id="Out1" uid="3563" uid_parent="3550" inputs="value:3622.task out" />
+      <Tunnel _id="Out2" uid="3566" uid_parent="3550" inputs="value:3622.error out" />
+      <Control _name="Select Time&#x0A;Manually" type="bool" uid="1661" uid_parent="3550" value="false" outputs="value:1661.value" />
+      <Constant _name="timescale" type="int32" uid="4064" uid_parent="3550" items="Host Time,I/O Device Time" style="Ring" values="[16126,16127]" value="16126" outputs="value:4064.value" />
+      <Call uid="3622" uid_parent="3550" instance="DAQmx Start Trigger (Time).vi" target="DAQmx Trigger.vi" inputs="task/channels in:3557.value,when:4040.value,timescale:4064.value,error in:3560.value" outputs="task out:3622.task out,error out:3622.error out" />
+      <Structure _name="Case Structure" uid="3803" uid_parent="3550" selectin="1661.value">
+        <CaseFrame selector="False" uid="3811" uid_parent="3803" selectout="">
+          <Tunnel _id="Out1" uid="4032" uid_parent="3811" inputs="value:4146.x+y" />
+          <Constant _name="y" type="double" uid="4234" uid_parent="3811" value="10" outputs="value:4234.value" />
+          <Node _name="Get Date/Time In Seconds" uid="4087" uid_parent="3811" outputs="seconds since 1Jan1904:4087.seconds since 1Jan1904" />
+          <Node _name="Add" uid="4146" uid_parent="3811" inputs="y:4234.value,x:4087.seconds since 1Jan1904" outputs="x+y:4146.x+y" />
+        </CaseFrame>
+        <CaseFrame selector="True" uid="3817" uid_parent="3803" selectout="">
+          <Tunnel _id="Out1" uid="4036" uid_parent="3817" inputs="value:2110.value" />
+          <Control _name="When" type="timestamp" uid="2110" uid_parent="3817" value="" outputs="value:2110.value" />
+        </CaseFrame>
+        <Tunnel _id="Out1" uid="4040" uid_parent="3803" outputs="value:4040.value" />
+      </Structure>
+    </CaseFrame>
+    <CaseFrame selector="&quot;Analog Start&quot;" uid="3249" uid_parent="3051" selectout="">
+      <Tunnel _id="In1" uid="3076" uid_parent="3249" outputs="value:3076.value" />
+      <Tunnel _id="In2" uid="3084" uid_parent="3249" outputs="value:3084.value" />
+      <Tunnel _id="Out1" uid="3092" uid_parent="3249" inputs="value:3315.task out" />
+      <Tunnel _id="Out2" uid="3100" uid_parent="3249" inputs="value:3315.error out" />
+      <Control _name="Analog Start Trigger Slope" type="int32" description="&lt;B&gt;Slope&lt;/B&gt; specifies on which slope of the signal to start acquiring or generating samples when the signal crosses the desired &lt;b&gt;level&lt;/b&gt;." items="Rising,Falling" style="Ring" values="[10280,10171]" uid="2749" uid_parent="3249" value="10280" outputs="value:2749.value" />
+      <Control _name="Analog Start Trigger Hysteresis" type="double" description="&lt;B&gt;Hysteresis&lt;/B&gt; adds a window above or below the trigger level and often is used to reduce false triggering due to noise or jitter in the signal. \0A\0AWhen using hysteresis with a rising slope\2C the trigger asserts when the signal starts below the trigger level minus hysteresis and then crosses above level. The trigger deasserts when the signal crosses below level minus hysteresis." uid="2641" uid_parent="3249" value="0" outputs="value:2641.value" />
+      <Control _name="Analog Start Trigger Level" type="double" description="&lt;B&gt;Level&lt;/B&gt; specifies at what threshold to start acquiring or generating samples. Specify this value in the units of the measurement or generation. Use &lt;b&gt;slope&lt;/b&gt; to specify on which slope to trigger at this threshold." uid="2575" uid_parent="3249" value="0" outputs="value:2575.value" />
+      <Control _name="Analog Start Trigger Source" type="string" description="&lt;B&gt;Analog Trigger Source&lt;/B&gt; is the name of a virtual channel or terminal where there is an analog signal to use as the source of the trigger.\0A\0AIf you specify a virtual channel\2C all values will be in the engineering units (EU) of this virtual channel. If you specify a terminal\2C all values will be in volts (V). \0A\0ANot all hardware supports analog triggering.  Refer to your device documentation for information on valid trigger sources.  \0A\0ASome examples include\3A\0A    APFI0\0A    Dev1/ai0" uid="2492" uid_parent="3249" value="APFI0" outputs="value:2492.value" />
+      <Call uid="3255" uid_parent="3249" instance="DAQmx Start Trigger (Analog Edge).vi" target="DAQmx Trigger.vi" inputs="task/channels in:3076.value,source:2492.value,slope:2749.value,level:2575.value,error in:3084.value" outputs="task out:3255.task out,error out:3255.error out" />
+      <Node _name="Property Node" uid="3315" uid_parent="3249" fields="write+Start\3AAnalog Edge\3AHysteresis" type="{GenClassTag.DAQmx Trigger.NIDAQ}" inputs="task out:3255.task out,error in (no error):3255.error out,Start\3AAnalog Edge\3AHysteresis:2641.value" outputs="task out:3315.task out,error out:3315.error out" />
+    </CaseFrame>
+    <CaseFrame selector="&quot;Digital Pause&quot;" uid="3367" uid_parent="3051" selectout="">
+      <Tunnel _id="In1" uid="3077" uid_parent="3367" outputs="value:3077.value" />
+      <Tunnel _id="In2" uid="3085" uid_parent="3367" outputs="value:3085.value" />
+      <Tunnel _id="Out1" uid="3093" uid_parent="3367" inputs="value:3396.task out" />
+      <Tunnel _id="Out2" uid="3101" uid_parent="3367" inputs="value:3396.error out" />
+      <Constant _name="Pause.TrigType" type="int32" uid="3384" uid_parent="3367" items="Analog Level,Analog Window,Digital Level,Digital Pattern,None" style="Ring" values="[10101,10103,10152,10398,10230]" value="10152" outputs="value:3384.value" />
+      <Control _name="Digital Pause Trigger Source" type="tag{13}" description="&lt;B&gt;Pause Trigger Source&lt;/B&gt; specifies the name of a terminal where there is a digital signal to use as the source of the pause trigger.  While the pause trigger is asserted\2C no sample clock edges will be registered.\0A\0ARefer to the Device Routes table in Measurement and Automation Explorer to determine eligible trigger sources." uid="2842" uid_parent="3367" value="/Dev1/PFI0" outputs="value:2842.value" />
+      <Control _name="Digital Pause Trigger Pause When" type="int32" description="&lt;B&gt;Pause When&lt;/B&gt; specifies the state of the digital line that pauses the acquisition." items="High,Low" style="Ring" values="[10192,10214]" uid="2796" uid_parent="3367" value="10192" outputs="value:2796.value" />
+      <Node _name="Property Node" uid="3396" uid_parent="3367" fields="write+More\3APause\3ATrigger Type,write+More\3APause\3ADigital Level\3ASource,write+More\3APause\3ADigital Level\3APause When" type="{GenClassTag.DAQmx Trigger.NIDAQ}" inputs="task out:3077.value,error in (no error):3085.value,More\3APause\3ATrigger Type:3384.value,More\3APause\3ADigital Level\3ASource:2842.value,More\3APause\3ADigital Level\3APause When:2796.value" outputs="task out:3396.task out,error out:3396.error out" />
+    </CaseFrame>
+    <CaseFrame selector="&quot;Analog Pause&quot;" uid="3452" uid_parent="3051" selectout="">
+      <Tunnel _id="In1" uid="3078" uid_parent="3452" outputs="value:3078.value" />
+      <Tunnel _id="In2" uid="3086" uid_parent="3452" outputs="value:3086.value" />
+      <Tunnel _id="Out1" uid="3094" uid_parent="3452" inputs="value:3471.task out" />
+      <Tunnel _id="Out2" uid="3102" uid_parent="3452" inputs="value:3471.error out" />
+      <Constant _name="Pause.TrigType" type="int32" uid="3461" uid_parent="3452" items="Analog Level,Analog Window,Digital Level,Digital Pattern,None" style="Ring" values="[10101,10103,10152,10398,10230]" value="10101" outputs="value:3461.value" />
+      <Control _name="Analog Pause Trigger Source" type="string" description="&lt;B&gt;Analog Pause Trigger Source&lt;/B&gt; is the name of a virtual channel or terminal where there is an analog signal to use as the source of the pause trigger.\0A\0AIf you specify a virtual channel\2C all values will be in the engineering units (EU) of this virtual channel. If you specify a terminal\2C all values will be in volts (V). \0A\0ANot all hardware supports analog triggering\2C and not all hardware supports pause triggering.  Refer to your device documentation  for information on valid trigger sources.  \0A\0ASome examples include\3A\0A    APFI0\0A    Dev1/ai0" uid="2972" uid_parent="3452" value="APFI0" outputs="value:2972.value" />
+      <Control _name="Analog Pause Trigger Pause When" type="int32" description="&lt;B&gt;Pause When&lt;/B&gt; specifies to pause when the trigger source is above or below a specified level." items="Above Level,Below Level" style="Ring" values="[10093,10107]" uid="2936" uid_parent="3452" value="10093" outputs="value:2936.value" />
+      <Control _name="Analog Pause Trigger Level" type="double" description="&lt;B&gt;Level&lt;/B&gt; specifies the threshold at which to pause the task. Specify this value in the units of the measurement or generation. Use &lt;b&gt;pause when&lt;/b&gt; to specify whether the task pauses above or below this threshold." uid="2875" uid_parent="3452" value="0" outputs="value:2875.value" />
+      <Node _name="Property Node" uid="3471" uid_parent="3452" fields="write+More\3APause\3ATrigger Type,write+More\3APause\3AAnalog Level\3ASource,write+More\3APause\3AAnalog Level\3APause When,write+More\3APause\3AAnalog Level\3ALevel" type="{GenClassTag.DAQmx Trigger.NIDAQ}" inputs="task out:3078.value,error in (no error):3086.value,More\3APause\3ATrigger Type:3461.value,More\3APause\3AAnalog Level\3ASource:2972.value,More\3APause\3AAnalog Level\3APause When:2936.value,More\3APause\3AAnalog Level\3ALevel:2875.value" outputs="task out:3471.task out,error out:3471.error out" />
+    </CaseFrame>
+    <Tunnel _id="Out1" uid="3087" uid_parent="3051" outputs="value:3087.value" />
+    <Tunnel _id="Out2" uid="3095" uid_parent="3051" outputs="value:3095.value" />
+  </Structure>
+  <FreeLabel comment="Why is there a Wait (ms)?\0A\0ABecause the cDAQ-918x chassis communicates over Ethernet\2C the host can write data faster than the device can generate it. This causes the Ethernet buffer to fill ahead of the actual output\2C leading to a delay when the user changes parameters such as amplitude or frequency. Adding a Wait(ms) equal to (Number of Samples / Sample Rate) x 1000 slows the write loop so the buffer does not get too far ahead. This improves update responsiveness\2C but Ethernet latency spikes may still cause issues. The more robust method is to limit DAQmx Write to only two buffer lengths ahead of the actual generation\2C as described in knowledge base \3A\0A\0A  1. Ethernet cDAQ Not Sending On-the-Fly Updates for Analog Output \0A  2. How to Decrease the Update Delay with Analog Output in a cDAQ 9188 " uid="1736" uid_parent="root" />
+  <FreeLabel comment="Trigger Settings" uid="3537" uid_parent="root" />
+  <FreeLabel comment="Not all hardware supports all trigger types.\0ARefer to your device documentation for more information." uid="3050" uid_parent="root" />
+  <FreeLabel comment="Output" uid="1093" uid_parent="root" />
+  <FreeLabel comment="Waveform Settings" uid="1090" uid_parent="root" />
+  <FreeLabel comment="Timing Settings" uid="1089" uid_parent="root" />
+  <FreeLabel comment="Channel Settings" uid="1078" uid_parent="root" />
+</VI>
+<?lvmcp pane="4815"?>
+<?lvmcp exec IsReentrant="0" PooledReentrancy="0" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>
+<?lvmcp calllink uid="104" tp="0" path="&lt;vilib&gt;|DAQmx|create|channels.llb|DAQmx Create Channel (AO-Voltage-Basic).vi"?>
+<?lvmcp calllink uid="1250" tp="0" path="&lt;vilib&gt;|DAQmx|configure|timing.llb|DAQmx Timing (Sample Clock).vi"?>
+<?lvmcp calllink uid="1554" tp="0" path="&lt;vilib&gt;|DAQmx|configure|task.llb|DAQmx Clear Task.vi"?>
+<?lvmcp calllink uid="578" tp="0" path="&lt;vilib&gt;|Utility|error.llb|Simple Error Handler.vi"?>
+<?lvmcp calllink uid="1315" tp="0" path="&lt;vilib&gt;|DAQmx|write.llb|DAQmx Write (Analog 1D Wfm NChan NSamp).vi"?>
+<?lvmcp calllink uid="558" tp="0" path="&lt;vilib&gt;|measure|masignal.llb|Basic Function Generator.vi"?>
+<?lvmcp calllink uid="415" tp="0" path="&lt;vilib&gt;|DAQmx|configure|task.llb|DAQmx Start Task.vi"?>
+<?lvmcp calllink uid="592" tp="0" path="&lt;vilib&gt;|DAQmx|configure|task.llb|DAQmx Stop Task.vi"?>
+<?lvmcp calllink uid="3124" tp="0" path="&lt;vilib&gt;|DAQmx|configure|trigger.llb|DAQmx Start Trigger (Digital Edge).vi"?>
+<?lvmcp calllink uid="3622" tp="0" path="&lt;vilib&gt;|DAQmx|configure|trigger.llb|DAQmx Start Trigger (Time).vi"?>
+<?lvmcp calllink uid="3255" tp="0" path="&lt;vilib&gt;|DAQmx|configure|trigger.llb|DAQmx Start Trigger (Analog Edge).vi"?>

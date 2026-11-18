@@ -1,0 +1,142 @@
+<VI _name="FP Layout Helper.vi" description="Scripting helper (not part of the application). Opens a VI by path and walks its front-panel controls. Read pass (Apply false): returns each control's label\2C position and size. Apply pass: moves each control named in Names to (Left\2C Top)\2C sizes the plot area of each graph named in Graph Names\2C sets its Y-scale name\2C sets the panel window bounds and saves the VI.">
+  <Control _name="vi path" type="string" value="" outputs="value:4201.value" uid="4201" uid_parent="root"/>
+  <Control _name="Apply" type="bool" value="false" outputs="value:4202.value" uid="4202" uid_parent="root"/>
+  <Constant _name="Names" type="array{string.Name}" value="[Device,AO Channel,Sample Rate (S/s),Samples per Block,Sensitivity (mV/g),AO Range (V),Speed Profile,STOP,Shaft Speed (rpm),Simulated Acceleration (g),Fault Injection,Fault Frequencies (Hz),Sim Config]" outputs="value:4203.value" uid="4203" uid_parent="root"/>
+  <Constant _name="Left" type="array{int32.L}" value="[20,20,20,20,20,20,20,20,250,250,1250,1250,1395]" outputs="value:4204.value" uid="4204" uid_parent="root"/>
+  <Constant _name="Top" type="array{int32.T}" value="[20,70,120,170,220,270,335,600,20,75,20,500,20]" outputs="value:4205.value" uid="4205" uid_parent="root"/>
+  <Constant _name="Graph Names" type="array{string.Name}" value="[Simulated Acceleration (g)]" outputs="value:4206.value" uid="4206" uid_parent="root"/>
+  <Constant _name="Plot W" type="array{int32.W}" value="[800]" outputs="value:4207.value" uid="4207" uid_parent="root"/>
+  <Constant _name="Plot H" type="array{int32.H}" value="[600]" outputs="value:4208.value" uid="4208" uid_parent="root"/>
+  <Constant _name="Y Names" type="array{string.Name}" value="[Acceleration (g)]" outputs="value:4209.value" uid="4209" uid_parent="root"/>
+  <Constant _name="Panel Bounds" type="cluster{int32.Left,int32.Top,int32.Right,int32.Bottom}" value="[60,60,1600,860]" outputs="value:4210.value" uid="4210" uid_parent="root"/>
+  <Control _name="error in" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" outputs="value:4211.value" uid="4211" uid_parent="root"/>
+
+  <Node _name="String To Path" inputs="string:4201.value" outputs="path:4215.path" uid="4215" uid_parent="root"/>
+  <Node _name="Open VI Reference" inputs="vi path:4215.path,error in (no error):4211.value" outputs="vi reference:4216.vi,error out:4216.err" uid="4216" uid_parent="root"/>
+  <Node _name="Property Node" fields="read+Front Panel" type="{LV.VI}" inputs="reference:4216.vi,error in (no error):4216.err" outputs="Front Panel:4217.fp,reference out:,error out:4217.err" uid="4217" uid_parent="root"/>
+  <Node _name="Property Node" fields="read+Controls[]" type="{LV.Panel}" inputs="reference:4217.fp,error in (no error):4217.err" outputs="Controls[]:4218.ctrls,reference out:,error out:4218.err" uid="4218" uid_parent="root"/>
+  <Constant _name="graph class" type="ref{LV.WaveformGraph}" value="" outputs="value:4219.value" uid="4219" uid_parent="root"/>
+  <Constant _name="position template" type="cluster{int32.Left,int32.Top}" value="[0,0]" outputs="value:4220.value" uid="4220" uid_parent="root"/>
+  <Constant _name="size template" type="cluster{int32.Width,int32.Height}" value="[0,0]" outputs="value:4221.value" uid="4221" uid_parent="root"/>
+
+  <Structure _name="For Loop" count="" maxin="" maxout="" uid="4300" uid_parent="root">
+    <Tunnel _id="In1" inputs="value:4218.ctrls" mode="index" outputs="value:4301.value" uid="4301" uid_parent="4300"/>
+    <Tunnel _id="In2" inputs="value:4202.value" outputs="value:4302.value" uid="4302" uid_parent="4300"/>
+    <Tunnel _id="In3" inputs="value:4203.value" outputs="value:4303.value" uid="4303" uid_parent="4300"/>
+    <Tunnel _id="In4" inputs="value:4204.value" outputs="value:4304.value" uid="4304" uid_parent="4300"/>
+    <Tunnel _id="In5" inputs="value:4205.value" outputs="value:4305.value" uid="4305" uid_parent="4300"/>
+    <Tunnel _id="In6" inputs="value:4206.value" outputs="value:4306.value" uid="4306" uid_parent="4300"/>
+    <Tunnel _id="In7" inputs="value:4207.value" outputs="value:4307.value" uid="4307" uid_parent="4300"/>
+    <Tunnel _id="In8" inputs="value:4208.value" outputs="value:4308.value" uid="4308" uid_parent="4300"/>
+    <Tunnel _id="In9" inputs="value:4209.value" outputs="value:4309.value" uid="4309" uid_parent="4300"/>
+    <Tunnel _id="In10" inputs="value:4219.value" outputs="value:4310.value" uid="4310" uid_parent="4300"/>
+    <Tunnel _id="In11" inputs="value:4220.value" outputs="value:4311.value" uid="4311" uid_parent="4300"/>
+    <Tunnel _id="In12" inputs="value:4221.value" outputs="value:4312.value" uid="4312" uid_parent="4300"/>
+    <ShiftReg uid="4320" uid_parent="4300">
+      <Left inputs="value:4218.err" outputs="value:4321.value" uid="4321" uid_parent="4320"/>
+      <Right inputs="value:4380.err" outputs="value:4322.final" uid="4322" uid_parent="4320"/>
+    </ShiftReg>
+
+    <Node _name="Property Node" fields="read+Label" type="{LV.Control}" inputs="reference:4301.value,error in (no error):4321.value" outputs="Label:4330.lbl,reference out:,error out:4330.err" uid="4330" uid_parent="4300"/>
+    <Node _name="Property Node" fields="read+Text" type="{LV.Text}" inputs="reference:4330.lbl,error in (no error):4330.err" outputs="Text:4331.txt,reference out:,error out:4331.err" uid="4331" uid_parent="4300"/>
+
+    <Structure _name="Case Structure" selectin="4302.value" uid="4340" uid_parent="4300">
+      <Tunnel _id="In1" inputs="value:4301.value" uid="4341" uid_parent="4340"/>
+      <Tunnel _id="In2" inputs="value:4331.err" uid="4342" uid_parent="4340"/>
+      <Tunnel _id="In3" inputs="value:4331.txt" uid="4343" uid_parent="4340"/>
+      <Tunnel _id="In4" inputs="value:4303.value" uid="4344" uid_parent="4340"/>
+      <Tunnel _id="In5" inputs="value:4304.value" uid="4345" uid_parent="4340"/>
+      <Tunnel _id="In6" inputs="value:4305.value" uid="4346" uid_parent="4340"/>
+      <Tunnel _id="In7" inputs="value:4306.value" uid="4347" uid_parent="4340"/>
+      <Tunnel _id="In8" inputs="value:4307.value" uid="4348" uid_parent="4340"/>
+      <Tunnel _id="In9" inputs="value:4308.value" uid="4349" uid_parent="4340"/>
+      <Tunnel _id="In10" inputs="value:4309.value" uid="4350" uid_parent="4340"/>
+      <Tunnel _id="In11" inputs="value:4310.value" uid="4351" uid_parent="4340"/>
+      <Tunnel _id="In12" inputs="value:4311.value" uid="4352" uid_parent="4340"/>
+      <Tunnel _id="In13" inputs="value:4312.value" uid="4353" uid_parent="4340"/>
+      <CaseFrame selector="True" selectout="" uid="4360" uid_parent="4340">
+        <Tunnel _id="In1" outputs="value:4361.value" uid="4361" uid_parent="4360"/>
+        <Tunnel _id="In2" outputs="value:4362.value" uid="4362" uid_parent="4360"/>
+        <Tunnel _id="In3" outputs="value:4363.value" uid="4363" uid_parent="4360"/>
+        <Tunnel _id="In4" outputs="value:4364.value" uid="4364" uid_parent="4360"/>
+        <Tunnel _id="In5" outputs="value:4365.value" uid="4365" uid_parent="4360"/>
+        <Tunnel _id="In6" outputs="value:4366.value" uid="4366" uid_parent="4360"/>
+        <Tunnel _id="In7" outputs="value:4367.value" uid="4367" uid_parent="4360"/>
+        <Tunnel _id="In8" outputs="value:4368.value" uid="4368" uid_parent="4360"/>
+        <Tunnel _id="In9" outputs="value:4369.value" uid="4369" uid_parent="4360"/>
+        <Tunnel _id="In10" outputs="value:4370.value" uid="4370" uid_parent="4360"/>
+        <Tunnel _id="In11" outputs="value:4371.value" uid="4371" uid_parent="4360"/>
+        <Tunnel _id="In12" outputs="value:4372.value" uid="4372" uid_parent="4360"/>
+        <Tunnel _id="In13" outputs="value:4373.value" uid="4373" uid_parent="4360"/>
+        <Node _name="Search 1D Array" inputs="1D array:4364.value,element:4363.value,start index (0):" outputs="index of element:4374.idx" uid="4374" uid_parent="4360"/>
+        <Node _name="Index Array" inputs="array:4365.value,index:4374.idx" outputs="element:4375.l" uid="4375" uid_parent="4360"/>
+        <Node _name="Index Array" inputs="array:4366.value,index:4374.idx" outputs="element:4376.t" uid="4376" uid_parent="4360"/>
+        <Node _name="Bundle By Name" fields="Left,Top" inputs="Left:4375.l,Top:4376.t,input cluster:4372.value" outputs="output cluster:4377.pos" uid="4377" uid_parent="4360"/>
+        <Node _name="Property Node" fields="write+Position" type="{LV.Control}" inputs="reference:4361.value,error in (no error):4362.value,Position:4377.pos" outputs="reference out:,error out:4378.err" uid="4378" uid_parent="4360"/>
+        <Node _name="Search 1D Array" inputs="1D array:4367.value,element:4363.value,start index (0):" outputs="index of element:4379.idx" uid="4379" uid_parent="4360"/>
+        <Node _name="Index Array" inputs="array:4368.value,index:4379.idx" outputs="element:4381.w" uid="4381" uid_parent="4360"/>
+        <Node _name="Index Array" inputs="array:4369.value,index:4379.idx" outputs="element:4382.h" uid="4382" uid_parent="4360"/>
+        <Node _name="Index Array" inputs="array:4370.value,index:4379.idx" outputs="element:4383.yn" uid="4383" uid_parent="4360"/>
+        <Node _name="Bundle By Name" fields="Width,Height" inputs="Width:4381.w,Height:4382.h,input cluster:4373.value" outputs="output cluster:4384.sz" uid="4384" uid_parent="4360"/>
+        <Node _name="To More Specific Class" inputs="reference:4361.value,error in:,target class:4371.value" outputs="specific class reference:4385.g,error out:4385.err" uid="4385" uid_parent="4360"/>
+        <Constant _name="legend visible" type="bool" value="false" outputs="value:4388.value" uid="4388" uid_parent="4360"/>
+        <Constant _name="x name" type="string" value="Sample # in block" outputs="value:4389.value" uid="4389" uid_parent="4360"/>
+        <Node _name="Property Node" fields="write+Plot Area\3ASize,write+Y Scale.Name Label.Text,write+X Scale.Name Label.Text,write+Legend\3AVisible" type="{LV.WaveformGraph}" inputs="reference:4385.g,error in (no error):4385.err,Plot Area\3ASize:4384.sz,Y Scale.Name Label.Text:4383.yn,X Scale.Name Label.Text:4389.value,Legend\3AVisible:4388.value" outputs="reference out:,error out:" uid="4386" uid_parent="4360"/>
+        <Tunnel _id="Out1" inputs="value:4378.err" uid="4387" uid_parent="4360"/>
+      </CaseFrame>
+      <CaseFrame selector="False" selectout="" uid="4390" uid_parent="4340">
+        <Tunnel _id="In1" outputs="value:" uid="4391" uid_parent="4390"/>
+        <Tunnel _id="In2" outputs="value:4392.value" uid="4392" uid_parent="4390"/>
+        <Tunnel _id="In3" outputs="value:" uid="4393" uid_parent="4390"/>
+        <Tunnel _id="In4" outputs="value:" uid="4394" uid_parent="4390"/>
+        <Tunnel _id="In5" outputs="value:" uid="4395" uid_parent="4390"/>
+        <Tunnel _id="In6" outputs="value:" uid="4396" uid_parent="4390"/>
+        <Tunnel _id="In7" outputs="value:" uid="4397" uid_parent="4390"/>
+        <Tunnel _id="In8" outputs="value:" uid="4398" uid_parent="4390"/>
+        <Tunnel _id="In9" outputs="value:" uid="4399" uid_parent="4390"/>
+        <Tunnel _id="In10" outputs="value:" uid="4400" uid_parent="4390"/>
+        <Tunnel _id="In11" outputs="value:" uid="4401" uid_parent="4390"/>
+        <Tunnel _id="In12" outputs="value:" uid="4402" uid_parent="4390"/>
+        <Tunnel _id="In13" outputs="value:" uid="4403" uid_parent="4390"/>
+        <Tunnel _id="Out1" inputs="value:4392.value" uid="4404" uid_parent="4390"/>
+      </CaseFrame>
+      <Tunnel _id="Out1" outputs="value:4405.err" uid="4405" uid_parent="4340"/>
+    </Structure>
+
+    <Node _name="Property Node" fields="read+Position\3ALeft,read+Position\3ATop,read+Bounds\3AArea Width,read+Bounds\3AArea Height" type="{LV.Control}" inputs="reference:4301.value,error in (no error):4405.err" outputs="Position\3ALeft:4380.l,Position\3ATop:4380.t,Bounds\3AArea Width:4380.w,Bounds\3AArea Height:4380.h,reference out:,error out:4380.err" uid="4380" uid_parent="4300"/>
+    <Tunnel _id="Out1" inputs="value:4331.txt" mode="index" outputs="value:4501.value" uid="4501" uid_parent="4300"/>
+    <Tunnel _id="Out2" inputs="value:4380.l" mode="index" outputs="value:4502.value" uid="4502" uid_parent="4300"/>
+    <Tunnel _id="Out3" inputs="value:4380.t" mode="index" outputs="value:4503.value" uid="4503" uid_parent="4300"/>
+    <Tunnel _id="Out4" inputs="value:4380.w" mode="index" outputs="value:4504.value" uid="4504" uid_parent="4300"/>
+    <Tunnel _id="Out5" inputs="value:4380.h" mode="index" outputs="value:4505.value" uid="4505" uid_parent="4300"/>
+  </Structure>
+
+  <Structure _name="Case Structure" selectin="4202.value" uid="4600" uid_parent="root">
+    <Tunnel _id="In1" inputs="value:4216.vi" uid="4601" uid_parent="4600"/>
+    <Tunnel _id="In2" inputs="value:4322.final" uid="4602" uid_parent="4600"/>
+    <Tunnel _id="In3" inputs="value:4210.value" uid="4603" uid_parent="4600"/>
+    <CaseFrame selector="True" selectout="" uid="4610" uid_parent="4600">
+      <Tunnel _id="In1" outputs="value:4611.value" uid="4611" uid_parent="4610"/>
+      <Tunnel _id="In2" outputs="value:4612.value" uid="4612" uid_parent="4610"/>
+      <Tunnel _id="In3" outputs="value:4613.value" uid="4613" uid_parent="4610"/>
+      <Node _name="Property Node" fields="write+Front Panel Window\3APanel Bounds" type="{LV.VI}" inputs="reference:4611.value,error in (no error):4612.value,Front Panel Window\3APanel Bounds:4613.value" outputs="reference out:,error out:4614.err" uid="4614" uid_parent="4610"/>
+      <Node _name="Invoke Node" target="Save.Instrument" type="{LV.VI}" inputs="reference:4611.value,error in (no error):4614.err,Path to saved file:,Save a Copy:,Without Diagram:" outputs="reference out:,error out:4615.err" uid="4615" uid_parent="4610"/>
+      <Tunnel _id="Out1" inputs="value:4615.err" uid="4616" uid_parent="4610"/>
+    </CaseFrame>
+    <CaseFrame selector="False" selectout="" uid="4620" uid_parent="4600">
+      <Tunnel _id="In1" outputs="value:" uid="4621" uid_parent="4620"/>
+      <Tunnel _id="In2" outputs="value:4622.value" uid="4622" uid_parent="4620"/>
+      <Tunnel _id="In3" outputs="value:" uid="4623" uid_parent="4620"/>
+      <Tunnel _id="Out1" inputs="value:4622.value" uid="4624" uid_parent="4620"/>
+    </CaseFrame>
+    <Tunnel _id="Out1" outputs="value:4630.err" uid="4630" uid_parent="4600"/>
+  </Structure>
+  <Node _name="Close Reference" inputs="reference:4216.vi,error in (no error):4630.err" outputs="error out:4640.err" uid="4640" uid_parent="root"/>
+
+  <Indicator _name="Labels" type="array{string.Label}" value="[]" inputs="value:4501.value" uid="4701" uid_parent="root"/>
+  <Indicator _name="Lefts" type="array{int32.L}" value="[]" inputs="value:4502.value" uid="4702" uid_parent="root"/>
+  <Indicator _name="Tops" type="array{int32.T}" value="[]" inputs="value:4503.value" uid="4703" uid_parent="root"/>
+  <Indicator _name="Widths" type="array{int32.W}" value="[]" inputs="value:4504.value" uid="4704" uid_parent="root"/>
+  <Indicator _name="Heights" type="array{int32.H}" value="[]" inputs="value:4505.value" uid="4705" uid_parent="root"/>
+  <Indicator _name="error out" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" inputs="value:4640.err" uid="4706" uid_parent="root"/>
+</VI>

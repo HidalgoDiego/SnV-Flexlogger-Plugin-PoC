@@ -1,0 +1,102 @@
+<VI _name="eDyno NVH Accel Simulator.vi" description="eDyno NVH accelerometer SIMULATOR - analog output only (PXIe-4468 AO0).\0A\0AContinuously generates\2C with NI-DAQmx and regeneration disabled\2C a voltage that emulates a PCB 356A15 ICP accelerometer (one axis\2C Sensitivity mV/g\2C default 100) on an e-bike drive unit on the eDyno. Acquisition and analysis are deliberately NOT here\3A run them in a separate VI on any AI channel wired to AO0 (with IEPE excitation OFF on that channel - never drive an AO into an IEPE-powered input).\0A\0ASpeed\3A constant\2C or a linear run-up when Speed Profile / Run-up Enabled is ON; every order tracks speed. Switch faults on live in Fault Injection\3A\0A1) Imbalance (1x order\2C grows with rpm^2) / Misalignment (2x order)\0A2) Bearing outer-race defect (impacts at BPFO ringing the housing resonance\3A crest factor and kurtosis rise\2C BPFO-spaced lines around the resonance)\0A3) Motor torque ripple (6 x pole pairs order) and inverter PWM carrier with +/-2fe sidebands.\0A\0AFault Frequencies shows where each fault should appear at the current speed (the answer key for the analysis VI).\0A\0ATiming\3A the AO buffer holds 3 blocks and DAQmx Write blocks when it is full\2C so the loop is paced by the hardware clock and a front-panel change reaches the output within about 3 x (Samples per Block / Sample Rate).">
+  <Control _name="Device" type="string" value="PXI1Slot2" outputs="value:6001.value" uid="6001" uid_parent="root"/>
+  <Control _name="AO Channel" type="string" value="ao0" outputs="value:6002.value" uid="6002" uid_parent="root"/>
+  <Constant _name="slash" type="string" value="/" outputs="value:6004.value" uid="6004" uid_parent="root"/>
+  <Node _name="Concatenate Strings" inputs="string:6001.value,string:6004.value,string:6002.value" outputs="concatenated string:6005.concatenated string" uid="6005" uid_parent="root"/>
+  <Control _name="Sample Rate (S/s)" type="double" value="51200" outputs="value:6007.value" uid="6007" uid_parent="root"/>
+  <Control _name="Samples per Block" type="int32" value="5120" outputs="value:6008.value" uid="6008" uid_parent="root"/>
+  <Control _name="Sensitivity (mV/g)" type="double" value="100" outputs="value:6009.value" uid="6009" uid_parent="root"/>
+  <Control _name="AO Range (V)" type="double" value="10" outputs="value:6010.value" uid="6010" uid_parent="root"/>
+  <Constant _name="3 blocks" type="int32" value="3" outputs="value:6013.value" uid="6013" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:6008.value,y:6013.value" outputs="x*y:6012.x*y" uid="6012" uid_parent="root"/>
+  <Constant _name="no error" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" outputs="value:6015.value" uid="6015" uid_parent="root"/>
+  <Constant _name="mV per V" type="double" value="1000" outputs="value:6016.value" uid="6016" uid_parent="root"/>
+  <Node _name="Divide" inputs="x:6009.value,y:6016.value" outputs="x/y:6017.x/y" uid="6017" uid_parent="root"/>
+  <Node _name="To Double Precision Float" inputs="number:6008.value" outputs="double precision float:6018.double precision float" uid="6018" uid_parent="root"/>
+  <Node _name="Divide" inputs="x:6018.double precision float,y:6007.value" outputs="x/y:6019.x/y" uid="6019" uid_parent="root"/>
+  <Call target="eDyno AO Setup.vi" inputs="AO Physical Channel:6005.concatenated string,AO Range (V):6010.value,Sample Rate (S/s):6007.value,Buffer Samples:6012.x*y,error in:6015.value" outputs="task out:6020.task out,error out:6020.error out" uid="6020" uid_parent="root"/>
+  <Constant _name="initial synth state" type="cluster{double.Shaft Rev,double.Sample Index}" value="[0,0]" outputs="value:6040.value" uid="6040" uid_parent="root"/>
+  <Constant _name="run-up t0 (s)" type="double" value="0" outputs="value:6041.value" uid="6041" uid_parent="root"/>
+
+  <Structure _name="While Loop" count="" uid="7000" uid_parent="root" label="Synthesize block -&gt; scale to V -&gt; AO0 (paced by DAQmx Write)">
+    <Tunnel _id="In1" inputs="value:6020.task out" outputs="value:7101.value" uid="7101" uid_parent="7000"/>
+    <Tunnel _id="In3" inputs="value:6020.error out" outputs="value:7103.value" uid="7103" uid_parent="7000"/>
+    <Tunnel _id="In4" inputs="value:6007.value" outputs="value:7104.value" uid="7104" uid_parent="7000"/>
+    <Tunnel _id="In5" inputs="value:6008.value" outputs="value:7105.value" uid="7105" uid_parent="7000"/>
+    <Tunnel _id="In6" inputs="value:6017.x/y" outputs="value:7106.value" uid="7106" uid_parent="7000"/>
+    <Tunnel _id="In7" inputs="value:6019.x/y" outputs="value:7107.value" uid="7107" uid_parent="7000"/>
+    <ShiftReg uid="7110" uid_parent="7000">
+      <Left inputs="value:6041.value" outputs="value:7111.value" uid="7111" uid_parent="7110"/>
+      <Right inputs="value:7120.t out (s)" outputs="value:" uid="7112" uid_parent="7110"/>
+    </ShiftReg>
+    <ShiftReg uid="7115" uid_parent="7000">
+      <Left inputs="value:6040.value" outputs="value:7116.value" uid="7116" uid_parent="7115"/>
+      <Right inputs="value:7183.value" outputs="value:" uid="7117" uid_parent="7115"/>
+    </ShiftReg>
+    <Control _name="Fault Injection" type="cluster{bool.Imbalance ON,double.Imbalance (g),bool.Misalignment ON,double.Misalignment (g),bool.Bearing BPFO ON,double.Bearing Impact (g),bool.Motor Ripple ON,double.Torque Ripple (g),bool.PWM Noise ON,double.PWM Level (g)}" value="[false,0.5,false,0.2,false,2,false,0.3,false,0.05]" outputs="value:7001.value" uid="7001" uid_parent="7000"/>
+    <Control _name="Sim Config" type="cluster{double.Sample Rate (Hz),double.Ref Speed (rpm),double.Baseline 1x (g),double.Noise Floor (g rms),double.BPFO Order,double.Resonance (Hz),double.Decay (ms),double.Pole Pairs,double.PWM Carrier (Hz)}" value="[51200,3000,0.02,0.01,3.57,3500,0.8,4,16000]" outputs="value:7002.value" uid="7002" uid_parent="7000"/>
+    <Control _name="Speed Profile" type="cluster{bool.Run-up Enabled,double.Constant Speed (rpm),double.Run-up Start (rpm),double.Run-up End (rpm),double.Run-up Duration (s)}" value="[false,3000,500,4500,30]" outputs="value:7003.value" uid="7003" uid_parent="7000"/>
+    <Control _name="STOP" type="bool" style="latched" value="false" outputs="value:7008.value" uid="7008" uid_parent="7000"/>
+    <Call target="eDyno Speed Profile.vi" inputs="Speed Profile:7003.value,t in (s):7111.value,Block Duration (s):7107.value" outputs="rpm start:7120.rpm start,rpm end:7120.rpm end,t out (s):7120.t out (s)" uid="7120" uid_parent="7000"/>
+    <Indicator _name="Shaft Speed (rpm)" type="double" value="0" inputs="value:7120.rpm end" uid="7137" uid_parent="7000"/>
+    <Node _name="Bundle By Name" fields="Sample Rate (Hz)" inputs="Sample Rate (Hz):7104.value,input cluster:7002.value" outputs="output cluster:7140.output cluster" uid="7140" uid_parent="7000"/>
+    <Call target="eDyno Accel Synth.vi" inputs="Fault Injection:7001.value,Sim Config:7140.output cluster,rpm start:7120.rpm start,rpm end:7120.rpm end,Samples:7105.value,State in:7116.value" outputs="Accel (g):7150.Accel (g),Fault Frequencies (Hz):7150.Fault Frequencies (Hz),State out:7150.State out" uid="7150" uid_parent="7000"/>
+    <Indicator _name="Fault Frequencies (Hz)" type="cluster{double.1x Shaft,double.2x Misalign,double.BPFO,double.Torque Ripple,double.PWM Carrier}" value="[0,0,0,0,0]" inputs="value:7150.Fault Frequencies (Hz)" uid="7151" uid_parent="7000"/>
+    <Indicator _name="Simulated Acceleration (g)" type="array{double.g}" style="graph21703" value="[]" inputs="value:7150.Accel (g)" uid="7152" uid_parent="7000"/>
+    <Node _name="Multiply" inputs="x:7150.Accel (g),y:7106.value" outputs="x*y:7154.x*y" uid="7154" uid_parent="7000"/>
+    <Call target="DAQmx Write.vi" instance="DAQmx Write (Analog 1D DBL 1Chan NSamp).vi" inputs="task/channels in:7101.value,data:7154.x*y,auto start:,timeout:,error in:7103.value" outputs="task out:7155.task out,number of samples written per channel:,error out:7155.error out" uid="7155" uid_parent="7000"/>
+    <Node _name="First Call?" outputs="First Call?\3A T/F:7156.First Call?\3A T/F" uid="7156" uid_parent="7000"/>
+    <Structure _name="Case Structure" selectin="7156.First Call?\3A T/F" uid="7160" uid_parent="7000">
+      <Tunnel _id="In1" inputs="value:7155.task out" uid="7161" uid_parent="7160"/>
+      <Tunnel _id="In2" inputs="value:7155.error out" uid="7162" uid_parent="7160"/>
+      <Tunnel _id="In3" inputs="value:7001.value" uid="7163" uid_parent="7160"/>
+      <Tunnel _id="In4" inputs="value:7140.output cluster" uid="7164" uid_parent="7160"/>
+      <Tunnel _id="In5" inputs="value:7120.rpm end" uid="7165" uid_parent="7160"/>
+      <Tunnel _id="In6" inputs="value:7105.value" uid="7166" uid_parent="7160"/>
+      <Tunnel _id="In7" inputs="value:7106.value" uid="7167" uid_parent="7160"/>
+      <Tunnel _id="In8" inputs="value:7150.State out" uid="7168" uid_parent="7160"/>
+      <CaseFrame selector="True" selectout="" label="1st iteration: pre-fill a 2nd block, then start AO" uid="7170" uid_parent="7160">
+        <Tunnel _id="In1" outputs="value:7171.value" uid="7171" uid_parent="7170"/>
+        <Tunnel _id="In2" outputs="value:7172.value" uid="7172" uid_parent="7170"/>
+        <Tunnel _id="In3" outputs="value:7173.value" uid="7173" uid_parent="7170"/>
+        <Tunnel _id="In4" outputs="value:7174.value" uid="7174" uid_parent="7170"/>
+        <Tunnel _id="In5" outputs="value:7175.value" uid="7175" uid_parent="7170"/>
+        <Tunnel _id="In6" outputs="value:7176.value" uid="7176" uid_parent="7170"/>
+        <Tunnel _id="In7" outputs="value:7177.value" uid="7177" uid_parent="7170"/>
+        <Tunnel _id="In8" outputs="value:7178.value" uid="7178" uid_parent="7170"/>
+        <Call target="eDyno Accel Synth.vi" inputs="Fault Injection:7173.value,Sim Config:7174.value,rpm start:7175.value,rpm end:7175.value,Samples:7176.value,State in:7178.value" outputs="Accel (g):7179.Accel (g),Fault Frequencies (Hz):,State out:7179.State out" uid="7179" uid_parent="7170"/>
+        <Node _name="Multiply" inputs="x:7179.Accel (g),y:7177.value" outputs="x*y:7180.x*y" uid="7180" uid_parent="7170"/>
+        <Call target="DAQmx Write.vi" instance="DAQmx Write (Analog 1D DBL 1Chan NSamp).vi" inputs="task/channels in:7171.value,data:7180.x*y,auto start:,timeout:,error in:7172.value" outputs="task out:7181.task out,number of samples written per channel:,error out:7181.error out" uid="7181" uid_parent="7170"/>
+        <Call target="DAQmx Start Task.vi" inputs="task/channels in:7181.task out,error in:7181.error out" outputs="task out:7182.task out,error out:7182.error out" uid="7182" uid_parent="7170"/>
+        <Tunnel _id="Out1" inputs="value:7182.task out" uid="7191" uid_parent="7170"/>
+        <Tunnel _id="Out2" inputs="value:7182.error out" uid="7192" uid_parent="7170"/>
+        <Tunnel _id="Out3" inputs="value:7179.State out" uid="7193" uid_parent="7170"/>
+      </CaseFrame>
+      <CaseFrame selector="False" selectout="" label="AO already running" uid="7200" uid_parent="7160">
+        <Tunnel _id="In1" outputs="value:7201.value" uid="7201" uid_parent="7200"/>
+        <Tunnel _id="In2" outputs="value:7202.value" uid="7202" uid_parent="7200"/>
+        <Tunnel _id="In3" outputs="value:" uid="7203" uid_parent="7200"/>
+        <Tunnel _id="In4" outputs="value:" uid="7204" uid_parent="7200"/>
+        <Tunnel _id="In5" outputs="value:" uid="7205" uid_parent="7200"/>
+        <Tunnel _id="In6" outputs="value:" uid="7206" uid_parent="7200"/>
+        <Tunnel _id="In7" outputs="value:" uid="7207" uid_parent="7200"/>
+        <Tunnel _id="In8" outputs="value:7208.value" uid="7208" uid_parent="7200"/>
+        <Tunnel _id="Out1" inputs="value:7201.value" uid="7211" uid_parent="7200"/>
+        <Tunnel _id="Out2" inputs="value:7202.value" uid="7212" uid_parent="7200"/>
+        <Tunnel _id="Out3" inputs="value:7208.value" uid="7213" uid_parent="7200"/>
+      </CaseFrame>
+      <Tunnel _id="Out1" outputs="value:7184.value" uid="7184" uid_parent="7160"/>
+      <Tunnel _id="Out2" outputs="value:7185.value" uid="7185" uid_parent="7160"/>
+      <Tunnel _id="Out3" outputs="value:7183.value" uid="7183" uid_parent="7160"/>
+    </Structure>
+
+    <Node _name="Or" inputs="x:7185.value,y:7008.value" outputs="x .or. y?:7261.x .or. y?" uid="7261" uid_parent="7000"/>
+    <Condition inputs="value:7261.x .or. y?" value="stop" uid="7262" uid_parent="7000"/>
+    <Tunnel _id="Out1" inputs="value:7184.value" outputs="value:7301.value" uid="7301" uid_parent="7000"/>
+    <Tunnel _id="Out2" inputs="value:7185.value" outputs="value:7303.value" uid="7303" uid_parent="7000"/>
+  </Structure>
+
+  <Call target="DAQmx Stop Task.vi" inputs="task/channels in:7301.value,error in:7303.value" outputs="task out:7310.task out,error out:7310.error out" uid="7310" uid_parent="root"/>
+  <Call target="DAQmx Clear Task.vi" inputs="task in:7310.task out,error in:7310.error out" outputs="error out:7311.error out" uid="7311" uid_parent="root"/>
+  <Call target="Simple Error Handler.vi" inputs="error code (no error\3A0):,error source (&quot; &quot;):,type of dialog (OK msg\3A1):,error in (no error):7311.error out" outputs="error?:,code out:,source out:,error out:,message:" uid="7314" uid_parent="root"/>
+</VI>

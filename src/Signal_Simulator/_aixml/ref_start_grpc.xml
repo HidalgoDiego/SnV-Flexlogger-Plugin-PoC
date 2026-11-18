@@ -1,0 +1,40 @@
+<VI _name="DAQmx Start Task.vi" description="Transitions the task to the running state to begin the measurement or generation. Using this VI is required for some applications and is optional for others.">
+  <Control _name="task/channels in" conIdx="0" connection="required" description="&lt;B>task/channels in&lt;/B> is the name of the task or a list of virtual channels to which the operation applies. If you provide a list of virtual channels\2C NI-DAQmx creates a task automatically." outputs="value:69.value" type="ref{GenClassTag.Task.NIDAQ}" uid="69" uid_parent="root" value=""/>
+  <Control _name="error in" conIdx="11" connection="recommended" description="&lt;B>error in&lt;/B> describes error conditions that occur before this VI or function runs." outputs="value:10.value" type="cluster{bool.status,int32.code,string.source}" uid="10" uid_parent="root" value="[false,0,]"/>
+  <Structure _name="Case Structure" selectin="10.value" uid="124" uid_parent="root">
+    <Tunnel _id="In1" inputs="value:10.value" uid="139" uid_parent="124"/>
+    <Tunnel _id="In2" inputs="value:69.value" uid="164" uid_parent="124"/>
+    <CaseFrame selector="No Error" selectout="" uid="140" uid_parent="124">
+      <FixedConst _name="0STR" outputs="value:260.value" uid="260" uid_parent="140"/>
+      <Tunnel _id="In1" outputs="value:136.value" uid="136" uid_parent="140"/>
+      <Tunnel _id="In2" outputs="value:157.value" uid="157" uid_parent="140"/>
+      <Constant items="start" outputs="value:293.value" style="Ring" type="uint16" uid="293" uid_parent="140" value="0" values="[0]"/>
+      <Node _name="Call Library Function Node" inputs="error in (no error):,taskID:157.value,mode:293.value,extendedErrorInfo:260.value" outputs="error out:,value:266.value,taskID:,mode:,extendedErrorInfo:266.extendedErrorInfo" uid="266" uid_parent="140"/>
+      <Structure _name="Case Structure" selectin="266.value" uid="179" uid_parent="140">
+        <Tunnel _id="In1" inputs="value:266.extendedErrorInfo" uid="185" uid_parent="179"/>
+        <Tunnel _id="In2" inputs="value:136.value" uid="325" uid_parent="179"/>
+        <CaseFrame selector="0" selectout="" uid="196" uid_parent="179">
+          <Tunnel _id="In1" outputs="value:" uid="188" uid_parent="196"/>
+          <Tunnel _id="In2" outputs="value:310.value" uid="310" uid_parent="196"/>
+          <Tunnel _id="Out1" inputs="value:310.value" uid="191" uid_parent="196"/>
+        </CaseFrame>
+        <CaseFrame selector="Default" selectout="197.value" uid="197" uid_parent="179">
+          <Tunnel _id="In1" outputs="value:189.value" uid="189" uid_parent="197"/>
+          <Tunnel _id="In2" outputs="value:319.value" uid="319" uid_parent="197"/>
+          <Call inputs="status code:197.value,extended error info:189.value,error in:319.value,depth:" outputs="error out:199.error out" target="DAQmx Fill In Error Info.vi" uid="199" uid_parent="197"/>
+          <Tunnel _id="Out1" inputs="value:199.error out" uid="192" uid_parent="197"/>
+        </CaseFrame>
+        <Tunnel _id="Out1" outputs="value:182.value" uid="182" uid_parent="179"/>
+      </Structure>
+      <Tunnel _id="Out1" inputs="value:182.value" uid="130" uid_parent="140"/>
+    </CaseFrame>
+    <CaseFrame selector="Error" selectout="" uid="148" uid_parent="124">
+      <Tunnel _id="In1" outputs="value:137.value" uid="137" uid_parent="148"/>
+      <Tunnel _id="In2" outputs="value:" uid="160" uid_parent="148"/>
+      <Tunnel _id="Out1" inputs="value:137.value" uid="138" uid_parent="148"/>
+    </CaseFrame>
+    <Tunnel _id="Out1" outputs="value:127.value" uid="127" uid_parent="124"/>
+  </Structure>
+  <Indicator _name="error out" conIdx="15" connection="recommended" description="&lt;B>error out&lt;/B> contains error information. If &lt;B>error in&lt;/B> indicates that an error occurred before this VI or function ran\2C &lt;B>error out&lt;/B> contains the same error information. Otherwise\2C &lt;B>error out&lt;/B> describes the error status that this VI or function produces." inputs="value:127.value" type="cluster{bool.status,int32.code,string.source}" uid="29" uid_parent="root" value="[false,0,]"/>
+  <Indicator _name="task out" conIdx="4" connection="recommended" description="&lt;B>task out&lt;/B> is a reference to the task after this VI or function runs. If you wired a channel or list of channels to &lt;B>task/channels in&lt;/B>\2C NI-DAQmx creates this task automatically." inputs="value:69.value" type="ref{GenClassTag.Task.NIDAQ}" uid="79" uid_parent="root" value=""/>
+</VI>

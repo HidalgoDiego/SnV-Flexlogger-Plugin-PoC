@@ -1,0 +1,33 @@
+<HTML>
+<HEAD>
+<TITLE>eDyno NVH Accel + RPM Simulator.vi</TITLE>
+<META NAME="Author" CONTENT="">
+<META NAME="GENERATOR" CONTENT="G Development Environment">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<A NAME="eDyno NVH Accel _ RPM Simulator.vi"></A><H2>eDyno NVH Accel + RPM Simulator.vi</H2>
+<P>eDyno NVH simulator for ORDER ANALYSIS - PXIe-4468 AO0 + AO1 in ONE task (the 4468 AO channels share one timing engine, so they cannot run as two separate tasks).</P>
+<P></P>
+<P>AO0 = accelerometer: PCB 356A15 (one axis) at Sensitivity mV/g, with the same speed profile and Fault Injection as eDyno NVH Accel Simulator.vi.</P>
+<P>AO1 = motor-shaft speed reference, phase-locked to AO0 (same shaft phase, same samples):</P>
+<P>- Pulse Tach OFF (default): analog voltage proportional to rpm, Tach Scale V per 1000 rpm (default 1 V/1000 rpm, so 4500 rpm = 4.5 V).</P>
+<P>- Pulse Tach ON: once-per-rev square wave, 0 / Pulse High V (default 5 V), 50 % duty, rising edge at shaft angle 0 - a keyphasor for SVT tach-to-speed conversion (1 pulse/rev).</P>
+<P></P>
+<P>Acquire in a separate VI: AO0 -&gt; an accel AI channel (IEPE OFF, same mV/g), AO1 -&gt; a voltage AI channel (IEPE OFF), both in one AI task so they share the sample clock. Analog mode: rpm = V x 1000 / Tach Scale. Orders are referred to the MOTOR shaft (1x = rpm/60 Hz). Fault Frequencies is the answer key at the current speed.</P>
+<P></P>
+<P>Defaults: run-up 500 -&gt; 4500 rpm over 30 s (Speed Profile / Run-up Enabled), or constant 3000 rpm. Timing: 3-block AO buffer, DAQmx Write paces the loop, the first write auto-starts the task.</P>
+<HR>
+<H3>Connector Pane</H3>
+<P><IMG SRC="eDynoNVHAccelRPMSimulatorc.png" ALT="eDyno NVH Accel + RPM Simulator.vi"></P>
+<HR>
+<H3>Front Panel</H3>
+<P><IMG SRC="eDynoNVHAccelRPMSimulatorp.png" ALT="eDyno NVH Accel + RPM Simulator.vi"></P>
+<HR>
+<H3>Block Diagram</H3>
+<P><IMG SRC="eDynoNVHAccelRPMSimulatord.png" ALT="eDyno NVH Accel + RPM Simulator.vi"></P>
+<HR>
+<H3></H3>
+<Table>
+</Table>
+</BODY>
+</HTML>

@@ -1,0 +1,36 @@
+<HTML>
+<HEAD>
+<TITLE>eDyno NVH Accel Simulator.vi</TITLE>
+<META NAME="Author" CONTENT="">
+<META NAME="GENERATOR" CONTENT="G Development Environment">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<A NAME="eDyno NVH Accel Simulator.vi"></A><H2>eDyno NVH Accel Simulator.vi</H2>
+<P>eDyno NVH accelerometer SIMULATOR - analog output only (PXIe-4468 AO0).</P>
+<P></P>
+<P>Continuously generates, with NI-DAQmx and regeneration disabled, a voltage that emulates a PCB 356A15 ICP accelerometer (one axis, Sensitivity mV/g, default 100) on an e-bike drive unit on the eDyno. Acquisition and analysis are deliberately NOT here: run them in a separate VI on any AI channel wired to AO0 (with IEPE excitation OFF on that channel - never drive an AO into an IEPE-powered input).</P>
+<P></P>
+<P>Speed: constant, or a linear run-up when Speed Profile / Run-up Enabled is ON; every order tracks speed. Switch faults on live in Fault Injection:</P>
+<P>1) Imbalance (1x order, grows with rpm^2) / Misalignment (2x order)</P>
+<P>2) Bearing outer-race defect (impacts at BPFO ringing the housing resonance: crest factor and kurtosis rise, BPFO-spaced lines around the resonance)</P>
+<P>3) Motor torque ripple (6 x pole pairs order) and inverter PWM carrier with +/-2fe sidebands.</P>
+<P></P>
+<P>Fault Frequencies shows where each fault should appear at the current speed (the answer key for the analysis VI).</P>
+<P></P>
+<P>Timing: the AO buffer holds 3 blocks and DAQmx Write blocks when it is full, so the loop is paced by the hardware clock and a front-panel change reaches the output within about 3 x (Samples per Block / Sample Rate).</P>
+<HR>
+<H3>Connector Pane</H3>
+<P><IMG SRC="eDynoNVHAccelSimulatorc.png" ALT="eDyno NVH Accel Simulator.vi"></P>
+<HR>
+<H3>Front Panel</H3>
+<P><IMG SRC="eDynoNVHAccelSimulatorp.png" ALT="eDyno NVH Accel Simulator.vi"></P>
+<HR>
+<H3>Block Diagram</H3>
+<P><IMG SRC="eDynoNVHAccelSimulatord.png" ALT="eDyno NVH Accel Simulator.vi"></P>
+<P><IMG SRC="eDynoNVHAccelSimulatord1.png" ALT="eDyno NVH Accel Simulator.vi"></P>
+<HR>
+<H3></H3>
+<Table>
+</Table>
+</BODY>
+</HTML>

@@ -1,0 +1,147 @@
+<VI _name="eDyno Accel Synth.vi" description="Synthesizes one block of eDyno drivetrain acceleration (g) as seen by a PCB 356A15 ICP accelerometer (one axis) on an e-bike motor housing.\0A\0ASpeed ramps linearly from rpm start to rpm end across the block\2C and every order tracks speed. Shaft phase and the sample counter are kept in uninitialized shift registers\2C so consecutive calls are phase-continuous (non-reentrant on purpose).\0A\0ABaseline: a small 1x residual plus broadband noise. Injectable faults (Fault Injection cluster):\0A- Imbalance: 1x order\2C amplitude scales with (rpm/ref)^2\0A- Misalignment: 2x order\0A- Bearing outer race (BPFO): impacts every 1/(BPFO order x shaft Hz) ringing the housing resonance with exponential decay\0A- Motor torque ripple: 6 x pole-pairs order\0A- Inverter PWM: carrier with sidebands at carrier +/- 2 x electrical frequency\0A\0AFault Frequencies returns the expected frequencies at rpm end\2C for the engineer to check against the spectrum.">
+  <Control _name="Fault Injection" conIdx="0" connection="required" type="cluster{bool.Imbalance ON,double.Imbalance (g),bool.Misalignment ON,double.Misalignment (g),bool.Bearing BPFO ON,double.Bearing Impact (g),bool.Motor Ripple ON,double.Torque Ripple (g),bool.PWM Noise ON,double.PWM Level (g)}" value="[false,0.5,false,0.2,false,2,false,0.3,false,0.05]" outputs="value:10.value" uid="10" uid_parent="root"/>
+  <Control _name="Sim Config" conIdx="5" connection="required" type="cluster{double.Sample Rate (Hz),double.Ref Speed (rpm),double.Baseline 1x (g),double.Noise Floor (g rms),double.BPFO Order,double.Resonance (Hz),double.Decay (ms),double.Pole Pairs,double.PWM Carrier (Hz)}" value="[51200,3000,0.02,0.01,3.57,3500,0.8,4,16000]" outputs="value:11.value" uid="11" uid_parent="root"/>
+  <Control _name="rpm start" conIdx="7" connection="required" type="double" value="3000" outputs="value:12.value" uid="12" uid_parent="root"/>
+  <Control _name="rpm end" conIdx="9" connection="required" type="double" value="3000" outputs="value:13.value" uid="13" uid_parent="root"/>
+  <Control _name="Samples" conIdx="11" connection="required" type="int32" value="5120" outputs="value:14.value" uid="14" uid_parent="root"/>
+  <Indicator _name="Accel (g)" conIdx="4" connection="recommended" type="array{double.Accel}" value="[]" inputs="value:199.value" uid="15" uid_parent="root"/>
+  <Indicator _name="Fault Frequencies (Hz)" conIdx="6" connection="recommended" type="cluster{double.1x Shaft,double.2x Misalign,double.BPFO,double.Torque Ripple,double.PWM Carrier}" value="[0,0,0,0,0]" inputs="value:74.output cluster" uid="16" uid_parent="root"/>
+
+  <Node _name="Unbundle By Name" fields="Imbalance ON,Imbalance (g),Misalignment ON,Misalignment (g),Bearing BPFO ON,Bearing Impact (g),Motor Ripple ON,Torque Ripple (g),PWM Noise ON,PWM Level (g)" inputs="input cluster:10.value" outputs="Imbalance ON:20.Imbalance ON,Imbalance (g):20.Imbalance (g),Misalignment ON:20.Misalignment ON,Misalignment (g):20.Misalignment (g),Bearing BPFO ON:20.Bearing BPFO ON,Bearing Impact (g):20.Bearing Impact (g),Motor Ripple ON:20.Motor Ripple ON,Torque Ripple (g):20.Torque Ripple (g),PWM Noise ON:20.PWM Noise ON,PWM Level (g):20.PWM Level (g)" uid="20" uid_parent="root"/>
+  <Node _name="Unbundle By Name" fields="Sample Rate (Hz),Ref Speed (rpm),Baseline 1x (g),Noise Floor (g rms),BPFO Order,Resonance (Hz),Decay (ms),Pole Pairs,PWM Carrier (Hz)" inputs="input cluster:11.value" outputs="Sample Rate (Hz):21.Sample Rate (Hz),Ref Speed (rpm):21.Ref Speed (rpm),Baseline 1x (g):21.Baseline 1x (g),Noise Floor (g rms):21.Noise Floor (g rms),BPFO Order:21.BPFO Order,Resonance (Hz):21.Resonance (Hz),Decay (ms):21.Decay (ms),Pole Pairs:21.Pole Pairs,PWM Carrier (Hz):21.PWM Carrier (Hz)" uid="21" uid_parent="root"/>
+
+  <Constant _name="zero" type="double" value="0" outputs="value:22.value" uid="22" uid_parent="root"/>
+  <Constant _name="60" type="double" value="60" outputs="value:23.value" uid="23" uid_parent="root"/>
+  <Constant _name="1000" type="double" value="1000" outputs="value:25.value" uid="25" uid_parent="root"/>
+  <Constant _name="6" type="double" value="6" outputs="value:26.value" uid="26" uid_parent="root"/>
+  <Constant _name="2" type="double" value="2" outputs="value:27.value" uid="27" uid_parent="root"/>
+  <Constant _name="sqrt12" type="double" value="3.4641016151377544" outputs="value:28.value" uid="28" uid_parent="root"/>
+
+  <Node _name="Select" inputs="t:20.Imbalance (g),s:20.Imbalance ON,f:22.value" outputs="s? t\3Af:30.s? t\3Af" uid="30" uid_parent="root"/>
+  <Node _name="Select" inputs="t:20.Misalignment (g),s:20.Misalignment ON,f:22.value" outputs="s? t\3Af:31.s? t\3Af" uid="31" uid_parent="root"/>
+  <Node _name="Select" inputs="t:20.Bearing Impact (g),s:20.Bearing BPFO ON,f:22.value" outputs="s? t\3Af:32.s? t\3Af" uid="32" uid_parent="root"/>
+  <Node _name="Select" inputs="t:20.Torque Ripple (g),s:20.Motor Ripple ON,f:22.value" outputs="s? t\3Af:33.s? t\3Af" uid="33" uid_parent="root"/>
+  <Node _name="Select" inputs="t:20.PWM Level (g),s:20.PWM Noise ON,f:22.value" outputs="s? t\3Af:34.s? t\3Af" uid="34" uid_parent="root"/>
+
+  <Node _name="To Double Precision Float" inputs="number:14.value" outputs="double precision float:40.double precision float" uid="40" uid_parent="root"/>
+  <Node _name="Subtract" inputs="x:13.value,y:12.value" outputs="x-y:41.x-y" uid="41" uid_parent="root"/>
+  <Node _name="Divide" inputs="x:41.x-y,y:40.double precision float" outputs="x/y:42.x/y" uid="42" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:21.Sample Rate (Hz),y:23.value" outputs="x*y:43.x*y" uid="43" uid_parent="root"/>
+  <Node _name="Divide" inputs="x:21.Decay (ms),y:25.value" outputs="x/y:44.x/y" uid="44" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:21.Pole Pairs,y:26.value" outputs="x*y:45.x*y" uid="45" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:21.Pole Pairs,y:27.value" outputs="x*y:46.x*y" uid="46" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:21.Noise Floor (g rms),y:28.value" outputs="x*y:47.x*y" uid="47" uid_parent="root"/>
+
+  <Node _name="Divide" inputs="x:13.value,y:23.value" outputs="x/y:70.x/y" uid="70" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:70.x/y,y:27.value" outputs="x*y:71.x*y" uid="71" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:70.x/y,y:21.BPFO Order" outputs="x*y:72.x*y" uid="72" uid_parent="root"/>
+  <Node _name="Multiply" inputs="x:70.x/y,y:45.x*y" outputs="x*y:73.x*y" uid="73" uid_parent="root"/>
+  <Constant _name="freq template" type="cluster{double.1x Shaft,double.2x Misalign,double.BPFO,double.Torque Ripple,double.PWM Carrier}" value="[0,0,0,0,0]" outputs="value:75.value" uid="75" uid_parent="root"/>
+  <Node _name="Bundle By Name" fields="1x Shaft,2x Misalign,BPFO,Torque Ripple,PWM Carrier" inputs="1x Shaft:70.x/y,2x Misalign:71.x*y,BPFO:72.x*y,Torque Ripple:73.x*y,PWM Carrier:21.PWM Carrier (Hz),input cluster:75.value" outputs="output cluster:74.output cluster" uid="74" uid_parent="root"/>
+
+  <Structure _name="For Loop" count="100.value" maxin="14.value" maxout="" uid="100" uid_parent="root" label="Per-sample synthesis">
+    <Tunnel _id="In1" inputs="value:12.value" outputs="value:201.value" uid="201" uid_parent="100"/>
+    <Tunnel _id="In2" inputs="value:42.x/y" outputs="value:202.value" uid="202" uid_parent="100"/>
+    <Tunnel _id="In3" inputs="value:43.x*y" outputs="value:203.value" uid="203" uid_parent="100"/>
+    <Tunnel _id="In4" inputs="value:21.Sample Rate (Hz)" outputs="value:204.value" uid="204" uid_parent="100"/>
+    <Tunnel _id="In5" inputs="value:21.Ref Speed (rpm)" outputs="value:205.value" uid="205" uid_parent="100"/>
+    <Tunnel _id="In6" inputs="value:21.Baseline 1x (g)" outputs="value:206.value" uid="206" uid_parent="100"/>
+    <Tunnel _id="In7" inputs="value:30.s? t\3Af" outputs="value:207.value" uid="207" uid_parent="100"/>
+    <Tunnel _id="In8" inputs="value:31.s? t\3Af" outputs="value:208.value" uid="208" uid_parent="100"/>
+    <Tunnel _id="In9" inputs="value:21.BPFO Order" outputs="value:209.value" uid="209" uid_parent="100"/>
+    <Tunnel _id="In10" inputs="value:44.x/y" outputs="value:210.value" uid="210" uid_parent="100"/>
+    <Tunnel _id="In11" inputs="value:21.Resonance (Hz)" outputs="value:211.value" uid="211" uid_parent="100"/>
+    <Tunnel _id="In12" inputs="value:32.s? t\3Af" outputs="value:212.value" uid="212" uid_parent="100"/>
+    <Tunnel _id="In13" inputs="value:45.x*y" outputs="value:213.value" uid="213" uid_parent="100"/>
+    <Tunnel _id="In14" inputs="value:33.s? t\3Af" outputs="value:214.value" uid="214" uid_parent="100"/>
+    <Tunnel _id="In15" inputs="value:21.PWM Carrier (Hz)" outputs="value:215.value" uid="215" uid_parent="100"/>
+    <Tunnel _id="In16" inputs="value:46.x*y" outputs="value:216.value" uid="216" uid_parent="100"/>
+    <Tunnel _id="In17" inputs="value:34.s? t\3Af" outputs="value:217.value" uid="217" uid_parent="100"/>
+    <Tunnel _id="In18" inputs="value:47.x*y" outputs="value:218.value" uid="218" uid_parent="100"/>
+
+    <ShiftReg uid="300" uid_parent="100">
+      <Left inputs="value:" outputs="value:301.value" uid="301" uid_parent="300"/>
+      <Right inputs="value:105.x+y" outputs="value:" uid="302" uid_parent="300"/>
+    </ShiftReg>
+    <ShiftReg uid="310" uid_parent="100">
+      <Left inputs="value:" outputs="value:311.value" uid="311" uid_parent="310"/>
+      <Right inputs="value:108.x+1" outputs="value:" uid="312" uid_parent="310"/>
+    </ShiftReg>
+
+    <Constant _name="2pi" type="double" value="6.2831853071795862" outputs="value:90.value" uid="90" uid_parent="100"/>
+    <Constant _name="one" type="double" value="1" outputs="value:91.value" uid="91" uid_parent="100"/>
+    <Constant _name="sixty" type="double" value="60" outputs="value:92.value" uid="92" uid_parent="100"/>
+    <Constant _name="imb phase" type="double" value="0.6" outputs="value:93.value" uid="93" uid_parent="100"/>
+    <Constant _name="mis phase" type="double" value="0.9" outputs="value:94.value" uid="94" uid_parent="100"/>
+    <Constant _name="two" type="double" value="2" outputs="value:95.value" uid="95" uid_parent="100"/>
+    <Constant _name="min fB" type="double" value="0.001" outputs="value:96.value" uid="96" uid_parent="100"/>
+    <Constant _name="half" type="double" value="0.5" outputs="value:97.value" uid="97" uid_parent="100"/>
+
+    <Node _name="To Double Precision Float" inputs="number:100.value" outputs="double precision float:101.double precision float" uid="101" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:202.value,y:101.double precision float" outputs="x*y:102.x*y" uid="102" uid_parent="100"/>
+    <Node _name="Add" inputs="x:201.value,y:102.x*y" outputs="x+y:103.x+y" uid="103" uid_parent="100"/>
+    <Node _name="Divide" inputs="x:103.x+y,y:203.value" outputs="x/y:104.x/y" uid="104" uid_parent="100"/>
+    <Node _name="Add" inputs="x:301.value,y:104.x/y" outputs="x+y:105.x+y" uid="105" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:90.value,y:301.value" outputs="x*y:106.x*y" uid="106" uid_parent="100"/>
+    <Node _name="Divide" inputs="x:103.x+y,y:205.value" outputs="x/y:107.x/y" uid="107" uid_parent="100"/>
+    <Node _name="Increment" inputs="x:311.value" outputs="x+1:108.x+1" uid="108" uid_parent="100"/>
+    <Node _name="Divide" inputs="x:311.value,y:204.value" outputs="x/y:109.x/y" uid="109" uid_parent="100"/>
+
+    <Node _name="Sine" inputs="x:106.x*y" outputs="sin(x):120.sin(x)" uid="120" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:206.value,y:120.sin(x)" outputs="x*y:121.x*y" uid="121" uid_parent="100"/>
+
+    <Node _name="Add" inputs="x:106.x*y,y:93.value" outputs="x+y:122.x+y" uid="122" uid_parent="100"/>
+    <Node _name="Sine" inputs="x:122.x+y" outputs="sin(x):123.sin(x)" uid="123" uid_parent="100"/>
+    <Node _name="Square" inputs="x:107.x/y" outputs="x^2:124.x^2" uid="124" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:207.value,y:124.x^2" outputs="x*y:125.x*y" uid="125" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:125.x*y,y:123.sin(x)" outputs="x*y:126.x*y" uid="126" uid_parent="100"/>
+
+    <Node _name="Multiply" inputs="x:106.x*y,y:95.value" outputs="x*y:127.x*y" uid="127" uid_parent="100"/>
+    <Node _name="Add" inputs="x:127.x*y,y:94.value" outputs="x+y:128.x+y" uid="128" uid_parent="100"/>
+    <Node _name="Sine" inputs="x:128.x+y" outputs="sin(x):129.sin(x)" uid="129" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:208.value,y:129.sin(x)" outputs="x*y:130.x*y" uid="130" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:130.x*y,y:107.x/y" outputs="x*y:131.x*y" uid="131" uid_parent="100"/>
+
+    <Node _name="Multiply" inputs="x:301.value,y:209.value" outputs="x*y:132.x*y" uid="132" uid_parent="100"/>
+    <Node _name="Quotient &amp; Remainder" inputs="x:132.x*y,y:91.value" outputs="x-y*floor(x/y):133.x-y*floor(x/y),floor(x/y):" uid="133" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:103.x+y,y:209.value" outputs="x*y:134.x*y" uid="134" uid_parent="100"/>
+    <Node _name="Divide" inputs="x:134.x*y,y:92.value" outputs="x/y:135.x/y" uid="135" uid_parent="100"/>
+    <Node _name="Max &amp; Min" inputs="x:135.x/y,y:96.value" outputs="max(x\2Cy):136.max(x\2Cy),min(x\2Cy):" uid="136" uid_parent="100"/>
+    <Node _name="Divide" inputs="x:133.x-y*floor(x/y),y:136.max(x\2Cy)" outputs="x/y:137.x/y" uid="137" uid_parent="100"/>
+    <Node _name="Divide" inputs="x:137.x/y,y:210.value" outputs="x/y:138.x/y" uid="138" uid_parent="100"/>
+    <Node _name="Negate" inputs="x:138.x/y" outputs="-x:139.-x" uid="139" uid_parent="100"/>
+    <Node _name="Exponential" inputs="x:139.-x" outputs="exp(x):140.exp(x)" uid="140" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:90.value,y:211.value" outputs="x*y:141.x*y" uid="141" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:141.x*y,y:137.x/y" outputs="x*y:142.x*y" uid="142" uid_parent="100"/>
+    <Node _name="Sine" inputs="x:142.x*y" outputs="sin(x):143.sin(x)" uid="143" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:140.exp(x),y:143.sin(x)" outputs="x*y:144.x*y" uid="144" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:144.x*y,y:212.value" outputs="x*y:145.x*y" uid="145" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:145.x*y,y:107.x/y" outputs="x*y:146.x*y" uid="146" uid_parent="100"/>
+
+    <Node _name="Multiply" inputs="x:106.x*y,y:213.value" outputs="x*y:147.x*y" uid="147" uid_parent="100"/>
+    <Node _name="Sine" inputs="x:147.x*y" outputs="sin(x):148.sin(x)" uid="148" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:214.value,y:148.sin(x)" outputs="x*y:149.x*y" uid="149" uid_parent="100"/>
+
+    <Node _name="Multiply" inputs="x:90.value,y:215.value" outputs="x*y:150.x*y" uid="150" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:150.x*y,y:109.x/y" outputs="x*y:151.x*y" uid="151" uid_parent="100"/>
+    <Node _name="Sine" inputs="x:151.x*y" outputs="sin(x):152.sin(x)" uid="152" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:106.x*y,y:216.value" outputs="x*y:153.x*y" uid="153" uid_parent="100"/>
+    <Node _name="Sine &amp; Cosine" inputs="x:153.x*y" outputs="sin(x):,cos(x):154.cos(x)" uid="154" uid_parent="100"/>
+    <Node _name="Add" inputs="x:154.cos(x),y:97.value" outputs="x+y:155.x+y" uid="155" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:152.sin(x),y:155.x+y" outputs="x*y:156.x*y" uid="156" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:156.x*y,y:217.value" outputs="x*y:157.x*y" uid="157" uid_parent="100"/>
+
+    <Node _name="Random Number (0-1)" outputs="number\3A 0 to 1:158.number\3A 0 to 1" uid="158" uid_parent="100"/>
+    <Node _name="Subtract" inputs="x:158.number\3A 0 to 1,y:97.value" outputs="x-y:159.x-y" uid="159" uid_parent="100"/>
+    <Node _name="Multiply" inputs="x:159.x-y,y:218.value" outputs="x*y:160.x*y" uid="160" uid_parent="100"/>
+
+    <Node _name="Add" inputs="x:121.x*y,y:126.x*y" outputs="x+y:161.x+y" uid="161" uid_parent="100"/>
+    <Node _name="Add" inputs="x:161.x+y,y:131.x*y" outputs="x+y:162.x+y" uid="162" uid_parent="100"/>
+    <Node _name="Add" inputs="x:162.x+y,y:146.x*y" outputs="x+y:163.x+y" uid="163" uid_parent="100"/>
+    <Node _name="Add" inputs="x:163.x+y,y:149.x*y" outputs="x+y:164.x+y" uid="164" uid_parent="100"/>
+    <Node _name="Add" inputs="x:164.x+y,y:157.x*y" outputs="x+y:165.x+y" uid="165" uid_parent="100"/>
+    <Node _name="Add" inputs="x:165.x+y,y:160.x*y" outputs="x+y:166.x+y" uid="166" uid_parent="100"/>
+
+    <Tunnel _id="Out1" inputs="value:166.x+y" mode="index" outputs="value:199.value" uid="199" uid_parent="100"/>
+  </Structure>
+</VI>

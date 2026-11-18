@@ -1,0 +1,10 @@
+<VI _name="eDyno Stop and Clear.vi" description="Stops and clears the AO task\2C then the AI task. Runs even after an upstream error so both tasks are always released.">
+  <Control _name="AO task" conIdx="0" connection="required" type="ref{GenClassTag.Task.NIDAQ}" value="" outputs="value:5010.value" uid="5010" uid_parent="root"/>
+  <Control _name="AI task" conIdx="1" connection="required" type="ref{GenClassTag.Task.NIDAQ}" value="" outputs="value:5011.value" uid="5011" uid_parent="root"/>
+  <Control _name="error in" conIdx="5" connection="recommended" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" outputs="value:5012.value" uid="5012" uid_parent="root"/>
+  <Indicator _name="error out" conIdx="19" connection="recommended" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" inputs="value:5023.error out" uid="5013" uid_parent="root"/>
+  <Call target="DAQmx Stop Task.vi" inputs="task/channels in:5010.value,error in:5012.value" outputs="task out:5020.task out,error out:5020.error out" uid="5020" uid_parent="root"/>
+  <Call target="DAQmx Clear Task.vi" inputs="task in:5020.task out,error in:5020.error out" outputs="error out:5021.error out" uid="5021" uid_parent="root"/>
+  <Call target="DAQmx Stop Task.vi" inputs="task/channels in:5011.value,error in:5021.error out" outputs="task out:5022.task out,error out:5022.error out" uid="5022" uid_parent="root"/>
+  <Call target="DAQmx Clear Task.vi" inputs="task in:5022.task out,error in:5022.error out" outputs="error out:5023.error out" uid="5023" uid_parent="root"/>
+</VI>

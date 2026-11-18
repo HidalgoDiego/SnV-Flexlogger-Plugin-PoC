@@ -1,0 +1,14 @@
+<VI _name="FP Snapshot Helper.vi" description="Scripting helper: saves an image of a VI's whole front panel (not only the visible area) to a PNG file.">
+  <Control _name="vi path" type="string" value="" outputs="value:4201.value" uid="4201" uid_parent="root"/>
+  <Control _name="png path" type="string" value="" outputs="value:4202.value" uid="4202" uid_parent="root"/>
+  <Control _name="error in" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" outputs="value:4203.value" uid="4203" uid_parent="root"/>
+  <Node _name="String To Path" inputs="string:4201.value" outputs="path:4210.path" uid="4210" uid_parent="root"/>
+  <Node _name="String To Path" inputs="string:4202.value" outputs="path:4211.path" uid="4211" uid_parent="root"/>
+  <Node _name="Open VI Reference" inputs="vi path:4210.path,error in (no error):4203.value" outputs="vi reference:4212.vi,error out:4212.err" uid="4212" uid_parent="root"/>
+  <Constant _name="visible area only" type="bool" value="false" outputs="value:4213.value" uid="4213" uid_parent="root"/>
+  <Constant _name="image depth" type="int32" value="24" outputs="value:4214.value" uid="4214" uid_parent="root"/>
+  <Node _name="Invoke Node" target="FP.Get Image" type="{LV.VI}" inputs="reference:4212.vi,error in (no error):4212.err,visible area only:4213.value,image depth:4214.value" outputs="reference out:,error out:4215.err,image data:4215.img" uid="4215" uid_parent="root"/>
+  <Call target="Write PNG File.vi" inputs="error in (no error):4215.err,path to PNG file:4211.path,image data:4215.img,compression (default):" outputs="error out:4216.err,path:" uid="4216" uid_parent="root"/>
+  <Node _name="Close Reference" inputs="reference:4212.vi,error in (no error):4216.err" outputs="error out:4217.err" uid="4217" uid_parent="root"/>
+  <Indicator _name="error out" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" inputs="value:4217.err" uid="4218" uid_parent="root"/>
+</VI>
