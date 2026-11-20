@@ -1,0 +1,114 @@
+<VI _name="OrderPowerSpectrum.vi" description="Order power spectrum for the FlexLogger plug-in Process.vi - the shipping example Order Power Spectrum (Analog Tach, DAQmx).vi with the DAQmx Read replaced by Data In.\0AData In = Read 1D Wfm (DBL)_v2 data: element 0 accelerometer (g), element 1 analog pulse tach (V).\0ASteps: OAT Analog Tacho Process -&gt; speed profile; OAT Convert to Even Angle Signal; oax_Compute Order Resolution -&gt; block size; OAT Order Power Spectrum; SVFA Power in Band for each order range (sqrt -&gt; g rms).\0AArray of Waveforms (to Write 1D Wfm, Auto Calculate T0 = TRUE), one 1-point waveform per channel, t0 = block t0, dt = block length: RPM, one order amplitude (g rms) per order range, Spectrum Valid (0 until the first spectrum after reset). Values are held between spectra so every channel is written every block.\0Areset? restarts the tach processing, resampling and averaging - wire TRUE on the first Process call after Configure Session.">
+  <Control uid="101" _name="Data In" type="array{doublewaveform.Waveform}" value="[]" outputs="value:101.value" conIdx="11" connection="required" uid_parent="root" />
+  <Control uid="102" _name="Order Settings" type="cluster{int32.pulses per rev,double.trigger level (V),double.max order,double.order resolution,uint32.window,cluster{uint16{No averaging,Vector averaging,RMS averaging,Peak hold}.averaging mode,uint16{Linear,Exponential}.weighting mode,uint32.number of averages,uint16{One shot,Auto restart}.linear mode}.averaging parameters,array{cluster{double.start,double.stop}.order range}.order ranges}" value="[1,2.5,64,0.1,1,[0,0,1,0],[[0.8,1.2],[1.8,2.2],[3.37,3.77],[3.8,4.2],[23.8,24.2]]]" outputs="value:102.value" conIdx="10" connection="recommended" uid_parent="root" />
+  <Control uid="103" _name="reset? (F)" type="bool" value="false" outputs="value:103.value" conIdx="9" connection="recommended" uid_parent="root" />
+  <Control uid="104" _name="error in (no error)" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" outputs="value:104.value" conIdx="8" connection="recommended" uid_parent="root" />
+  <Node uid="105" _name="Unbundle By Name" fields="pulses per rev,trigger level (V),max order,order resolution,window,averaging parameters,order ranges" inputs="input cluster:102.value" outputs="pulses per rev:105.pulses per rev,trigger level (V):105.trigger level (V),max order:105.max order,order resolution:105.order resolution,window:105.window,averaging parameters:105.averaging parameters,order ranges:105.order ranges" uid_parent="root" />
+  <Node uid="106" _name="Index Array" inputs="array:101.value,index:,index:" outputs="element:106.element0,element:106.element1" uid_parent="root" />
+  <Call uid="107" adapt="true" instance="SoundVib_TachProcess.lvlib:OAT Analog Tacho Process (1 Tacho).vi" target="SoundVib_TachProcess.lvlib:OAT Analog Tacho Process.vi" inputs="analog tacho signal:106.element1,reset? (F):103.value,threshold (auto):105.trigger level (V),pulse/revolution (1):105.pulses per rev,error in (no error):104.value" outputs="speed profile:107.speed profile,error out:107.error out" uid_parent="root" />
+  <Call uid="108" adapt="true" instance="SoundVib_OrderTracking.lvlib:OAT Convert to Even Angle Signal (1 Channel).vi" target="SoundVib_OrderTracking.lvlib:OAT Convert to Even Angle Signal.vi" inputs="scaled signal [EU]:106.element0,speed profile:107.speed profile,pulse/revolution (1):105.pulses per rev,reset? (F):103.value,max order (auto):105.max order,error in (no error):107.error out" outputs="even-angle signal:108.even-angle signal,even-angle channel info:108.even-angle channel info,actual max order:108.actual max order,error out:108.error out" uid_parent="root" />
+  <Constant uid="109" _name="block size" type="int32" value="1" outputs="value:109.value" uid_parent="root" />
+  <Call uid="110" target="oax_Compute Order Resolution.vi" inputs="block size:109.value,order resolution:105.order resolution,actual max order:108.actual max order" outputs="block size out:110.block size out" uid_parent="root" />
+  <Constant uid="111" _name="dB on? (T)" type="bool" value="false" outputs="value:111.value" uid_parent="root" />
+  <Call uid="112" adapt="true" instance="SoundVib_OrderTracking.lvlib:OAT Order Power Spectrum (1 Channel).vi" target="SoundVib_OrderTracking.lvlib:OAT Order Power Spectrum.vi" inputs="even-angle signal:108.even-angle signal,dB on? (T):111.value,even-angle channel info:108.even-angle channel info,window:105.window,block size:110.block size out,error in (no error):108.error out,averaging parameters:105.averaging parameters,restart averaging? (F):103.value" outputs="new spectrum available?:112.new spectrum available?,order power spectrum:112.order power spectrum,spectrum info:112.spectrum info,error out:112.error out" uid_parent="root" />
+  <Structure _name="Case Structure" selectin="112.new spectrum available?" uid="113" uid_parent="root">
+    <Tunnel _id="In1" inputs="value:112.order power spectrum" uid="114" uid_parent="113" />
+    <Tunnel _id="In2" inputs="value:112.spectrum info" uid="115" uid_parent="113" />
+    <Tunnel _id="In3" inputs="value:112.error out" uid="116" uid_parent="113" />
+    <Tunnel _id="In4" inputs="value:105.order ranges" uid="117" uid_parent="113" />
+    <CaseFrame selector="True" selectout="" uid="118" uid_parent="113">
+      <Tunnel uid="119" _id="In1" outputs="value:119.value" uid_parent="118" />
+      <Tunnel uid="120" _id="In2" outputs="value:120.value" uid_parent="118" />
+      <Tunnel uid="121" _id="In3" outputs="value:121.value" uid_parent="118" />
+      <Tunnel uid="122" _id="In4" outputs="value:122.value" uid_parent="118" />
+      <Structure _name="For Loop" count="" maxin="" maxout="" uid="123" uid_parent="118">
+        <Tunnel uid="124" _id="In1" inputs="value:122.value" outputs="value:124.value" mode="index" uid_parent="123" />
+        <Tunnel uid="125" _id="In2" inputs="value:119.value" outputs="value:125.value" uid_parent="123" />
+        <Tunnel uid="126" _id="In3" inputs="value:120.value" outputs="value:126.value" uid_parent="123" />
+        <Tunnel uid="127" _id="In4" inputs="value:121.value" outputs="value:127.value" uid_parent="123" />
+        <Call uid="128" target="SVFA Power in Band (1 Ch).vi" inputs="spectrum:125.value,range:124.value,spectrum info:126.value,error in (no error):127.value" outputs="power in band:128.power in band,error out:128.error out" uid_parent="123" />
+        <Tunnel uid="129" _id="Out1" mode="index" inputs="value:128.power in band" outputs="value:129.value" uid_parent="123" />
+        <Tunnel uid="130" _id="Out2" inputs="value:128.error out" outputs="value:130.value" uid_parent="123" />
+      </Structure>
+      <Node uid="131" _name="Square Root" inputs="x:129.value" outputs="sqrt(x):131.sqrt(x)" uid_parent="118" />
+      <Tunnel _id="Out1" inputs="value:131.sqrt(x)" uid="132" uid_parent="118" />
+      <Tunnel _id="Out2" inputs="value:130.value" uid="133" uid_parent="118" />
+    </CaseFrame>
+    <CaseFrame selector="False" selectout="" uid="134" uid_parent="113">
+      <Tunnel _id="In1" outputs="value:" uid="135" uid_parent="134" />
+      <Tunnel _id="In2" outputs="value:" uid="136" uid_parent="134" />
+      <Tunnel _id="In4" outputs="value:" uid="137" uid_parent="134" />
+      <Tunnel uid="138" _id="In3" outputs="value:138.value" uid_parent="134" />
+      <Constant uid="139" _name="no new amplitudes" type="array{double}" value="[]" outputs="value:139.value" uid_parent="134" />
+      <Tunnel _id="Out1" inputs="value:139.value" uid="140" uid_parent="134" />
+      <Tunnel _id="Out2" inputs="value:138.value" uid="141" uid_parent="134" />
+    </CaseFrame>
+    <Tunnel uid="142" _id="Out1" outputs="value:142.value" uid_parent="113" />
+    <Tunnel uid="143" _id="Out2" outputs="value:143.value" uid_parent="113" />
+  </Structure>
+  <Node uid="144" _name="Unbundle By Name" fields="speed [RPM]" inputs="input cluster:107.speed profile" outputs="speed [RPM]:144.speed [RPM]" uid_parent="root" />
+  <Node uid="145" _name="Array Size" inputs="array:144.speed [RPM]" outputs="size(s):145.size(s)" uid_parent="root" />
+  <Node uid="146" _name="Greater Than 0?" inputs="x:145.size(s)" outputs="x &gt; 0?:146.x &gt; 0?" uid_parent="root" />
+  <Node uid="147" _name="Decrement" inputs="x:145.size(s)" outputs="x-1:147.x-1" uid_parent="root" />
+  <Node uid="148" _name="Index Array" inputs="array:144.speed [RPM],index:147.x-1" outputs="element:148.element" uid_parent="root" />
+  <Node uid="149" _name="Array Size" inputs="array:105.order ranges" outputs="size(s):149.size(s)" uid_parent="root" />
+  <Constant uid="150" _name="zero" type="double" value="0" outputs="value:150.value" uid_parent="root" />
+  <Node uid="151" _name="Initialize Array" inputs="element:150.value,dimension size:149.size(s)" outputs="initialized array:151.initialized array" uid_parent="root" />
+  <Structure _name="While Loop" count="" uid="152" uid_parent="root">
+    <Tunnel uid="153" _id="In1" inputs="value:112.new spectrum available?" outputs="value:153.value" uid_parent="152" />
+    <Tunnel uid="154" _id="In2" inputs="value:142.value" outputs="value:154.value" uid_parent="152" />
+    <Tunnel uid="155" _id="In3" inputs="value:103.value" outputs="value:155.value" uid_parent="152" />
+    <Tunnel uid="156" _id="In4" inputs="value:146.x &gt; 0?" outputs="value:156.value" uid_parent="152" />
+    <Tunnel uid="157" _id="In5" inputs="value:148.element" outputs="value:157.value" uid_parent="152" />
+    <Tunnel uid="158" _id="In6" inputs="value:151.initialized array" outputs="value:158.value" uid_parent="152" />
+    <ShiftReg uid="159" uid_parent="152">
+      <Left uid="160" inputs="value:" outputs="value:159.L" uid_parent="159" />
+      <Right uid="161" inputs="value:170.s? t_f" outputs="value:159.R" uid_parent="159" />
+    </ShiftReg>
+    <ShiftReg uid="162" uid_parent="152">
+      <Left uid="163" inputs="value:" outputs="value:162.L" uid_parent="162" />
+      <Right uid="164" inputs="value:172.s? t_f" outputs="value:162.R" uid_parent="162" />
+    </ShiftReg>
+    <ShiftReg uid="165" uid_parent="152">
+      <Left uid="166" inputs="value:" outputs="value:165.L" uid_parent="165" />
+      <Right uid="167" inputs="value:175.x .or. y?" outputs="value:165.R" uid_parent="165" />
+    </ShiftReg>
+    <Constant uid="168" _name="no speed" type="double" value="0" outputs="value:168.value" uid_parent="152" />
+    <Node uid="169" _name="Select" inputs="t:168.value,s:155.value,f:159.L" outputs="s? t\3Af:169.s? t_f" uid_parent="152" />
+    <Node uid="170" _name="Select" inputs="t:157.value,s:156.value,f:169.s? t_f" outputs="s? t\3Af:170.s? t_f" uid_parent="152" />
+    <Node uid="171" _name="Select" inputs="t:158.value,s:155.value,f:162.L" outputs="s? t\3Af:171.s? t_f" uid_parent="152" />
+    <Node uid="172" _name="Select" inputs="t:154.value,s:153.value,f:171.s? t_f" outputs="s? t\3Af:172.s? t_f" uid_parent="152" />
+    <Node uid="173" _name="Not" inputs="x:155.value" outputs=".not. x?:173..not. x?" uid_parent="152" />
+    <Node uid="174" _name="And" inputs="x:165.L,y:173..not. x?" outputs="x .and. y?:174.x .and. y?" uid_parent="152" />
+    <Node uid="175" _name="Or" inputs="x:153.value,y:174.x .and. y?" outputs="x .or. y?:175.x .or. y?" uid_parent="152" />
+    <Node uid="176" _name="Select" inputs="t:172.s? t_f,s:175.x .or. y?,f:158.value" outputs="s? t\3Af:176.s? t_f" uid_parent="152" />
+    <Constant uid="177" _name="run once" type="bool" value="true" outputs="value:177.value" uid_parent="152" />
+    <Condition value="stop" inputs="value:177.value" uid="178" uid_parent="152" />
+    <Tunnel uid="179" _id="Out1" inputs="value:176.s? t_f" outputs="value:179.value" uid_parent="152" />
+  </Structure>
+  <Constant uid="180" _name="valid" type="double" value="1" outputs="value:180.value" uid_parent="root" />
+  <Constant uid="181" _name="not yet" type="double" value="0" outputs="value:181.value" uid_parent="root" />
+  <Node uid="182" _name="Select" inputs="t:180.value,s:165.R,f:181.value" outputs="s? t\3Af:182.s? t_f" uid_parent="root" />
+  <Node uid="183" _name="Build Array" concat="true" inputs="element:159.R,array:179.value,element:182.s? t_f" outputs="appended array:183.appended array" uid_parent="root" />
+  <Indicator uid="184" _name="Values" type="array{double}" value="[]" inputs="value:183.appended array" conIdx="1" connection="recommended" uid_parent="root" />
+  <Indicator uid="185" _name="order power spectrum" type="cluster{double.order 0,double.delta order,array{double}.magnitude}" value="[0,1,[]]" inputs="value:112.order power spectrum" conIdx="2" connection="recommended" uid_parent="root" />
+  <Node uid="186" _name="Get Waveform Components" fields="t0,dt,Y" inputs="waveform:106.element0" outputs="t0:186.t0,dt:186.dt,Y:186.Y" uid_parent="root" />
+  <Node uid="187" _name="Array Size" inputs="array:186.Y" outputs="size(s):187.size(s)" uid_parent="root" />
+  <Node uid="188" _name="To Double Precision Float" inputs="number:187.size(s)" outputs="double precision float:188.double precision float" uid_parent="root" />
+  <Node uid="189" _name="Multiply" inputs="x:188.double precision float,y:186.dt" outputs="x*y:189.x*y" uid_parent="root" />
+  <Structure _name="For Loop" count="" maxin="" maxout="" uid="190" uid_parent="root">
+    <Tunnel uid="191" _id="In1" inputs="value:183.appended array" outputs="value:191.value" mode="index" uid_parent="190" />
+    <Tunnel uid="192" _id="In2" inputs="value:186.t0" outputs="value:192.value" uid_parent="190" />
+    <Tunnel uid="193" _id="In3" inputs="value:189.x*y" outputs="value:193.value" uid_parent="190" />
+    <Node uid="194" _name="Build Array" inputs="element:191.value" outputs="appended array:194.appended array" uid_parent="190" />
+    <Node uid="195" _name="Build Waveform" fields="t0,dt,Y" inputs="waveform:,t0:192.value,dt:193.value,Y:194.appended array" outputs="output waveform:195.output waveform" uid_parent="190" />
+    <Tunnel uid="196" _id="Out1" mode="index" inputs="value:195.output waveform" outputs="value:196.value" uid_parent="190" />
+  </Structure>
+  <Indicator uid="197" _name="Array of Waveforms" type="array{doublewaveform.Waveform}" value="[]" inputs="value:196.value" conIdx="3" connection="recommended" uid_parent="root" />
+  <Node uid="198" _name="Unbundle By Name" fields="status" inputs="input cluster:143.value" outputs="status:198.status" uid_parent="root" />
+  <Constant uid="199" _name="no error (warnings cleared)" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" outputs="value:199.value" uid_parent="root" />
+  <Node uid="200" _name="Select" inputs="t:143.value,s:198.status,f:199.value" outputs="s? t\3Af:200.s? t_f" uid_parent="root" />
+  <Indicator uid="201" _name="error out" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" inputs="value:200.s? t_f" conIdx="0" connection="recommended" uid_parent="root" />
+</VI>
+<?lvmcp pane="4815"?>
+<?lvmcp exec IsReentrant="1" PooledReentrancy="0" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>

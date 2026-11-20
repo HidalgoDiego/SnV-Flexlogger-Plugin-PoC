@@ -1,0 +1,33 @@
+<HTML>
+<HEAD>
+<TITLE>OT Hold Last Values.vi</TITLE>
+<META NAME="Author" CONTENT="">
+<META NAME="GENERATOR" CONTENT="G Development Environment">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<A NAME="OT Hold Last Values.vi"></A><H2>OT Hold Last Values.vi</H2>
+<P>Sample-and-hold for FlexLogger outputs: remembers the last values between Process calls so the plug-in can write every channel on every block.</P>
+<P></P>
+<P>Why: the S&amp;V order VIs do not deliver a result on every block (the tach needs edges, the order spectrum needs enough revolutions). FlexLogger expects one value per channel per block, so in a block without a new result the previous result is repeated.</P>
+<P></P>
+<P>Rules, checked in this order on every call:</P>
+<P>1. update? TRUE  -&gt; held values = new values (a fresh result always wins, also on the reset call).</P>
+<P>2. reset? TRUE, or the memory does not have the same length as reset values (first call ever, or the number of channels changed) -&gt; held values = reset values.</P>
+<P>3. otherwise -&gt; held values = the values held on the previous call.</P>
+<P></P>
+<P>How: a While Loop that runs exactly once per call. Its shift register is left uninitialized, so it keeps its value from one call to the next - that is the memory.</P>
+<P></P>
+<P>IMPORTANT: this VI must stay PREALLOCATED CLONE REENTRANT. Every place it is called (RPM, order amplitudes, every plug-in channel instance) then gets its own memory. As non-reentrant or shared clones, two callers would overwrite each other's values.</P>
+<HR>
+<H3>Connector Pane</H3>
+<P><IMG SRC="OTHoldLastValuesc.png" ALT="OT Hold Last Values.vi"></P>
+<HR>
+<H3>Front Panel</H3>
+<P><IMG SRC="OTHoldLastValuesp.png" ALT="OT Hold Last Values.vi"></P>
+<HR>
+<H3>Block Diagram</H3>
+<P><IMG SRC="OTHoldLastValuesd.png" ALT="OT Hold Last Values.vi"></P>
+<HR>
+<H3></H3>
+</BODY>
+</HTML>

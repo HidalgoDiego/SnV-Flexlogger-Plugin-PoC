@@ -1,0 +1,51 @@
+<VI _name="eDyno Load Torque.vi" description="PURPOSE\0ASupplies the motor LOAD TORQUE that the eDyno NVH simulator does not produce\2C so the MCU_Status frame (0x300) carries a realistic torque instead of 0. Drop it in the CAN Status Generator Loop and wire Load Torque (Nm) into the Torque (Nm) element of the Status cluster of eDyno CAN Pack Signals.vi (which passes it to eDyno MCU Model.vi). Simple demo model - not a validated vehicle model.\0A\0AINPUTS\0A- Speed (rpm)\3A the simulator's Shaft Speed.\0A- Speed Profile\3A the simulator's Speed Profile cluster (used to know whether a run-up is in progress and how fast it accelerates).\0A- Load Parameters\3A drag and inertia coefficients. Defaults give about 0.2 Nm at standstill and about 0.8 Nm at 4500 rpm (typical e-bike mid-drive motor shaft before the gearbox).\0A\0AOUTPUT\0A- Load Torque (Nm)\3A positive = motoring. Limited to +/- Max Torque (and to the DBC range of MCU_TorqueEst\2C +/-32.767 Nm).\0A\0AEQUATIONS (one labelled frame each on the block diagram)\0A1) T_drag = T0 + k x rpm^2  (rolling + aero-like drag seen by the motor)\0A2) alpha = (Run-up End - Run-up Start)/Run-up Duration x 2pi/60 while a run-up is active and Speed &lt; Run-up End\2C else 0;  T_inertia = J x alpha\0A3) Load Torque = T_drag + T_inertia\2C coerced to +/- Max Torque\0A\0ALIMITATIONS\0ANo regen\2C no gear ratio\2C run-up acceleration assumed linear (matches the simulator's linear run-up). Duration is clamped to at least 0.1 s.">
+  <Control _name="Speed (rpm)" type="double" uid="51" uid_parent="root" value="0" conIdx="0" connection="required" outputs="value:51.value" />
+  <Control _name="Speed Profile" type="cluster{bool.Run-up Enabled,double.Constant Speed (rpm),double.Run-up Start (rpm),double.Run-up End (rpm),double.Run-up Duration (s)}" uid="52" uid_parent="root" value="[false,3000,500,4500,30]" conIdx="5" connection="recommended" outputs="value:52.value" />
+  <Control _name="Load Parameters" type="cluster{double.Base Torque T0 (Nm),double.Drag Coeff k (Nm per rpm2),double.Rotor+Load Inertia J (kg m2),double.Max Torque (Nm)}" uid="53" uid_parent="root" value="[0.2,3E-8,0.0005,30]" conIdx="7" connection="recommended" outputs="value:53.value" />
+  <Indicator _name="Load Torque (Nm)" type="double" uid="61" uid_parent="root" value="0" conIdx="4" connection="recommended" inputs="value:20301.value" />
+  <Node _name="Unbundle By Name" uid="1001" uid_parent="root" fields="Base Torque T0 (Nm),Drag Coeff k (Nm per rpm2),Rotor+Load Inertia J (kg m2),Max Torque (Nm)" inputs="input cluster:53.value" outputs="Base Torque T0 (Nm):1001.Base Torque T0 (Nm),Drag Coeff k (Nm per rpm2):1001.Drag Coeff k (Nm per rpm2),Rotor+Load Inertia J (kg m2):1001.Rotor+Load Inertia J (kg m2),Max Torque (Nm):1001.Max Torque (Nm)" />
+  <Node _name="Unbundle By Name" uid="1002" uid_parent="root" fields="Run-up Enabled,Run-up Start (rpm),Run-up End (rpm),Run-up Duration (s)" inputs="input cluster:52.value" outputs="Run-up Enabled:1002.Run-up Enabled,Run-up Start (rpm):1002.Run-up Start (rpm),Run-up End (rpm):1002.Run-up End (rpm),Run-up Duration (s):1002.Run-up Duration (s)" />
+
+  <Structure _name="Flat Sequence Frame" uid="2000" uid_parent="root" label="1) DRAG LOAD\0AT_drag [Nm] = T0 + k x rpm^2">
+    <Node _name="Square" uid="2010" uid_parent="2000" inputs="x:20001.value" outputs="x^2:2010.x^2" />
+    <Node _name="Multiply" uid="2011" uid_parent="2000" inputs="x:2010.x^2,y:20003.value" outputs="x*y:2011.x*y" />
+    <Node _name="Add" uid="2012" uid_parent="2000" inputs="x:2011.x*y,y:20002.value" outputs="x+y:2012.x+y" />
+    <Tunnel _id="In1" uid="20001" uid_parent="2000" inputs="value:51.value" outputs="value:20001.value" />
+    <Tunnel _id="In2" uid="20002" uid_parent="2000" inputs="value:1001.Base Torque T0 (Nm)" outputs="value:20002.value" />
+    <Tunnel _id="In3" uid="20003" uid_parent="2000" inputs="value:1001.Drag Coeff k (Nm per rpm2)" outputs="value:20003.value" />
+    <Tunnel _id="Out1" uid="20009" uid_parent="2000" outputs="value:20009.value" inputs="value:2012.x+y" />
+  </Structure>
+
+  <Structure _name="Flat Sequence Frame" uid="2100" uid_parent="root" label="2) RUN-UP INERTIA\0Aalpha [rad/s2] = (End - Start) / max(Duration, 0.1 s) x 2pi/60\0Aonly while Run-up Enabled AND Speed &lt; Run-up End, else 0\0AT_inertia [Nm] = J x alpha">
+    <Constant _name="min duration (s)" type="double" uid="2101" uid_parent="2100" value="0.1" outputs="value:2101.value" />
+    <Constant _name="2pi/60 (rad/s per rpm)" type="double" uid="2102" uid_parent="2100" value="0.10471975511965977" outputs="value:2102.value" />
+    <Constant _name="no acceleration" type="double" uid="2103" uid_parent="2100" value="0" outputs="value:2103.value" />
+    <Node _name="Subtract" uid="2110" uid_parent="2100" inputs="x:20103.value,y:20102.value" outputs="x-y:2110.x-y" />
+    <Node _name="Max &amp; Min" uid="2111" uid_parent="2100" inputs="x:20104.value,y:2101.value" outputs="max(x\2Cy):2111.max(x\2Cy),min(x\2Cy):" />
+    <Node _name="Divide" uid="2112" uid_parent="2100" inputs="x:2110.x-y,y:2111.max(x\2Cy)" outputs="x/y:2112.x/y" />
+    <Node _name="Multiply" uid="2113" uid_parent="2100" inputs="x:2112.x/y,y:2102.value" outputs="x*y:2113.x*y" />
+    <Node _name="Less?" uid="2114" uid_parent="2100" inputs="x:20105.value,y:20103.value" outputs="x &lt; y?:2114.x &lt; y?" />
+    <Node _name="And" uid="2115" uid_parent="2100" inputs="x:20101.value,y:2114.x &lt; y?" outputs="x .and. y?:2115.x .and. y?" />
+    <Node _name="Select" uid="2116" uid_parent="2100" inputs="t:2113.x*y,s:2115.x .and. y?,f:2103.value" outputs="s? t\3Af:2116.s? t\3Af" />
+    <Node _name="Multiply" uid="2117" uid_parent="2100" inputs="x:2116.s? t\3Af,y:20106.value" outputs="x*y:2117.x*y" />
+    <Tunnel _id="In1" uid="20101" uid_parent="2100" inputs="value:1002.Run-up Enabled" outputs="value:20101.value" />
+    <Tunnel _id="In2" uid="20102" uid_parent="2100" inputs="value:1002.Run-up Start (rpm)" outputs="value:20102.value" />
+    <Tunnel _id="In3" uid="20103" uid_parent="2100" inputs="value:1002.Run-up End (rpm)" outputs="value:20103.value" />
+    <Tunnel _id="In4" uid="20104" uid_parent="2100" inputs="value:1002.Run-up Duration (s)" outputs="value:20104.value" />
+    <Tunnel _id="In5" uid="20105" uid_parent="2100" inputs="value:51.value" outputs="value:20105.value" />
+    <Tunnel _id="In6" uid="20106" uid_parent="2100" inputs="value:1001.Rotor+Load Inertia J (kg m2)" outputs="value:20106.value" />
+    <Tunnel _id="Out1" uid="20109" uid_parent="2100" outputs="value:20109.value" inputs="value:2117.x*y" />
+  </Structure>
+
+  <Structure _name="Flat Sequence Frame" uid="2200" uid_parent="root" label="3) TOTAL AND LIMIT\0ALoad Torque [Nm] = T_drag + T_inertia\0Acoerced to -Max Torque ... +Max Torque">
+    <Constant _name="minus one" type="double" uid="2201" uid_parent="2200" value="-1" outputs="value:2201.value" />
+    <Node _name="Add" uid="2210" uid_parent="2200" inputs="x:20201.value,y:20202.value" outputs="x+y:2210.x+y" />
+    <Node _name="Multiply" uid="2211" uid_parent="2200" inputs="x:20203.value,y:2201.value" outputs="x*y:2211.x*y" />
+    <Node _name="In Range and Coerce" uid="2212" uid_parent="2200" includeLow="true" includeHigh="true" inputs="upper limit:20203.value,x:2210.x+y,lower limit:2211.x*y" outputs="coerced(x):2212.coerced(x),In Range?:" />
+    <Tunnel _id="In1" uid="20201" uid_parent="2200" inputs="value:20009.value" outputs="value:20201.value" />
+    <Tunnel _id="In2" uid="20202" uid_parent="2200" inputs="value:20109.value" outputs="value:20202.value" />
+    <Tunnel _id="In3" uid="20203" uid_parent="2200" inputs="value:1001.Max Torque (Nm)" outputs="value:20203.value" />
+    <Tunnel _id="Out1" uid="20301" uid_parent="2200" outputs="value:20301.value" inputs="value:2212.coerced(x)" />
+  </Structure>
+  <FreeLabel comment="Output -> Status.Torque (Nm) of eDyno CAN Pack Signals.vi" uid="20990" uid_parent="root" />
+</VI>

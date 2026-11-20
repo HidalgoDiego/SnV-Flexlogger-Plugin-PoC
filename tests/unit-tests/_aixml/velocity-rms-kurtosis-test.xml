@@ -1,0 +1,90 @@
+<VI _name="Unit-Test.lvlib:velocity-rms-kurtosis-test.vi" description="PURPOSE\0AUnit test for the two channels added to PowerSpectrum.vi (Calculations.lvlib)\3A Velocity RMS and Kurtosis. Checks the g-&gt;m/s2 scaling\2C the SVL Integration setup (single integration\2C mm\2C 10 Hz highpass) and the Build Array order.\0A\0AHOW IT WORKS\0A1. Synthesises a continuous-phase sine (Amplitude g pk at Frequency Hz\2C fs = Sample Rate) and cuts it into blocks of Samples per Block\2C like FlexLogger feeds Process.vi.\0A2. Calls PowerSpectrum.vi once per block from ONE call site\2C so the integration filter state carries over between blocks as in the plugin. Early blocks show the highpass start-up transient.\0A3. Reads the LAST TWO waveforms of Array of Waveforms\3A second-to-last = Kurtosis (Kurt)\2C last = Velocity RMS (VelRMS). Matches the Initialize.vi name lists\3A PBand\2C Crest\2C Peak\2C RMS\2C Max\2C Min\2C Max-Min\2C Skew\2C Kurt\2C VelRMS.\0A4. Compares the final block with the theory.\0A\0AEXPECTED (pure sine)\0AVelocity RMS [mm/s] = A x 9806.65 / (2 pi f) / sqrt(2). Default 1 g pk at 159.15 Hz = 6.94 mm/s.\0AKurtosis = 1.5 (sine). Gaussian noise = 3. Impacts &gt; 3.\0A\0AHOW TO USE\0ARun with the defaults. PASS = both checks true.\0A- Velocity 1000x low\3A the g-&gt;mm/s2 multiply is 9.80665 instead of 9806.65 (SVL Integration with length units = mm expects mm/s2 in).\0A- Values swapped\3A Build Array order wrong.\0A- Kurtosis about -1.5\3A the VI reports excess kurtosis.\0AVelocity RMS per Block shows the filter settling. Parameter Count must be 10 (the number of names in Initialize.vi).">
+  <Control uid="101" _name="Frequency (Hz)" type="double" value="159.15" outputs="value:101.value" conIdx="11" connection="recommended" uid_parent="root" />
+  <Control uid="102" _name="Amplitude (g pk)" type="double" value="1" outputs="value:102.value" conIdx="10" connection="recommended" uid_parent="root" />
+  <Control uid="103" _name="Sample Rate (S/s)" type="double" value="51200" outputs="value:103.value" conIdx="9" connection="recommended" uid_parent="root" />
+  <Control uid="104" _name="Samples per Block" type="int32" value="12800" outputs="value:104.value" conIdx="7" connection="recommended" uid_parent="root" />
+  <Control uid="105" _name="Number of Blocks" type="int32" value="8" outputs="value:105.value" conIdx="6" connection="recommended" uid_parent="root" />
+  <Control uid="106" _name="Velocity Tolerance (%)" type="double" value="2" outputs="value:106.value" conIdx="5" connection="recommended" uid_parent="root" />
+  <Control uid="107" _name="Kurtosis Tolerance" type="double" value="0.05" outputs="value:107.value" conIdx="4" connection="recommended" uid_parent="root" />
+  <Control uid="108" _name="error in (no error)" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" outputs="value:108.value" conIdx="8" connection="required" uid_parent="root" />
+  <FreeLabel comment="1) Sine block k\2C continuous phase" uid="109" uid_parent="root" />
+  <FreeLabel comment="2) One call site\3A filter state carries over" uid="110" uid_parent="root" />
+  <FreeLabel comment="3) Last two outputs = Kurt\2C VelRMS" uid="111" uid_parent="root" />
+  <FreeLabel comment="4) Expected = A*9806.65/(2pi f)/sqrt2" uid="112" uid_parent="root" />
+  <Constant uid="113" _name="one" type="double" value="1" outputs="value:113.value" uid_parent="root" />
+  <Node uid="114" _name="Divide" inputs="x:113.value,y:103.value" outputs="x/y:114.x/y" uid_parent="root" />
+  <Constant uid="115" _name="2 pi" type="double" value="6.283185307179586" outputs="value:115.value" uid_parent="root" />
+  <Node uid="116" _name="Multiply" inputs="x:101.value,y:115.value" outputs="x*y:116.x*y" uid_parent="root" />
+  <Node uid="117" _name="Divide" inputs="x:116.x*y,y:103.value" outputs="x/y:117.x/y" uid_parent="root" />
+  <Structure _name="For Loop" count="118.value" maxin="105.value" maxout="" uid="118" uid_parent="root">
+    <ShiftReg uid="119" uid_parent="118">
+      <Left uid="120" inputs="value:108.value" outputs="value:119.left" uid_parent="119" />
+      <Right uid="121" inputs="value:140.error out" outputs="value:119.rout" uid_parent="119" />
+    </ShiftReg>
+    <Tunnel uid="122" _id="In1" inputs="value:104.value" outputs="value:122.value" uid_parent="118" />
+    <Tunnel uid="123" _id="In2" inputs="value:117.x/y" outputs="value:123.value" uid_parent="118" />
+    <Tunnel uid="124" _id="In3" inputs="value:102.value" outputs="value:124.value" uid_parent="118" />
+    <Tunnel uid="125" _id="In4" inputs="value:114.x/y" outputs="value:125.value" uid_parent="118" />
+    <Node uid="126" _name="Multiply" inputs="x:118.value,y:122.value" outputs="x*y:126.x*y" uid_parent="118" />
+    <Structure _name="For Loop" count="127.value" maxin="122.value" maxout="" uid="127" uid_parent="118">
+      <Tunnel uid="128" _id="In1" inputs="value:126.x*y" outputs="value:128.value" uid_parent="127" />
+      <Tunnel uid="129" _id="In2" inputs="value:123.value" outputs="value:129.value" uid_parent="127" />
+      <Tunnel uid="130" _id="In3" inputs="value:124.value" outputs="value:130.value" uid_parent="127" />
+      <Node uid="131" _name="Add" inputs="x:128.value,y:127.value" outputs="x+y:131.x+y" uid_parent="127" />
+      <Node uid="132" _name="To Double Precision Float" inputs="number:131.x+y" outputs="double precision float:132.double precision float" uid_parent="127" />
+      <Node uid="133" _name="Multiply" inputs="x:132.double precision float,y:129.value" outputs="x*y:133.x*y" uid_parent="127" />
+      <Node uid="134" _name="Sine" inputs="x:133.x*y" outputs="sin(x):134.sin(x)" uid_parent="127" />
+      <Node uid="135" _name="Multiply" inputs="x:134.sin(x),y:130.value" outputs="x*y:135.x*y" uid_parent="127" />
+      <Tunnel uid="136" _id="Out1" inputs="value:135.x*y" outputs="value:136.value" mode="index" uid_parent="127" />
+    </Structure>
+    <Node uid="137" _name="To Double Precision Float" inputs="number:126.x*y" outputs="double precision float:137.double precision float" uid_parent="118" />
+    <Node uid="138" _name="Multiply" inputs="x:137.double precision float,y:125.value" outputs="x*y:138.x*y" uid_parent="118" />
+    <Node uid="139" _name="To Time Stamp" inputs="number:138.x*y" outputs="Time Stamp:139.Time Stamp" uid_parent="118" />
+    <Node uid="141" _name="Build Waveform" fields="t0,dt,Y" inputs="waveform:,t0:139.Time Stamp,dt:125.value,Y:136.value" outputs="output waveform:141.output waveform" uid_parent="118" />
+    <Call uid="140" target="Calculations.lvlib\3APowerSpectrum.vi" inputs="Data In:141.output waveform,error in (no error):119.left" outputs="Array of Waveforms:140.Array of Waveforms,error out:140.error out" uid_parent="118" />
+    <Node uid="142" _name="Array Size" inputs="array:140.Array of Waveforms" outputs="size(s):142.size(s)" uid_parent="118" />
+    <Constant uid="143" _name="two" type="int32" value="2" outputs="value:143.value" uid_parent="118" />
+    <Node uid="145" _name="Subtract" inputs="x:142.size(s),y:143.value" outputs="x-y:145.x-y" uid_parent="118" />
+    <Node uid="146" _name="Decrement" inputs="x:142.size(s)" outputs="x-1:146.x-1" uid_parent="118" />
+    <Node uid="147" _name="Index Array" inputs="array:140.Array of Waveforms,index:145.x-y,index:146.x-1" outputs="element:147.element,element:147.element2" uid_parent="118" />
+    <Node uid="148" _name="Get Waveform Components" fields="Y" inputs="waveform:147.element" outputs="Y:148.Y" uid_parent="118" />
+    <Node uid="149" _name="Get Waveform Components" fields="Y" inputs="waveform:147.element2" outputs="Y:149.Y" uid_parent="118" />
+    <Constant uid="150" _name="first" type="int32" value="0" outputs="value:150.value" uid_parent="118" />
+    <Node uid="151" _name="Index Array" inputs="array:148.Y,index:150.value" outputs="element:151.element" uid_parent="118" />
+    <Node uid="152" _name="Index Array" inputs="array:149.Y,index:150.value" outputs="element:152.element" uid_parent="118" />
+    <Tunnel uid="153" _id="Out1" inputs="value:152.element" outputs="value:153.value" mode="index" uid_parent="118" />
+    <Tunnel uid="154" _id="Out2" inputs="value:151.element" outputs="value:154.value" mode="index" uid_parent="118" />
+    <Tunnel uid="155" _id="Out3" inputs="value:142.size(s)" outputs="value:155.value" uid_parent="118" />
+  </Structure>
+  <Node uid="156" _name="Decrement" inputs="x:105.value" outputs="x-1:156.x-1" uid_parent="root" />
+  <Node uid="157" _name="Index Array" inputs="array:153.value,index:156.x-1" outputs="element:157.element" uid_parent="root" />
+  <Node uid="158" _name="Index Array" inputs="array:154.value,index:156.x-1" outputs="element:158.element" uid_parent="root" />
+  <Constant uid="159" _name="g to mm/s2" type="double" value="9806.65" outputs="value:159.value" uid_parent="root" />
+  <Constant uid="160" _name="sqrt2" type="double" value="1.4142135623730951" outputs="value:160.value" uid_parent="root" />
+  <Node uid="161" _name="Multiply" inputs="x:102.value,y:159.value" outputs="x*y:161.x*y" uid_parent="root" />
+  <Node uid="162" _name="Multiply" inputs="x:116.x*y,y:160.value" outputs="x*y:162.x*y" uid_parent="root" />
+  <Node uid="163" _name="Divide" inputs="x:161.x*y,y:162.x*y" outputs="x/y:163.x/y" uid_parent="root" />
+  <Node uid="164" _name="Subtract" inputs="x:157.element,y:163.x/y" outputs="x-y:164.x-y" uid_parent="root" />
+  <Node uid="165" _name="Divide" inputs="x:164.x-y,y:163.x/y" outputs="x/y:165.x/y" uid_parent="root" />
+  <Constant uid="166" _name="percent" type="double" value="100" outputs="value:166.value" uid_parent="root" />
+  <Node uid="167" _name="Multiply" inputs="x:165.x/y,y:166.value" outputs="x*y:167.x*y" uid_parent="root" />
+  <Node uid="168" _name="Absolute Value" inputs="x:167.x*y" outputs="abs(x):168.abs(x)" uid_parent="root" />
+  <Node uid="169" _name="Less?" inputs="x:168.abs(x),y:106.value" outputs="x &lt; y?:169.x &lt; y?" uid_parent="root" />
+  <Constant uid="170" _name="sine kurtosis" type="double" value="1.5" outputs="value:170.value" uid_parent="root" />
+  <Node uid="171" _name="Subtract" inputs="x:158.element,y:170.value" outputs="x-y:171.x-y" uid_parent="root" />
+  <Node uid="172" _name="Absolute Value" inputs="x:171.x-y" outputs="abs(x):172.abs(x)" uid_parent="root" />
+  <Node uid="173" _name="Less?" inputs="x:172.abs(x),y:107.value" outputs="x &lt; y?:173.x &lt; y?" uid_parent="root" />
+  <Node uid="174" _name="And" inputs="x:169.x &lt; y?,y:173.x &lt; y?" outputs="x .and. y?:174.x .and. y?" uid_parent="root" />
+  <Indicator uid="175" _name="PASS" type="bool" value="false" inputs="value:174.x .and. y?" conIdx="3" connection="recommended" uid_parent="root" />
+  <Indicator uid="176" _name="Velocity RMS (mm/s)" type="double" value="0" inputs="value:157.element" conIdx="2" connection="recommended" uid_parent="root" />
+  <Indicator uid="177" _name="Expected Velocity RMS (mm/s)" type="double" value="0" inputs="value:163.x/y" conIdx="1" connection="recommended" uid_parent="root" />
+  <Indicator uid="178" _name="Velocity Error (%)" type="double" value="0" inputs="value:167.x*y" uid_parent="root" />
+  <Indicator uid="179" _name="Velocity PASS" type="bool" value="false" inputs="value:169.x &lt; y?" uid_parent="root" />
+  <Indicator uid="180" _name="Kurtosis" type="double" value="0" inputs="value:158.element" uid_parent="root" />
+  <Indicator uid="181" _name="Kurtosis PASS" type="bool" value="false" inputs="value:173.x &lt; y?" uid_parent="root" />
+  <Indicator uid="182" _name="Velocity RMS per Block" type="array{double}" value="[]" inputs="value:153.value" uid_parent="root" />
+  <Indicator uid="183" _name="Kurtosis per Block" type="array{double}" value="[]" inputs="value:154.value" uid_parent="root" />
+  <Indicator uid="184" _name="Parameter Count" type="int32" value="0" inputs="value:155.value" uid_parent="root" />
+  <Indicator uid="185" _name="error out" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" inputs="value:119.rout" conIdx="0" connection="recommended" uid_parent="root" />
+</VI>
+<?lvmcp pane="4815"?>

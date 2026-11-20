@@ -1,0 +1,63 @@
+<VI _name="OA Speed Estimate.vi" description="Order Analysis helper. Takes the speed points of OAT Analog Tacho Process for this block and returns RPM at the block centre (last speed point extrapolated with the slope of the last two points, clamped at 0), RPM Rate (rpm/s, slope over &gt;= 0.5 s), speed OK (tach alive AND RPM &gt;= Min Valid RPM) and became valid (rising edge of speed OK). Tach alive = last speed point younger than max(4 pulse periods, 1 s). Keeps its history in Order State (class data), no hidden state.">
+  <Control uid="101" _name="speed profile" type="cluster{array{double.time [s]}.time [s],array{double.speed [RPM]}.speed [RPM]}" value="[[],[]]" outputs="value:101.value" conIdx="11" connection="required" uid_parent="root" />
+  <Control uid="102" _name="Order State in" type="cluster{double.Sample Count,double.Last Time,double.Last RPM,double.Prev Time,double.Prev RPM,double.Anchor Time,double.Anchor RPM,double.RPM Rate,array{double}.Held Values,bool.Has Spectrum,bool.Was Valid,double.Acc SumSq,double.Acc N}" value="[0,-1000000000,0,-1000000000,0,-1000000000,0,0,[0,0,0,0,0,0,0,0],false,false,0,0]" outputs="value:102.value" conIdx="10" connection="recommended" uid_parent="root" />
+  <Control uid="103" _name="block start (s)" type="double" value="0" outputs="value:103.value" conIdx="9" connection="recommended" uid_parent="root" />
+  <Control uid="104" _name="block length (s)" type="double" value="0.1" outputs="value:104.value" conIdx="7" connection="recommended" uid_parent="root" />
+  <Control uid="105" _name="Min Valid RPM" type="double" value="300" outputs="value:105.value" conIdx="6" connection="recommended" uid_parent="root" />
+  <Node uid="106" _name="Unbundle By Name" fields="Last Time,Last RPM,Prev Time,Prev RPM,Anchor Time,Anchor RPM,RPM Rate,Was Valid" inputs="input cluster:102.value" outputs="Last Time:106.Last Time,Last RPM:106.Last RPM,Prev Time:106.Prev Time,Prev RPM:106.Prev RPM,Anchor Time:106.Anchor Time,Anchor RPM:106.Anchor RPM,RPM Rate:106.RPM Rate,Was Valid:106.Was Valid" uid_parent="root" />
+  <Node uid="107" _name="Unbundle By Name" fields="time [s],speed [RPM]" inputs="input cluster:101.value" outputs="time [s]:107.time [s],speed [RPM]:107.speed [RPM]" uid_parent="root" />
+  <Node uid="108" _name="Array Size" inputs="array:107.speed [RPM]" outputs="size(s):108.size(s)" uid_parent="root" />
+  <Node uid="109" _name="Greater Than 0?" inputs="x:108.size(s)" outputs="x &gt; 0?:109.x &gt; 0?" uid_parent="root" />
+  <Node uid="110" _name="Decrement" inputs="x:108.size(s)" outputs="x-1:110.x-1" uid_parent="root" />
+  <Node uid="111" _name="Index Array" inputs="array:107.time [s],index:110.x-1" outputs="element:111.element" uid_parent="root" />
+  <Node uid="112" _name="Index Array" inputs="array:107.speed [RPM],index:110.x-1" outputs="element:112.element" uid_parent="root" />
+  <Node uid="113" _name="Greater Than 0?" inputs="x:112.element" outputs="x &gt; 0?:113.x &gt; 0?" uid_parent="root" />
+  <Node uid="114" _name="Greater?" inputs="x:111.element,y:106.Last Time" outputs="x &gt; y?:114.x &gt; y?" uid_parent="root" />
+  <Node uid="115" _name="And" inputs="x:109.x &gt; 0?,y:113.x &gt; 0?" outputs="x .and. y?:115.x .and. y?" uid_parent="root" />
+  <Node uid="116" _name="And" inputs="x:115.x .and. y?,y:114.x &gt; y?" outputs="x .and. y?:116.x .and. y?" uid_parent="root" />
+  <Node uid="117" _name="Select" inputs="t:111.element,s:116.x .and. y?,f:106.Last Time" outputs="s? t\3Af:117.s? t_f" uid_parent="root" />
+  <Node uid="118" _name="Select" inputs="t:112.element,s:116.x .and. y?,f:106.Last RPM" outputs="s? t\3Af:118.s? t_f" uid_parent="root" />
+  <Node uid="119" _name="Select" inputs="t:106.Last Time,s:116.x .and. y?,f:106.Prev Time" outputs="s? t\3Af:119.s? t_f" uid_parent="root" />
+  <Node uid="120" _name="Select" inputs="t:106.Last RPM,s:116.x .and. y?,f:106.Prev RPM" outputs="s? t\3Af:120.s? t_f" uid_parent="root" />
+  <Node uid="121" _name="Subtract" inputs="x:117.s? t_f,y:106.Anchor Time" outputs="x-y:121.x-y" uid_parent="root" />
+  <Constant uid="122" _name="rate window (s)" type="double" value="0.5" outputs="value:122.value" uid_parent="root" />
+  <Node uid="123" _name="Greater Or Equal?" inputs="x:121.x-y,y:122.value" outputs="x &gt;= y?:123.x &gt;= y?" uid_parent="root" />
+  <Node uid="124" _name="And" inputs="x:116.x .and. y?,y:123.x &gt;= y?" outputs="x .and. y?:124.x .and. y?" uid_parent="root" />
+  <Node uid="125" _name="Subtract" inputs="x:118.s? t_f,y:106.Anchor RPM" outputs="x-y:125.x-y" uid_parent="root" />
+  <Node uid="126" _name="Divide" inputs="x:125.x-y,y:121.x-y" outputs="x/y:126.x/y" uid_parent="root" />
+  <Node uid="127" _name="Select" inputs="t:126.x/y,s:124.x .and. y?,f:106.RPM Rate" outputs="s? t\3Af:127.s? t_f" uid_parent="root" />
+  <Node uid="128" _name="Select" inputs="t:117.s? t_f,s:124.x .and. y?,f:106.Anchor Time" outputs="s? t\3Af:128.s? t_f" uid_parent="root" />
+  <Node uid="129" _name="Select" inputs="t:118.s? t_f,s:124.x .and. y?,f:106.Anchor RPM" outputs="s? t\3Af:129.s? t_f" uid_parent="root" />
+  <Node uid="130" _name="Add" inputs="x:103.value,y:104.value" outputs="x+y:130.x+y" uid_parent="root" />
+  <Constant uid="131" _name="half" type="double" value="0.5" outputs="value:131.value" uid_parent="root" />
+  <Node uid="132" _name="Multiply" inputs="x:104.value,y:131.value" outputs="x*y:132.x*y" uid_parent="root" />
+  <Node uid="133" _name="Add" inputs="x:103.value,y:132.x*y" outputs="x+y:133.x+y" uid_parent="root" />
+  <Node uid="134" _name="Subtract" inputs="x:117.s? t_f,y:119.s? t_f" outputs="x-y:134.x-y" uid_parent="root" />
+  <Constant uid="135" _name="pulse periods to stay alive" type="double" value="4" outputs="value:135.value" uid_parent="root" />
+  <Constant uid="136" _name="min alive window (s)" type="double" value="1" outputs="value:136.value" uid_parent="root" />
+  <Node uid="137" _name="Multiply" inputs="x:134.x-y,y:135.value" outputs="x*y:137.x*y" uid_parent="root" />
+  <Node uid="138" _name="Max &amp; Min" inputs="x:137.x*y,y:136.value" outputs="max(x\2Cy):138.max(x_y),min(x\2Cy):138.min(x_y)" uid_parent="root" />
+  <Node uid="139" _name="Subtract" inputs="x:130.x+y,y:117.s? t_f" outputs="x-y:139.x-y" uid_parent="root" />
+  <Node uid="140" _name="Less?" inputs="x:139.x-y,y:138.max(x_y)" outputs="x &lt; y?:140.x &lt; y?" uid_parent="root" />
+  <Constant uid="141" _name="zero" type="double" value="0" outputs="value:141.value" uid_parent="root" />
+  <Node uid="142" _name="Subtract" inputs="x:118.s? t_f,y:120.s? t_f" outputs="x-y:142.x-y" uid_parent="root" />
+  <Node uid="143" _name="Divide" inputs="x:142.x-y,y:134.x-y" outputs="x/y:143.x/y" uid_parent="root" />
+  <Node uid="144" _name="Subtract" inputs="x:133.x+y,y:117.s? t_f" outputs="x-y:144.x-y" uid_parent="root" />
+  <Node uid="145" _name="Multiply" inputs="x:143.x/y,y:144.x-y" outputs="x*y:145.x*y" uid_parent="root" />
+  <Node uid="146" _name="Add" inputs="x:118.s? t_f,y:145.x*y" outputs="x+y:146.x+y" uid_parent="root" />
+  <Node uid="147" _name="Max &amp; Min" inputs="x:146.x+y,y:141.value" outputs="max(x\2Cy):147.max(x_y),min(x\2Cy):147.min(x_y)" uid_parent="root" />
+  <Node uid="148" _name="Select" inputs="t:147.max(x_y),s:140.x &lt; y?,f:141.value" outputs="s? t\3Af:148.s? t_f" uid_parent="root" />
+  <Node uid="149" _name="Select" inputs="t:127.s? t_f,s:140.x &lt; y?,f:141.value" outputs="s? t\3Af:149.s? t_f" uid_parent="root" />
+  <Node uid="150" _name="Greater Or Equal?" inputs="x:148.s? t_f,y:105.value" outputs="x &gt;= y?:150.x &gt;= y?" uid_parent="root" />
+  <Node uid="151" _name="And" inputs="x:140.x &lt; y?,y:150.x &gt;= y?" outputs="x .and. y?:151.x .and. y?" uid_parent="root" />
+  <Node uid="152" _name="Not" inputs="x:106.Was Valid" outputs=".not. x?:152..not. x?" uid_parent="root" />
+  <Node uid="153" _name="And" inputs="x:151.x .and. y?,y:152..not. x?" outputs="x .and. y?:153.x .and. y?" uid_parent="root" />
+  <Node uid="154" _name="Bundle By Name" fields="Last Time,Last RPM,Prev Time,Prev RPM,Anchor Time,Anchor RPM,RPM Rate,Was Valid" inputs="Last Time:117.s? t_f,Last RPM:118.s? t_f,Prev Time:119.s? t_f,Prev RPM:120.s? t_f,Anchor Time:128.s? t_f,Anchor RPM:129.s? t_f,RPM Rate:127.s? t_f,Was Valid:151.x .and. y?,input cluster:102.value" outputs="output cluster:154.output cluster" uid_parent="root" />
+  <Indicator uid="155" _name="RPM" type="double" value="0" inputs="value:148.s? t_f" conIdx="3" connection="recommended" uid_parent="root" />
+  <Indicator uid="156" _name="RPM Rate (rpm/s)" type="double" value="0" inputs="value:149.s? t_f" conIdx="2" connection="recommended" uid_parent="root" />
+  <Indicator uid="157" _name="speed OK" type="bool" value="false" inputs="value:151.x .and. y?" conIdx="1" connection="recommended" uid_parent="root" />
+  <Indicator uid="158" _name="became valid" type="bool" value="false" inputs="value:153.x .and. y?" conIdx="5" connection="recommended" uid_parent="root" />
+  <Indicator uid="159" _name="Order State out" type="cluster{double.Sample Count,double.Last Time,double.Last RPM,double.Prev Time,double.Prev RPM,double.Anchor Time,double.Anchor RPM,double.RPM Rate,array{double}.Held Values,bool.Has Spectrum,bool.Was Valid,double.Acc SumSq,double.Acc N}" value="[0,-1000000000,0,-1000000000,0,-1000000000,0,0,[0,0,0,0,0,0,0,0],false,false,0,0]" inputs="value:154.output cluster" conIdx="0" connection="recommended" uid_parent="root" />
+</VI>
+<?lvmcp pane="4815"?>
+<?lvmcp exec IsReentrant="1" PooledReentrancy="0" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>

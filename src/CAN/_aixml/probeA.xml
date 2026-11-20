@@ -1,0 +1,6 @@
+<VI _name="probeA.vi" description="p">
+  <Control _name="cfg" type="cluster{double.Sample Rate (Hz),double.Ref Speed (rpm),double.Baseline 1x (g),double.Noise Floor (g rms),double.BPFO Order,double.Resonance (Hz),double.Decay (ms),double.Pole Pairs,double.PWM Carrier (Hz)}" uid="50" uid_parent="root" value="[51200,3000,0.02,0.01,3.57,3500,0.8,4,16000]" conIdx="0" connection="required" outputs="value:2.value" />
+  <Control _name="sr" type="double" uid="51" uid_parent="root" value="1" conIdx="5" connection="recommended" outputs="value:3.value" />
+  <Node _name="Bundle By Name" uid="60" uid_parent="root" fields="Sample Rate (Hz)" inputs="Sample Rate (Hz):3.value,input cluster:2.value" outputs="output cluster:60.output cluster" />
+  <Indicator _name="out" type="cluster{double.Sample Rate (Hz),double.Ref Speed (rpm),double.Baseline 1x (g),double.Noise Floor (g rms),double.BPFO Order,double.Resonance (Hz),double.Decay (ms),double.Pole Pairs,double.PWM Carrier (Hz)}" uid="52" uid_parent="root" value="[51200,3000,0.02,0.01,3.57,3500,0.8,4,16000]" conIdx="4" connection="recommended" inputs="value:60.output cluster" />
+</VI>

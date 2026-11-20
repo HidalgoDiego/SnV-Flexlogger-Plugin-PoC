@@ -1,0 +1,95 @@
+<VI _name="SoundVib_OrderTracking.lvlib:OAT Convert to Even Angle Signal (1 Channel).vi" description="Converts an even-time-spaced scaled signal to an even-angle-spaced signal by resampling the acquired signal. Wire data to the &lt;B&gt;scaled signal [EU]&lt;/B&gt; input to determine the polymorphic instance to use or manually select the instance.">
+  <Indicator _name="even-angle signal" type="cluster{double.r0,double.dr,array{double.Y}.Y}" description="&lt;B&gt;even-angle signal&lt;/B&gt; returns data resampled at even-angle intervals. This parameter is synchronous to the rotational speed with constant number of samples per revolution." uid="514" uid_parent="root" value="[0,1,[]]" conIdx="4" connection="recommended" inputs="value:609.value" />
+  <Control _name="pulse/revolution (1)" type="int32" description="&lt;B&gt;pulse/revolution&lt;/B&gt; specifies the number of pulses the tachometer generates during each revolution. The default is 1." uid="502" uid_parent="root" value="1" conIdx="7" connection="recommended" outputs="value:502.value" />
+  <Control _name="max order (auto)" type="double" description="&lt;B&gt;max order&lt;/B&gt; specifies the maximum order to analyze. If the value of this parameter is less than or equal to zero\2C this VI automatically sets the maximum order to analyze. The maximum order used might be larger than the one you specify. Review &lt;B&gt;actual max order&lt;/B&gt; entry for calculation. The default is 0 (auto)." uid="490" uid_parent="root" value="0" conIdx="12" connection="optional" outputs="value:490.value" />
+  <Control _name="speed profile" type="cluster{array{double.time [s]}.time [s],array{double.speed [rpm]}.speed [RPM]}" description="contains information about tachometer pulse arrival time and the rotational speed at each pulse." uid="1154" uid_parent="root" value="[[],[]]" conIdx="5" connection="recommended" outputs="value:1154.value" />
+  <Control _name="scaled signal [EU]" type="doublewaveform" description="&lt;B&gt;scaled signal [EU]&lt;/B&gt; specifies the scaled signal expressed in the selected engineering units. To obtain a properly scaled signal\2C you can use the SVL Scale Voltage to EU VI or define a virtual channel in National Instruments Measurement &amp; Automation Explorer (MAX)." uid="316" uid_parent="root" value="" conIdx="0" connection="recommended" outputs="value:316.value" />
+  <Indicator _name="even-angle channel info" type="cluster{string.channel name,string.description,cluster{double.sensor sensitivity,uint16.engineering units,double.dB reference,string.custom label,uint16.weighting filter,double.pregain}. channel info}" description="&lt;B&gt;even-angle channel info&lt;/B&gt; returns information that you can pass to another VI about the measurement configuration for &lt;B&gt;even-angle signal&lt;/B&gt;." uid="185" uid_parent="root" value="[,,[1000,1,1,EU,0,0]]" conIdx="6" connection="recommended" inputs="value:614.value" />
+  <Indicator _name="even-angle position info" type="cluster{array{double.time [s]}.positions [s],double.samples/rev}" description="&lt;B&gt;even-angle position info&lt;/B&gt; returns the position information of &lt;B&gt;even-angle signals&lt;/B&gt;." uid="123" uid_parent="root" value="[[],0]" conIdx="8" connection="recommended" inputs="value:615.value" />
+  <Indicator _name="error out" type="cluster{bool.status,int32.code,string.source}" description="&lt;B&gt;error out&lt;/B&gt; contains error information. This output provides standard error out functionality." uid="80" uid_parent="root" value="[false,0,]" conIdx="15" connection="recommended" inputs="value:612.value" />
+  <Control _name="error in (no error)" type="cluster{bool.status,int32.code,string.source}" description="&lt;B&gt;error in&lt;/B&gt; describes error conditions that occur before this node runs. This input provides standard error in functionality." uid="37" uid_parent="root" value="[false,0,]" conIdx="11" connection="recommended" outputs="value:37.value" />
+  <Control _name="analysis method" type="uint16" description="&lt;B&gt;analysis method&lt;/B&gt; specifies the analysis method this VI uses to convert the &lt;B&gt;scaled signal [EU]&lt;/B&gt; to &lt;B&gt;even-angle signal&lt;/B&gt;." items="fast,accurate" style="Ring" uid="23" uid_parent="root" value="0" conIdx="1" connection="recommended" outputs="value:23.value" />
+  <Indicator _name="actual max order" type="double" description="&lt;B&gt;actual max order&lt;/B&gt; is the actual measured maximum order this VI uses." uid="8" uid_parent="root" value="0" conIdx="14" connection="recommended" inputs="value:616.value" />
+  <Control _name="reset? (F)" type="bool" description="&lt;B&gt;reset?&lt;/B&gt; specifies the initialization of the internal states. The first time this VI runs\2C or when &lt;B&gt;reset?&lt;/B&gt; is TRUE\2C the internal states initialize to zero. If &lt;B&gt;reset?&lt;/B&gt; is FALSE\2C this VI sets the internal states to the final states from the previous call to the VI. The default is FALSE." style="latched" uid="580" uid_parent="root" value="false" conIdx="2" connection="recommended" outputs="value:580.value" />
+  <Control _name="zero delay? (F)" type="bool" description="&lt;B&gt;zero delay?&lt;/B&gt; specifies whether a filter delay exists between the input signal and the output signal. The default is FALSE." uid="1216" uid_parent="root" value="false" conIdx="13" connection="recommended" outputs="value:1216.value" />
+  <Structure _name="Case Structure" uid="604" uid_parent="root" selectin="37.value">
+    <Tunnel _id="In1" uid="607" uid_parent="604" inputs="value:502.value" />
+    <Tunnel _id="In2" uid="608" uid_parent="604" inputs="value:490.value" />
+    <Tunnel _id="In5" uid="610" uid_parent="604" inputs="value:316.value" />
+    <Tunnel _id="In6" uid="611" uid_parent="604" inputs="value:1154.value" />
+    <Tunnel _id="In7" uid="613" uid_parent="604" inputs="value:23.value" />
+    <Tunnel _id="In3" uid="617" uid_parent="604" inputs="value:580.value" />
+    <Tunnel _id="In4" uid="1249" uid_parent="604" inputs="value:1216.value" />
+    <CaseFrame selector="No Error" uid="620" uid_parent="604" selectout="620.value">
+      <Tunnel _id="In1" uid="1119" uid_parent="620" outputs="value:1119.value" />
+      <Tunnel _id="In2" uid="1122" uid_parent="620" outputs="value:1122.value" />
+      <Tunnel _id="Out2" uid="1177" uid_parent="620" inputs="value:1000.even-angle signal" />
+      <Tunnel _id="In5" uid="1155" uid_parent="620" outputs="value:1155.value" />
+      <Tunnel _id="In6" uid="1158" uid_parent="620" outputs="value:1158.value" />
+      <Tunnel _id="Out3" uid="1180" uid_parent="620" inputs="value:1005.error out" />
+      <Tunnel _id="In7" uid="1161" uid_parent="620" outputs="value:1161.value" />
+      <Tunnel _id="Out4" uid="1183" uid_parent="620" inputs="value:622.output cluster" />
+      <Tunnel _id="Out5" uid="1186" uid_parent="620" inputs="value:1000.even-angle position info" />
+      <Tunnel _id="Out1" uid="1174" uid_parent="620" inputs="value:1000.actual max order" />
+      <Tunnel _id="In3" uid="1135" uid_parent="620" outputs="value:1135.value" />
+      <Tunnel _id="In4" uid="1233" uid_parent="620" outputs="value:1233.value" />
+      <Constant _name="alias protect in final transition" type="bool" uid="1114" uid_parent="620" value="false" outputs="value:1114.value" />
+      <Constant _name="y" type="int32" uid="1128" uid_parent="620" value="1" outputs="value:1128.value" />
+      <Constant _name="timing jitter" type="uint32{Interpolation,Rounding}" uid="1144" uid_parent="620" value="0" outputs="value:1144.value" />
+      <Constant _name="checks for channel parameter change" type="cluster{bool.dt,bool.t0 continuity,bool.array length,bool.channel info,bool.name}" uid="1170" uid_parent="620" value="[true,true,false,true,false]" outputs="value:1170.value" />
+      <Node _name="First Call?" uid="711" uid_parent="620" outputs="First Call?\3A T/F:711.First Call?\3A T/F" />
+      <Call uid="1445" uid_parent="620" target="svc_Complex Datatype Defaults.vi" outputs="spectral info:,resampled channel info:1445.resampled channel info,channel info:,empty spectrum:,dead spectrum info:,empty array of spectra:,empty array of spectrum info:,empty array of peaks:,complex spectrum:" />
+      <Node _name="Or" uid="700" uid_parent="620" outputs="x .or. y?:700.x .or. y?" inputs="y:711.First Call?\3A T/F,x:1135.value" />
+      <Call uid="210" uid_parent="620" target="svc_Check for Waveform Parameter Continuity (1 Ch).vi" inputs="restart averaging (F):700.x .or. y?,error in (no error):620.value,checks for channel parameter change:1170.value,scaled signal [EU]:1155.value" outputs="error out:210.error out,channel info:,waveform parameter changed:210.waveform parameter changed,dup scaled signal [EU]:210.dup scaled signal [EU],array length:,dt:" />
+      <Node _name="Or" uid="748" uid_parent="620" outputs="x .or. y?:748.x .or. y?" inputs="y:210.waveform parameter changed,x:700.x .or. y?" />
+      <Call uid="638" uid_parent="620" target="SoundVib_Resampling.lvlib:oa_If Param Changed, Set Reset True (1 Channel).vi" inputs="scaled signal in [EU]:210.dup scaled signal [EU],reset in:748.x .or. y?,speed profile:1158.value,pulse/revolution in (1):1119.value,max order in (auto):1122.value,error in (no error):210.error out,analysis method in:1161.value" outputs="reset out:638.reset out,scaled signal out [EU]:638.scaled signal out [EU],speed profile out:638.speed profile out,pulse/revolution out (1):638.pulse/revolution out (1),max order out (auto):638.max order out (auto),analysis method out:638.analysis method out,error out:638.error out" />
+      <Node _name="Max &amp; Min" uid="1067" uid_parent="620" inputs="y:1128.value,x:638.pulse/revolution out (1)" outputs="min(x\2Cy):,max(x\2Cy):1067.max(x\2Cy)" />
+      <Call uid="966" uid_parent="620" target="SoundVib_Resampling.lvlib:OAT Estimate Max Order.vi" inputs="reset? (True):638.reset out,speed profile in:638.speed profile out,scaled signal [EU] in:638.scaled signal out [EU]" outputs="max possible order:,max suggested order:966.max suggested order,speed profile out:966.speed profile out,scaled signal [EU] out:966.scaled signal [EU] out" />
+      <Node _name="Unbundle By Name" uid="918" uid_parent="620" fields="time [s]" outputs="time [s]:918.time [s]" inputs="input cluster:966.speed profile out" />
+      <Call uid="840" uid_parent="620" target="SoundVib_Resampling.lvlib:oa_Get Actual Max Order.vi" outputs="new pulse/revolution:840.new pulse/revolution,interpolation factor:840.interpolation factor" inputs="max order (auto):638.max order out (auto),pulse/revolution (1):1067.max(x\2Cy),max suggested order:966.max suggested order" />
+      <Call uid="156" uid_parent="620" target="svc_Get SV Channel Info.vi" outputs="error out:156.error out,unit label:,channel info:156.channel info,dup scaled signal [EU]:156.dup scaled signal [EU],channel name:156.channel name,channel description:156.channel description" inputs="channel index:,error in (no error):638.error out,scaled signal [EU]:966.scaled signal [EU] out" />
+      <Node _name="Build Array" uid="792" uid_parent="620" outputs="appended array:792.appended array" inputs="element:156.dup scaled signal [EU]" />
+      <Node _name="Bundle By Name" uid="622" uid_parent="620" fields="channel name,description, channel info" inputs="input cluster:1445.resampled channel info,channel name:156.channel name,description:156.channel description, channel info:156.channel info" outputs="output cluster:622.output cluster" />
+      <Call uid="927" uid_parent="620" target="SoundVib_Resampling.lvlib:OAT Resample Filter Prototype Design.vi" inputs="alias free:1114.value,reset? (True):748.x .or. y?,error in (no error):156.error out,resolution:,timing jitter:1144.value" outputs="error out:927.error out,taps:,filter prototype:927.filter prototype" />
+      <Call uid="879" uid_parent="620" target="SoundVib_Resampling.lvlib:oa_Interpolate Tach Pulses.vi" outputs="error out:879.error out,interpolated pulse positions[s]:879.interpolated pulse positions[s],dup scaled signals (EU):879.dup scaled signals (EU),reset out:879.reset out" inputs="zero delay? (F):1233.value,resolution:638.analysis method out,reset? (True):638.reset out,error in (no error):927.error out,interpolation factor:840.interpolation factor,pulse positions [s]:918.time [s],scaled signals (EU):792.appended array" />
+      <Call uid="1005" uid_parent="620" target="SoundVib_Resampling.lvlib:OAT Resample (Const to Variable).vi" inputs="reset? (True):748.x .or. y?,error in (no error):879.error out,filter prototype:927.filter prototype,time:879.interpolated pulse positions[s],scaled signals (EU):879.dup scaled signals (EU)" outputs="error out:1005.error out,offset:1005.offset,time stamps:1005.time stamps,Y:1005.Y" />
+      <Node _name="Index Array" uid="1044" uid_parent="620" dimensions="2" outputs="subarray:1044.subarray" inputs="array:1005.Y,index (row):,disabled index (col):" />
+      <Call uid="1000" uid_parent="620" target="SoundVib_Resampling.lvlib:oa_Regulate Even Angle Signal (1 Channel).vi" inputs="reset?:879.reset out,samples/rev:840.new pulse/revolution,offset:1005.offset,time stamps:1005.time stamps,Data:1044.subarray" outputs="actual max order:1000.actual max order,even-angle position info:1000.even-angle position info,even-angle signal:1000.even-angle signal" />
+    </CaseFrame>
+    <CaseFrame selector="Error" uid="1340" uid_parent="604" selectout="1340.value">
+      <Tunnel _id="In1" uid="1408" uid_parent="1340" outputs="value:" />
+      <Tunnel _id="In2" uid="1409" uid_parent="1340" outputs="value:" />
+      <Tunnel _id="Out2" uid="1460" uid_parent="1340" inputs="value:1418.value" />
+      <Tunnel _id="In5" uid="1412" uid_parent="1340" outputs="value:" />
+      <Tunnel _id="In6" uid="1413" uid_parent="1340" outputs="value:" />
+      <Tunnel _id="Out3" uid="1461" uid_parent="1340" inputs="value:1340.value" />
+      <Tunnel _id="In7" uid="1458" uid_parent="1340" outputs="value:" />
+      <Tunnel _id="Out4" uid="1462" uid_parent="1340" inputs="value:1679.resampled channel info" />
+      <Tunnel _id="Out5" uid="1459" uid_parent="1340" inputs="value:" />
+      <Tunnel _id="Out1" uid="1414" uid_parent="1340" inputs="value:" />
+      <Tunnel _id="In3" uid="1410" uid_parent="1340" outputs="value:" />
+      <Tunnel _id="In4" uid="1243" uid_parent="1340" outputs="value:" />
+      <Constant type="cluster{double,double,array{double.Numeric}.Y}" uid="1418" uid_parent="1340" value="[0,0,[]]" outputs="value:1418.value" />
+      <Call uid="1679" uid_parent="1340" target="svc_Complex Datatype Defaults.vi" outputs="spectral info:,resampled channel info:1679.resampled channel info,channel info:,empty spectrum:,dead spectrum info:,empty array of spectra:,empty array of spectrum info:,empty array of peaks:,complex spectrum:" />
+    </CaseFrame>
+    <Tunnel _id="Out2" uid="609" uid_parent="604" outputs="value:609.value" />
+    <Tunnel _id="Out3" uid="612" uid_parent="604" outputs="value:612.value" />
+    <Tunnel _id="Out4" uid="614" uid_parent="604" outputs="value:614.value" />
+    <Tunnel _id="Out5" uid="615" uid_parent="604" cond="true" outputs="value:615.value" />
+    <Tunnel _id="Out1" uid="616" uid_parent="604" cond="true" outputs="value:616.value" />
+  </Structure>
+</VI>
+<?lvmcp pane="4833"?>
+<?lvmcp paneflags="0:0800,1:0A00,2:0A00,4:0900,5:0800,6:0900,7:0A00,8:0900,11:0A00,12:0200,13:0800,14:0900,15:0D0B"?>
+<?lvmcp exec IsReentrant="1" PooledReentrancy="0" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>
+<?lvmcp calllink uid="1445" tp="0" path="&lt;vilib&gt;|addons|_NISVFA|_Shared subVIs|Common|svc_Complex Datatype Defaults.vi"?>
+<?lvmcp calllink uid="210" tp="0" path="&lt;vilib&gt;|addons|_NISVFA|_Shared subVIs|Common|svc_Check for Waveform Parameter Continuity (1 Ch).vi"?>
+<?lvmcp calllink uid="638" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Resample Order Tracking|SubVIs|oa_If Param Changed, Set Reset True (1 Channel).vi"?>
+<?lvmcp calllink uid="966" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Resample Order Tracking|SubVIs|OAT Estimate Max Order.vi"?>
+<?lvmcp calllink uid="840" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Adv Resampling|oa_Get Actual Max Order.vi"?>
+<?lvmcp calllink uid="156" tp="0" path="&lt;vilib&gt;|addons|_NISVFA|_Shared subVIs|Common|svc_Get SV Channel Info.vi"?>
+<?lvmcp calllink uid="927" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Adv Resampling|OAT Resample Filter Prototype Design.vi"?>
+<?lvmcp calllink uid="879" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Adv Resampling|oa_Interpolate Tach Pulses.vi"?>
+<?lvmcp calllink uid="1005" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Adv Resampling|OAT Resample (Const to Variable).vi"?>
+<?lvmcp calllink uid="1000" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Resample Order Tracking|SubVIs|oa_Regulate Even Angle Signal (1 Channel).vi"?>
+<?lvmcp calllink uid="1679" tp="0" path="&lt;vilib&gt;|addons|_NISVFA|_Shared subVIs|Common|svc_Complex Datatype Defaults.vi"?>

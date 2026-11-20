@@ -1,0 +1,23 @@
+<VI _name="XNET CAN2 Receive Probe.vi" description="Opens a Signal Input Single-point session on CAN2 with the eDyno_NVH_PoC alias (bus settings from the database), reads 20 times over ~2 s and returns the last values.">
+  <Control _name="interface" type="string" uid="50" uid_parent="root" value="CAN2" conIdx="0" connection="required" outputs="value:50.value" />
+  <Control _name="database" type="string" uid="51" uid_parent="root" value="eDyno_NVH_PoC" conIdx="5" connection="recommended" outputs="value:51.value" />
+  <Control _name="signals" type="array{string}" uid="52" uid_parent="root" value="[DYNO_Status.DynoSts_BlockCounter,DYNO_Status.DynoSts_SpeedAct,DYNO_Cmd.DynoCmd_Mode,SIM_FaultStatus.FltSts_Freq_1x,SIM_Config.SimCfg_SampleRate]" conIdx="7" connection="recommended" outputs="value:52.value" />
+  <Constant _name="Signal Input Single-point" type="uint32" uid="53" uid_parent="root" value="0" outputs="value:53.value" />
+  <Constant _name="cluster" type="string" uid="54" uid_parent="root" value="" outputs="value:54.value" />
+  <Constant _name="reads" type="int32" uid="55" uid_parent="root" value="20" outputs="value:55.value" />
+  <Call adapt="true" instance="XNET Create Session (Generic).vi" target="XNET Create Session.vi" uid="60" uid_parent="root" inputs=" list (empty):52.value,mode:53.value,interface:50.value,error in (no error):,database (\3Amemory\3A):51.value,cluster (empty):54.value" outputs="session out:60.session out,error out:60.error out" />
+  <Structure _name="For Loop" uid="100" uid_parent="root" count="" maxin="55.value">
+    <Constant _name="100 ms" type="int32" uid="101" uid_parent="100" value="100" outputs="value:101.value" />
+    <Node _name="Wait (ms)" uid="102" uid_parent="100" inputs="milliseconds to wait:101.value" outputs="millisecond timer value:" />
+    <Call adapt="true" instance="XNET Read (Signal Single-point).vi" target="XNET Read.vi" uid="103" uid_parent="100" inputs="session in:110.value,error in (no error):121.value" outputs="session out:,data:103.data,error out:103.error out" />
+    <Tunnel _id="In1" uid="111" uid_parent="100" inputs="value:60.session out" outputs="value:110.value" />
+    <Tunnel _id="Out1" uid="112" uid_parent="100" inputs="value:103.data" outputs="value:112.value" />
+    <ShiftReg uid="120" uid_parent="100">
+      <Left uid="122" uid_parent="120" inputs="value:60.error out" outputs="value:121.value" />
+      <Right uid="123" uid_parent="120" inputs="value:103.error out" outputs="value:124.value" />
+    </ShiftReg>
+  </Structure>
+  <Call uid="70" uid_parent="root" target="XNET Clear.vi" inputs="session in:60.session out,error in (no error):124.value" outputs="error out:70.error out" />
+  <Indicator _name="values" type="array{double}" uid="80" uid_parent="root" value="[]" conIdx="4" connection="recommended" inputs="value:112.value" />
+  <Indicator _name="error out" type="cluster{bool.status,int32.code,string.source}" uid="81" uid_parent="root" value="[false,0,]" conIdx="15" connection="recommended" inputs="value:70.error out" />
+</VI>

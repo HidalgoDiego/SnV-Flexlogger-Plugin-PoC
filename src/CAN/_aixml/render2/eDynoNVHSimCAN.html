@@ -1,0 +1,31 @@
+<HTML>
+<HEAD>
+<TITLE>eDyno NVH Sim + CAN.vi</TITLE>
+<META NAME="Author" CONTENT="">
+<META NAME="GENERATOR" CONTENT="G Development Environment">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<A NAME="eDyno NVH Sim _ CAN.vi"></A><H2>eDyno NVH Sim + CAN.vi</H2>
+<P>eDyno NVH simulator + CAN (eDyno_NVH_PoC.dbc, CAN FD) - copy of eDyno NVH Accel + RPM Simulator.vi plus a PARALLEL CAN loop.</P>
+<P></P>
+<P>AO loop (paced by DAQmx Write, one block per iteration): runs the fault sequencer, synthesizes the block and publishes the applied state (faults, speed profile, sim config, fault frequencies, speed, test step, sequence state, block counter) to a notifier.</P>
+<P>CAN loop (10 ms): takes the latest notification, packs the eDyno_NVH_PoC signals and writes them through an NI-XNET Signal Output Single-point session on CAN Interface (PXIe-8510 Port1); NI-XNET transmits each frame at its DBC cycle time. Alive counters step on every CAN loop iteration. The CAN loop stops when the AO loop ends and the notifier is released, or on an XNET error.</P>
+<P></P>
+<P>Manual: Run Auto Sequence OFF, toggle Fault Injection / Speed Profile. Automated: Run Auto Sequence ON - each Steps row is applied for Dwell (s) with the run-up restarted; after the last row the panel values apply (Seq State 3 = AutoDone).</P>
+<P></P>
+<P>Setup: import eDyno_NVH_PoC.dbc as XNET alias eDyno_NVH_PoC (CAN FD+BRS, 500 kbit/s / 2 Mbit/s). FlexLogger logs on Port2 (loopback).</P>
+<HR>
+<H3>Connector Pane</H3>
+<P><IMG SRC="eDynoNVHSimCANc.png" ALT="eDyno NVH Sim + CAN.vi"></P>
+<HR>
+<H3>Front Panel</H3>
+<P><IMG SRC="eDynoNVHSimCANp.png" ALT="eDyno NVH Sim + CAN.vi"></P>
+<HR>
+<H3>Block Diagram</H3>
+<P><IMG SRC="eDynoNVHSimCANd.png" ALT="eDyno NVH Sim + CAN.vi"></P>
+<HR>
+<H3></H3>
+<Table>
+</Table>
+</BODY>
+</HTML>

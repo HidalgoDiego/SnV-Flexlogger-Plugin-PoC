@@ -1,0 +1,52 @@
+<VI _name="Vibration Parameters.lvlib:Vibration Parameters.lvclass:Initialize.vi" description="">
+  <Control _name="error in" type="cluster{bool.status,int32.code,string.source}" description="The &lt;B&gt;error in&lt;/B&gt; cluster can accept error information wired from VIs previously called.  Use this information to decide if any functionality should be bypassed in the event of errors from other VIs.\0A\0AThe pop-up option &lt;B&gt;Explain Error&lt;/B&gt; (or Explain Warning) gives more information about the error displayed." uid="21" uid_parent="root" value="[false,0,]" conIdx="8" connection="recommended" outputs="value:21.value" />
+  <Indicator _name="error out" type="cluster{bool.status,int32.code,string.source}" description="The &lt;B&gt;error out&lt;/B&gt; cluster passes error or warning information out of a VI to be used by other VIs.\0A\0AThe pop-up option &lt;B&gt;Explain Error&lt;/B&gt; (or Explain Warning) gives more information about the error displayed." uid="99" uid_parent="root" value="[false,0,]" conIdx="0" connection="recommended" inputs="value:892.error out" />
+  <Control _name="Plugin in" type="ref{UDClassInst}" uid="416" uid_parent="root" value="" conIdx="11" connection="dynamic" outputs="value:416.value" />
+  <Indicator _name="Plugin out" type="ref{UDClassInst}" uid="482" uid_parent="root" value="" conIdx="3" connection="dynamic" inputs="value:892.Plugin out" />
+  <Constant _name="Resampling Mode" type="uint16{No Resampling,Custom Rate,Maximum Rate,Minimum Rate}" uid="583" uid_parent="root" value="0" outputs="value:583.value" />
+  <Constant _name="Strings []" type="array{string}" uid="1259" uid_parent="root" value="[None,Hanning,Hamming,Blackman-Harris,Exact Blackman,Blackman,Flat Top,4 Term B-Harris ,7 Term B-Harris,Low Sidelobe,Force,Exponential,Blackman Nuttall,Triangle,Bartlett-Hanning,Bohman,Parzen,Welch,Kaiser,Dolph-Chebyshev,Gaussian]" outputs="value:1259.value" />
+  <Constant _name="Name" type="string" uid="1528" uid_parent="root" value="Window" outputs="value:1528.value" />
+  <Constant _name="Current Value" type="string" uid="1680" uid_parent="root" value="Hanning" outputs="value:1680.value" />
+  <Constant _name="Possible Values" type="array{string.String}" uid="1250" uid_parent="root" value="[Powers in Band  ,Crest Factors  ,Peak Levels  ,RMS Levels  ,Max Level  ,Min Level  ,Max-Min Level   ]" outputs="value:1250.value" />
+  <Constant _name="Possible Values" type="array{string.String}" uid="1405" uid_parent="root" value="[PBand  ,Crest  ,Peak  ,RMS  ,Max,Min,Max-Min]" outputs="value:1405.value" />
+  <Constant _name="String" type="string" uid="1034" uid_parent="root" value="Accelerometer" outputs="value:1034.value" />
+  <Constant _name="Name" type="string" uid="591" uid_parent="root" value="Axis" outputs="value:591.value" />
+  <Constant _name="Current Value" type="string" uid="1161" uid_parent="root" value="X " outputs="value:1161.value" />
+  <Constant type="array{string}" uid="2093" uid_parent="root" value="[X,Y,Z]" outputs="value:2093.value" />
+  <Constant type="double" uid="578" uid_parent="root" value="0.25" outputs="value:578.value" />
+  <Node _name="Call Parent Class Method" uid="210" uid_parent="root" outputs="error out:210.error out,Plugin out:210.Plugin out" inputs="error in (no error):21.value,Plugin in:416.value" />
+  <Call uid="892" uid_parent="root" target="PluginSDK.lvlibp:Plugin.lvclass:Add Channels.vi" inputs="error in (no error):1660.value,Channels:1567.value,Plugin in:856.Plugin out" outputs="error out:892.error out,Plugin out:892.Plugin out" />
+  <Call uid="408" uid_parent="root" target="PluginSDK.lvlibp:Plugin.lvclass:Set Plugin Resampling.vi" inputs="Plugin in:210.Plugin out,Drift Tolerance (s):,Resampling Mode:583.value,Resampling Rate (Hz):,Block Size (s):578.value,error in (no error):210.error out" outputs="Plugin out:408.Plugin out,error out:408.error out" comment="Setup resampling parameters for the plugin. Input channels will all be resampled to 100Hz with this configuration. Setting up resampling is necessary when data will come from multiple sources that may run at multiple rates." />
+  <Call uid="856" uid_parent="root" instance="PluginSDK.lvlibp:Plugin.lvclass:Write Enum.vi" target="PluginSDK.lvlibp:Plugin.lvclass:Write Parameter.vi" inputs="Possible Values:1259.value,error in (no error):1219.error out,Current Value:1680.value,Name:1528.value,Plugin in:1219.Plugin out" outputs="error out:856.error out,Plugin out:856.Plugin out" />
+  <Call uid="1243" uid_parent="root" instance="PluginSDK.lvlibp:Plugin.lvclass:Write Single Channel.vi" target="PluginSDK.lvlibp:Plugin.lvclass:Write Parameter.vi" outputs="error out:1243.error out,Plugin out:1243.Plugin out" inputs="error in (no error):408.error out,Name (Unique Channel Identifier):1034.value,Plugin in:408.Plugin out" comment="Special parameter type that allows users to select multiple other FlexLogger channels to pass to this plugin." />
+  <Structure _name="For Loop" uid="1499" uid_parent="root" count="" maxin="" maxout="">
+    <Constant _name="Data Type" type="uint16" uid="1894" uid_parent="1499" value="0" outputs="value:1894.value" />
+    <Constant _name="String" type="string" uid="1398" uid_parent="1499" value="Accel" outputs="value:1398.value" />
+    <Constant _name="dt(sec)" type="double" uid="819" uid_parent="1499" value="0.25" outputs="value:819.value" />
+    <Call uid="384" uid_parent="1499" instance="PluginSDK.lvlibp:Producer Channel.lvclass:Create Producer Channel_v2.vi" target="PluginSDK.lvlibp:Create Channel_v2.vi" inputs="Unique Channel Identifier:296.concatenated string,Display Group:1398.value,Data Type:1894.value,Default Channel Name:1423.concatenated string,Parameters:,dt(sec):819.value,error in (no error):1582.value,Unit:,Can Disable?:" outputs="Producer Channel:384.Producer Channel,error out:384.error out" />
+    <Node _name="Concatenate Strings" uid="1423" uid_parent="1499" inputs="string:2508.value,string:1398.value" outputs="concatenated string:1423.concatenated string" />
+    <Node _name="Concatenate Strings" uid="296" uid_parent="1499" inputs="string:1633.value,string:1398.value" outputs="concatenated string:296.concatenated string" />
+    <Tunnel _id="Out1" uid="1567" uid_parent="1499" mode="index" outputs="value:1567.value" inputs="value:384.Producer Channel" />
+    <Tunnel _id="In1" uid="1633" uid_parent="1499" mode="index" inputs="value:1405.value" outputs="value:1633.value" />
+    <Tunnel _id="In2" uid="2508" uid_parent="1499" mode="index" inputs="value:1250.value" outputs="value:2508.value" />
+    <ShiftReg uid="1568" uid_parent="1499">
+      <Left uid="1582" uid_parent="1568" inputs="value:856.error out" outputs="value:1582.value" />
+      <Right uid="1660" uid_parent="1568" outputs="value:1660.value" inputs="value:384.error out" />
+    </ShiftReg>
+  </Structure>
+  <Call uid="1219" uid_parent="root" adapt="true" instance="PluginSDK.lvlibp:Plugin.lvclass:Write Enum.vi" target="PluginSDK.lvlibp:Plugin.lvclass:Write Parameter.vi" outputs="error out:1219.error out,Plugin out:1219.Plugin out" inputs="Possible Values:2093.value,error in (no error):1243.error out,Current Value:1161.value,Name:591.value,Plugin in:1243.Plugin out" />
+  <FreeLabel comment="Add a device level parameter which switches the type of calculation being performed on the data." uid="1306" uid_parent="root" />
+  <FreeLabel comment="Initialize.vi creates the parameters and channels that users interact with in FlexLogger.  The plugin created by the wizard demonstrates a calculation across multiple channels by allowing selection of multiple input channels and producing a single output channel." uid="971" uid_parent="root" />
+</VI>
+<?lvmcp pane="4815"?>
+<?lvmcp dynamic uids="482,416"?>
+<?lvmcp paneflags="0:0900,3:8D0B,8:0A00,11:9200"?>
+<?lvmcp exec IsReentrant="1" PooledReentrancy="1" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>
+<?lvmcp classes uid="482" names="Vibration Parameters.lvlib:Vibration Parameters.lvclass"?>
+<?lvmcp classes uid="416" names="Vibration Parameters.lvlib:Vibration Parameters.lvclass"?>
+<?lvmcp calllink uid="892" tp="0" path="&lt;vilib&gt;|FlexLogger|SDK|PluginSDK.lvlibp|PEFClasses|SDK|Plugin|Add Channels.vi"?>
+<?lvmcp calllink uid="408" tp="0" path="&lt;vilib&gt;|FlexLogger|SDK|PluginSDK.lvlibp|PEFClasses|SDK|Plugin|Set Plugin Resampling.vi"?>
+<?lvmcp calllink uid="856" tp="0" path="&lt;vilib&gt;|FlexLogger|SDK|PluginSDK.lvlibp|PEFClasses|SDK|Plugin|ParameterAccess|Write Enum.vi"?>
+<?lvmcp calllink uid="1243" tp="0" path="&lt;vilib&gt;|FlexLogger|SDK|PluginSDK.lvlibp|PEFClasses|SDK|Plugin|ParameterAccess|Write Single Channel.vi"?>
+<?lvmcp calllink uid="384" tp="0" path="&lt;vilib&gt;|FlexLogger|SDK|PluginSDK.lvlibp|PEFClasses|SDK|Producer Channel|Create Producer Channel_v2.vi"?>
+<?lvmcp calllink uid="1219" tp="0" path="&lt;vilib&gt;|FlexLogger|SDK|PluginSDK.lvlibp|PEFClasses|SDK|Plugin|ParameterAccess|Write Enum.vi"?>

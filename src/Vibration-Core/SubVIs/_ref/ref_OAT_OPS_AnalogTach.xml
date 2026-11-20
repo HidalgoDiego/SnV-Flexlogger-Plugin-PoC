@@ -1,0 +1,130 @@
+<VI _name="SoundVib_MCM Examples.lvlib:Order Power Spectrum (Analog Tach, DAQmx).vi" description="This VI demonstrates how to compute an order power spectrum with averaging. This VI uses DAQmx VIs to acquire sound or vibration signals and an analog tachometer signal and displays the order power spectrum continuously. \0A\0A&lt;B&gt;INSTRUCTIONS&lt;/B&gt;\3A\0A1. On the &lt;B&gt;DAQ Configurations&lt;/B&gt; page\2C specify the device and channel configurations\2C time settings\2C and tachometer channel information.\0A2. On the &lt;B&gt;Order Power Spectrum&lt;/B&gt; page\2C specify the &lt;B&gt;window type&lt;/B&gt;\2C &lt;B&gt;block size&lt;/B&gt; or &lt;B&gt;order resolution&lt;/B&gt;\2C and &lt;B&gt;averaging parameters&lt;/B&gt; for power in band computation.  \0A3. Run the VI.\0A\0A&lt;B&gt;VIs USED IN THIS EXAMPLE&lt;/B&gt;\3A\0A1.\09OAT Analog Tacho Process.vi\0A2.\09OAT Convert to Even Angle Signal.vi\0A3.\09OAT Order Power Spectrum.vi\0A4.\09SVFA Power in Band.vi">
+  <Control _name="Tab Control" type="uint32{DAQ Configurations,Time Waveform and Speed Profile,Order Power Spectrum}" uid="7" uid_parent="root" value="0" outputs="value:" />
+  <Constant _name="History Data" type="array.2{doublewaveform.scaled signals [EU]}" uid="571" uid_parent="root" value="[]" outputs="value:571.value" />
+  <Control _name=" DAQmx AI Config" type="ref{GenClassTag.Task.NIDAQ}" uid="4981" uid_parent="root" value="" outputs="value:4981.value" />
+  <Constant _name="SampQuant.SampMode" type="int32" uid="2497" uid_parent="root" items="Finite Samples,Continuous Samples,Hardware Timed Single Point" style="Ring" values="[10178,10123,12522]" value="10123" outputs="value:2497.value" />
+  <Node _name="Property Node" uid="2463" uid_parent="root" fields="write+Sample Quantity\3ASample Mode,read+SampQuant.SampPerChan" type="{GenClassTag.DAQmx Timing.NIDAQ}" inputs=" DAQmx AI Config:4981.value,error in (no error):,Sample Quantity\3ASample Mode:2497.value" outputs=" DAQmx AI Config:2463. DAQmx AI Config,error out:2463.error out,SampQuant.SampPerChan:2463.SampQuant.SampPerChan" />
+  <Node _name="Property Node" uid="311" uid_parent="root" fields="write+History Data" link="Acquired waveform" type="{LV.WaveformChart}" inputs="error in (no error):2463.error out,History Data:571.value" outputs="error out:311.error out" />
+  <Structure _name="While Loop" uid="1797" uid_parent="root" count="">
+    <Indicator _name="Speed profile" type="cluster{array{double.time [s]}.time [s],array{double.speed [rpm]}.speed [RPM]}" style="graph21716" uid="358" uid_parent="1797" value="[[],[]]" inputs="value:35.speed profile" />
+    <Indicator _name="Acquired waveform" type="array{doublewaveform.scaled signals [EU]}" style="graph21717" uid="410" uid_parent="1797" value="[]" inputs="value:33.scaled signals with tachometer channel deleted" />
+    <Control _name="stop" type="bool" style="latched" uid="422" uid_parent="1797" value="false" outputs="value:422.value" />
+    <Control _name="window type" type="uint32" description="&lt;B&gt;window type&lt;/B&gt; specifies the window this VI uses to compute the order power spectrum." items="None,Hanning,Hamming,Blackman-Harris,Exact Blackman,Blackman,Flat Top,4 Term B-Harris,7 Term B-Harris,Low Sidelobe,Gaussian" style="Ring" values="[0,1,2,3,4,5,6,7,8,9,62]" uid="973" uid_parent="1797" value="0" outputs="value:973.value" />
+    <Control _name="dB on? (T)" type="bool" description="&lt;B&gt;dB on&lt;/B&gt; specifies if results are expressed in decibels. The default is TRUE." uid="983" uid_parent="1797" value="true" outputs="value:983.value" />
+    <Control _name="averaging parameters" type="cluster{uint16{No averaging,Vector averaging,RMS averaging,Peak hold}.averaging mode,uint16{Linear,Exponential}.weighting mode,uint32.number of averages,uint16{One shot,Auto restart}.linear mode}" description="&lt;B&gt;averaging parameters&lt;/B&gt; defines how the VI computes the averaging." uid="757" uid_parent="1797" value="[2,1,10,0]" outputs="value:757.value" />
+    <Control _name="restart averaging (F)" type="bool" description="&lt;B&gt;restart averaging&lt;/B&gt; specifies if the VI must restart the selected averaging process. If&lt;B&gt;restart averaging&lt;/B&gt; is TRUE\2C the VI restarts the selected averaging process. If &lt;B&gt;restart averaging&lt;/B&gt; is FALSE\2C the VI does not restart the selected averaging process. The default is FALSE." style="latched" uid="1004" uid_parent="1797" value="false" outputs="value:1004.value" />
+    <Indicator _name="actual max order" type="double" description="&lt;B&gt;actual order resolution [order]&lt;/B&gt;returns the actual order resolution in orders." uid="747" uid_parent="1797" value="0" inputs="value:1327.actual max order" />
+    <Control _name="order resolution" type="double" description="&lt;B&gt;order resolution&lt;/B&gt; specifies resolution of the order power spectrum. The default is 0.1 order." uid="932" uid_parent="1797" value="0.10000000000000001" outputs="value:932.value" />
+    <Constant _name="block size" type="int32" uid="6491" uid_parent="1797" value="1" outputs="value:6491.value" />
+    <Constant _name="t" type="cluster{bool.status,int32.code,string.source}" uid="699" uid_parent="1797" value="[true,-21414,&lt;ERR&gt;The DAQ config input is invalid. Select one tacho channel and at least one sound or vibration channel in the configuration control. ]" outputs="value:699.value" />
+    <Node _name="Unbundle By Name" uid="1436" uid_parent="1797" fields="averaging mode" outputs="averaging mode:1436.averaging mode" inputs="input cluster:757.value" />
+    <Call uid="2443" uid_parent="1797" instance="DAQmx Read (Analog 1D Wfm NChan NSamp).vi" target="DAQmx Read.vi" outputs="task out:2443.task out,data:2443.data,error out:2443.error out" inputs="task/channels in:49.value,number of samples per channel:1222.value,timeout:,error in:1172.value" />
+    <Call uid="33" uid_parent="1797" instance="SV Get By Measurement Type (tach) (1 Ch).vi" target="SV Get By Measurement Type.vi" outputs="scaled signals with tachometer channel deleted:33.scaled signals with tachometer channel deleted,found?:33.found?,tachometer channel:33.tachometer channel,threshold:33.threshold,maximum order:33.maximum order,rotation direction:,slope:33.slope,pulses per rev:33.pulses per rev" inputs="scaled signals [EU]:2443.data" />
+    <Node _name="Select" uid="16" uid_parent="1797" inputs="f:1267.error out,s:33.found?,t:2443.error out" outputs="s? t\3Af:16.s? t\3Af" />
+    <Call uid="35" uid_parent="1797" adapt="true" instance="SoundVib_TachProcess.lvlib:OAT Analog Tacho Process (1 Tacho).vi" target="SoundVib_TachProcess.lvlib:OAT Analog Tacho Process.vi" inputs="analog tacho signal:33.tachometer channel,missing pulses? (no\3AF):,reset? (F):,threshold (auto):33.threshold,pulse/revolution (1):33.pulses per rev,hysteresis (0):,error in (no error):16.s? t\3Af,pulse width (2):,slope (Rising):33.slope" outputs="speed profile:35.speed profile,actual threshold:,speed position info:,no tacho?:,error out:35.error out" />
+    <Call uid="1327" uid_parent="1797" adapt="true" instance="SoundVib_OrderTracking.lvlib:OAT Convert to Even Angle Signal (N Channels).vi" target="SoundVib_OrderTracking.lvlib:OAT Convert to Even Angle Signal.vi" inputs="scaled signals [EU]:33.scaled signals with tachometer channel deleted,analysis method:,reset? (F):,speed profile:35.speed profile,pulse/revolution (1):33.pulses per rev,error in (no error):35.error out,max order (auto):33.maximum order,zero delay? (F):" outputs="even-angle signals:1327.even-angle signals,even-angle channel info:1327.even-angle channel info,even-angle position info:,actual max order:1327.actual max order,error out:1327.error out" />
+    <Call uid="1842" uid_parent="1797" target="oax_Compute Order Resolution.vi" inputs="actual max order:1327.actual max order,order resolution:932.value,block size:6491.value" outputs="actual order resolution&#x0A;[order]:,block size out:1842.block size out" />
+    <Structure _name="Case Structure" uid="1385" uid_parent="1797" selectin="1436.averaging mode">
+      <Tunnel _id="In2" uid="4416" uid_parent="1385" inputs="value:1327.error out" />
+      <Tunnel _id="In3" uid="1290" uid_parent="1385" inputs="value:1327.even-angle signals" />
+      <Tunnel _id="In1" uid="1591" uid_parent="1385" inputs="value:1842.block size out" />
+      <Tunnel _id="In4" uid="4578" uid_parent="1385" inputs="value:1327.even-angle channel info" />
+      <CaseFrame selector="&quot;No averaging&quot;\2C Default" uid="1668" uid_parent="1385" selectout="">
+        <Tunnel _id="In2" uid="1753" uid_parent="1668" outputs="value:1753.value" />
+        <Tunnel _id="Out2" uid="1543" uid_parent="1668" inputs="value:1753.value" />
+        <Tunnel _id="In3" uid="1283" uid_parent="1668" outputs="value:1283.value" />
+        <Tunnel _id="In1" uid="1368" uid_parent="1668" outputs="value:1368.value" />
+        <Tunnel _id="Out1" uid="2025" uid_parent="1668" inputs="value:1368.value" />
+        <Tunnel _id="Out3" uid="2202" uid_parent="1668" inputs="value:1283.value" />
+        <Tunnel _id="Out4" uid="2036" uid_parent="1668" inputs="value:1563.value" />
+        <Tunnel _id="In4" uid="1563" uid_parent="1668" outputs="value:1563.value" />
+      </CaseFrame>
+      <CaseFrame selector="&quot;Vector averaging&quot;" uid="1675" uid_parent="1385" selectout="">
+        <Tunnel _id="In2" uid="4413" uid_parent="1675" outputs="value:4413.value" />
+        <Tunnel _id="Out2" uid="4431" uid_parent="1675" inputs="value:1378.error out" />
+        <Tunnel _id="In3" uid="1287" uid_parent="1675" outputs="value:1287.value" />
+        <Tunnel _id="In1" uid="1588" uid_parent="1675" outputs="value:1588.value" />
+        <Tunnel _id="Out1" uid="2129" uid_parent="1675" inputs="value:1588.value" />
+        <Tunnel _id="Out3" uid="2206" uid_parent="1675" inputs="value:1378.triggered even-angle signals" />
+        <Tunnel _id="Out4" uid="4547" uid_parent="1675" inputs="value:1378.even-angle channel info out" />
+        <Tunnel _id="In4" uid="4574" uid_parent="1675" outputs="value:4574.value" />
+        <Call uid="1378" uid_parent="1675" adapt="true" instance="SoundVib_OAUtility.lvlib:OAT Output Triggered Even Angle Signal (N Channels).vi" target="SoundVib_OAUtility.lvlib:OAT Output Triggered Even Angle Signal.vi" inputs="even-angle signals:1287.value,block size:1588.value,reset? (F):,even-angle channel info:4574.value,error in (no error):4413.value,trigger period [rev]:" outputs="triggered even-angle signals:1378.triggered even-angle signals,even-angle channel info out:1378.even-angle channel info out,error out:1378.error out" />
+      </CaseFrame>
+      <Tunnel _id="Out2" uid="4435" uid_parent="1385" outputs="value:4435.value" />
+      <Tunnel _id="Out1" uid="2151" uid_parent="1385" outputs="value:2151.value" />
+      <Tunnel _id="Out3" uid="2209" uid_parent="1385" outputs="value:2209.value" />
+      <Tunnel _id="Out4" uid="4554" uid_parent="1385" outputs="value:4554.value" />
+    </Structure>
+    <Call uid="1356" uid_parent="1797" adapt="true" instance="SoundVib_OrderTracking.lvlib:OAT Order Power Spectrum (N Channels).vi" target="SoundVib_OrderTracking.lvlib:OAT Order Power Spectrum.vi" outputs="new spectrum available?:1356.new spectrum available?,order power spectra:1356.order power spectra,unit labels:,averages completed:1356.averages completed,spectrum info:1356.spectrum info,averaging done?:1356.averaging done?,error out:1356.error out" inputs="even-angle signals:2209.value,dB on? (T):983.value,even-angle channel info:4554.value,window:973.value,block size:2151.value,error in (no error):4435.value,averaging parameters:757.value,restart averaging? (F):1004.value" />
+    <Structure _name="Case Structure" uid="1083" uid_parent="1797" selectin="1356.new spectrum available?">
+      <Tunnel _id="In1" uid="2051" uid_parent="1083" inputs="value:1356.averaging done?" />
+      <Tunnel _id="In2" uid="2062" uid_parent="1083" inputs="value:1356.averages completed" />
+      <Tunnel _id="In3" uid="2074" uid_parent="1083" inputs="value:1356.order power spectra" />
+      <Tunnel _id="In4" uid="2088" uid_parent="1083" inputs="value:1356.spectrum info" />
+      <Tunnel _id="In5" uid="2105" uid_parent="1083" inputs="value:1356.error out" />
+      <CaseFrame selector="False" uid="1982" uid_parent="1083" selectout="">
+        <Tunnel _id="In1" uid="2049" uid_parent="1982" outputs="value:" />
+        <Tunnel _id="In2" uid="2060" uid_parent="1982" outputs="value:" />
+        <Tunnel _id="In3" uid="2072" uid_parent="1982" outputs="value:" />
+        <Tunnel _id="In4" uid="2085" uid_parent="1982" outputs="value:" />
+        <Tunnel _id="In5" uid="2102" uid_parent="1982" outputs="value:2102.value" />
+        <Tunnel _id="Out1" uid="2115" uid_parent="1982" inputs="value:2102.value" />
+      </CaseFrame>
+      <CaseFrame selector="True" uid="2001" uid_parent="1083" selectout="">
+        <Tunnel _id="In1" uid="2050" uid_parent="2001" outputs="value:2050.value" />
+        <Tunnel _id="In2" uid="2061" uid_parent="2001" outputs="value:2061.value" />
+        <Tunnel _id="In3" uid="2073" uid_parent="2001" outputs="value:2073.value" />
+        <Tunnel _id="In4" uid="2086" uid_parent="2001" outputs="value:2086.value" />
+        <Tunnel _id="In5" uid="2104" uid_parent="2001" outputs="value:2104.value" />
+        <Tunnel _id="Out1" uid="2116" uid_parent="2001" inputs="value:1395.error out" />
+        <Indicator _name="averaging done?" type="bool" description="&lt;B&gt;averaging done?&lt;/B&gt; returns TRUE if the number of &lt;B&gt;averages completed&lt;/B&gt; equals or exceeds the number of averages specified in &lt;B&gt;averaging parameters&lt;/B&gt;. &lt;B&gt;averaging done?&lt;/B&gt; returns FALSE if the number of averages is less than &lt;B&gt;averaging parameters&lt;/B&gt;." uid="737" uid_parent="2001" value="false" inputs="value:2050.value" />
+        <Indicator _name="averages completed" type="double" description="&lt;B&gt;averages completed&lt;/B&gt; returns the number of averages completed by the VI at that point." uid="1016" uid_parent="2001" value="0" inputs="value:2061.value" />
+        <Indicator _name="powers in band" type="array{double.power in band}" description="&lt;B&gt;powers in band&lt;/B&gt; returns the power in band for each spectrum." uid="3825" uid_parent="2001" value="[]" inputs="value:1395.powers in band" />
+        <Control _name="order range" type="cluster{double.start order,double.stop order}" description="&lt;B&gt;order range&lt;/B&gt; defines the order band of analysis." uid="825" uid_parent="2001" value="[-1,-1]" outputs="value:825.value" />
+        <Indicator _name="unit labels" type="array{string.unit label}" description="&lt;B&gt;unit labels&lt;/B&gt; returns the unit label for each channel." uid="860" uid_parent="2001" value="[]" inputs="value:1395.unit labels" />
+        <Indicator _name="Order power spectrum" type="array{cluster{double.order 0,double.delta order,array{double}.magnitude}.order power spectrum}" style="graph21703" uid="448" uid_parent="2001" value="[]" inputs="value:2073.value" />
+        <Call uid="1395" uid_parent="2001" adapt="true" instance="SVFA Power in Band (N Ch).vi" target="SVFA Power in Band.vi" outputs="powers in band:1395.powers in band,unit labels:1395.unit labels,error out:1395.error out" inputs="spectra:2073.value,range:825.value,spectrum info:2086.value,error in (no error):2104.value" />
+        <FreeLabel comment="10" uid="327" uid_parent="2001" />
+      </CaseFrame>
+      <Tunnel _id="Out1" uid="2117" uid_parent="1083" outputs="value:2117.value" />
+    </Structure>
+    <Node _name="Compound Arithmetic" uid="1951" uid_parent="1797" operation="OR" inversions=" , , " inputs="value:422.value,value:2117.value" outputs="result:1951.result" />
+    <Node _name="Merge Errors" uid="1267" uid_parent="1797" inputs="error in:2443.error out,error in:699.value" outputs="error out:1267.error out" />
+    <FreeLabel comment="C" uid="1279" uid_parent="1797" />
+    <FreeLabel comment="B" uid="1201" uid_parent="1797" />
+    <FreeLabel comment="A" uid="1151" uid_parent="1797" />
+    <FreeLabel comment="9" uid="456" uid_parent="1797" />
+    <FreeLabel comment="8" uid="447" uid_parent="1797" />
+    <FreeLabel comment="7" uid="434" uid_parent="1797" />
+    <FreeLabel comment="6" uid="415" uid_parent="1797" />
+    <FreeLabel comment="5" uid="319" uid_parent="1797" />
+    <FreeLabel comment="4" uid="593" uid_parent="1797" />
+    <FreeLabel comment="3" uid="581" uid_parent="1797" />
+    <Tunnel _id="Out1" uid="1848" uid_parent="1797" outputs="value:1848.value" inputs="value:2443.task out" />
+    <Tunnel _id="Out2" uid="2755" uid_parent="1797" outputs="value:2755.value" inputs="value:2117.value" />
+    <Tunnel _id="In1" uid="1172" uid_parent="1797" inputs="value:311.error out" outputs="value:1172.value" />
+    <Tunnel _id="In2" uid="1222" uid_parent="1797" inputs="value:2463.SampQuant.SampPerChan" outputs="value:1222.value" />
+    <Tunnel _id="In3" uid="49" uid_parent="1797" inputs="value:2463. DAQmx AI Config" outputs="value:49.value" />
+    <Condition uid="1805" uid_parent="1797" value="stop" inputs="value:1951.result" />
+  </Structure>
+  <Call uid="2321" uid_parent="root" target="DAQmx Clear Task.vi" inputs="task in:1848.value,error in:2755.value" outputs="error out:2321.error out" />
+  <Call uid="1954" uid_parent="root" target="Simple Error Handler.vi" inputs="error code (no error\3A0):,error source (&quot; &quot;):,type of dialog (OK msg\3A1):,error in (no error):2321.error out" outputs="error?:,code out:,source out:,error out:,message:" />
+  <FreeLabel comment="2" uid="1001" uid_parent="root" />
+  <FreeLabel comment="Key Concepts\3A\0A\0AA. Using resampling to correlate the vibration signal with the rotational speed allows for this example to be used for online analysis.\0A\0AB. If vector averaging is selected\2C use a triggered signal. Vector averaging eliminates signal elements (noise and order components) that are not synchronous with the running speed.\0A\0AC. Since it may take multiple sets of data to produce a spectrum\2C the front panel indicators are only updated when a spectrum is complete. \0A" uid="1144" uid_parent="root" />
+  <FreeLabel comment="11" uid="425" uid_parent="root" />
+  <FreeLabel comment="1" uid="564" uid_parent="root" />
+  <FreeLabel comment="For more information on specific functions\3A Show Context Help &lt;Ctrl+H&gt;\0A\0ASteps\3A\0A1. Use the DAQmx AI Config XControl to configure DAQ channel properties and start the DAQmx task.\0A2. Specifies sample mode and reads input block size with the Timing Node.\0A3. Use the DAQmx Read VI to measure multiple samples from channels on the device.\0A4. Separates the tachometer waveform from the vibration waveform and gets specific waveform attributes.\0A5. Determines the tachometer pulse positions and generates a speed profile.\0A6. Resamples the vibration signal from an even-time-spaced signal to even-angle-spaced signal.\0A7. Determines the block size used to compute the order-power spectrum of the even-angle-spaced signal based on the order resolution setting.\0A8. Generates triggered even-angle signals for vector averaging in order power spectrum calculations.\0A9. Computes the order power spectrum of the input even-angle signal.\0A10. Computes the aggreate power of the specified spectrum range. \0A11. Call the DAQmx Clear Task VI to clear the Task. " uid="316" uid_parent="root" />
+</VI>
+<?lvmcp pane="4800"?>
+<?lvmcp exec IsReentrant="0" PooledReentrancy="0" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>
+<?lvmcp calllink uid="2443" tp="0" path="&lt;vilib&gt;|DAQmx|read.llb|DAQmx Read (Analog 1D Wfm NChan NSamp).vi"?>
+<?lvmcp calllink uid="33" tp="0" path="&lt;vilib&gt;|addons|_NISVFA|_Shared subVIs|Groups|SV Get By Measurement Type (tach) (1 Ch).vi"?>
+<?lvmcp calllink uid="35" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Tach Process|OAT Analog Tacho Process (1 Tacho).vi"?>
+<?lvmcp calllink uid="1327" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Resample Order Tracking|OAT Convert to Even Angle Signal (N Channels).vi"?>
+<?lvmcp calllink uid="1842" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Example Support|sub VIs|oax_Compute Order Resolution.vi"?>
+<?lvmcp calllink uid="1378" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Utility|OAT Output Triggered Even Angle Signal (N Channels).vi"?>
+<?lvmcp calllink uid="1356" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Resample Order Tracking|OAT Order Power Spectrum (N Channels).vi"?>
+<?lvmcp calllink uid="1395" tp="0" path="&lt;vilib&gt;|addons|_NISVFA|_Spectrum Processing|SVFA Power in Band (N Ch).vi"?>
+<?lvmcp calllink uid="2321" tp="0" path="&lt;vilib&gt;|DAQmx|configure|task.llb|DAQmx Clear Task.vi"?>
+<?lvmcp calllink uid="1954" tp="0" path="&lt;vilib&gt;|Utility|error.llb|Simple Error Handler.vi"?>
+<?lvmcp xcontrol uid="4981" xctl="SVX NI-DAQmx AI Configuration XControl.xctl"?>

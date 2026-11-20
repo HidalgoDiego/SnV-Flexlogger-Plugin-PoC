@@ -1,0 +1,16 @@
+<VI _name="XNET Create Session (Generic).vi" description="Creates an XNET session at run time using strings instead of XNET I/O names. This VI is for advanced applications\2C when you need to store the configuration as strings (such as within a text file).">
+  <Control _name="error in (no error)" type="cluster{bool.status,int32.code,string.source}" description="The &lt;B&gt;error in&lt;/B&gt; cluster can accept error information wired from VIs previously called.  Use this information to decide if any functionality should be bypassed in the event of errors from other VIs.\0A\0AThe pop-up option &lt;B&gt;Explain Error&lt;/B&gt; (or Explain Warning) gives more information about the error displayed." uid="88" uid_parent="root" value="[false,0,]" conIdx="11" connection="recommended" outputs="value:88.value" />
+  <Indicator _name="error out" type="cluster{bool.status,int32.code,string.source}" description="The &lt;B&gt;error out&lt;/B&gt; cluster passes error or warning information out of a VI to be used by other VIs.\0A\0AThe pop-up option &lt;B&gt;Explain Error&lt;/B&gt; (or Explain Warning) gives more information about the error displayed." uid="55" uid_parent="root" value="[false,0,]" conIdx="15" connection="recommended" inputs="value:180.error out" />
+  <Indicator _name="session out" type="ref{GenClassTag.XNET Session.xnet}" uid="125" uid_parent="root" value="" conIdx="4" connection="recommended" inputs="value:180.session out" />
+  <Control _name=" list (empty)" type="array{string.XNET Signal}" uid="737" uid_parent="root" value="[]" conIdx="5" connection="optional" outputs="value:737.value" />
+  <Control _name="interface" type="ref{GenClassTag.XNET Interface.xnet}" uid="148" uid_parent="root" value="" conIdx="9" connection="required" outputs="value:148.value" />
+  <Control _name="mode" type="uint32" items="Signal Input Single-point,Signal Input Waveform,Signal Input XY,Signal Output Single-point,Signal Output Waveform,Signal Output XY,Frame Input Stream,Frame Input Queued,Frame Input Single-point,Frame Output Stream,Frame Output Queued,Frame Output Single-point,Conversion" style="Ring" uid="177" uid_parent="root" value="0" conIdx="7" connection="required" outputs="value:177.value" />
+  <Control _name="database (\3Amemory\3A)" type="string" uid="399" uid_parent="root" value=":memory:" conIdx="12" connection="optional" outputs="value:399.value" />
+  <Control _name="cluster (empty)" type="string" uid="27" uid_parent="root" value="" conIdx="13" connection="optional" outputs="value:27.value" />
+  <Call uid="180" uid_parent="root" target="_XNET Create Session.vi" inputs="database (empty):399.value,interface:148.value,mode:177.value,cluster (empty):27.value,signal/frame list (empty):737.value,error in (no error):88.value" outputs="session out:180.session out,error out:180.error out" />
+  <FreeLabel comment="NOTE\3A This diagram contains internal implementation of an NI-XNET VI... do not change.  For help\2C select VI and press Ctrl-H." uid="9" uid_parent="root" />
+</VI>
+<?lvmcp pane="4833"?>
+<?lvmcp paneflags="4:0900,5:20000,7:1000,9:1000,11:0A00,12:10200,13:10200,15:0D0B"?>
+<?lvmcp exec IsReentrant="1" PooledReentrancy="0" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>
+<?lvmcp calllink uid="180" tp="1" path="|_XNET Create Session.vi"?>

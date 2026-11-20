@@ -7,4 +7,5 @@
 	<Item Name="acc-daq-test.vi" Type="VI" URL="../acc-daq-test.vi"/>
 	<Item Name="power-spectrum-test.vi" Type="VI" URL="../power-spectrum-test.vi"/>
 	<Item Name="Signal-simulator.vi" Type="VI" URL="../Signal-simulator.vi"/>
+	<Item Name="velocity-rms-kurtosis-test.vi" Type="VI" URL="../velocity-rms-kurtosis-test.vi"/>
 </Library>

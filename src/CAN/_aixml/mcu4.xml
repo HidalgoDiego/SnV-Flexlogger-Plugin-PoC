@@ -1,0 +1,64 @@
+<VI _name="eDyno MCU Model.vi" description="PURPOSE\0ASimulates what an e-bike motor controller (MCU) would report on CAN\2C so the eDyno PoC can log electrical and thermal channels next to vibration. Feeds the MCU_Status frame (0x300) through eDyno CAN Pack Signals.vi. It is a simple STEADY-STATE model for demos - not a validated motor model.\0A\0AINPUTS\0A- Speed (rpm)\3A shaft speed (the simulator's Shaft Speed).\0A- Load Torque (Nm)\3A torque at the motor shaft. Positive = motoring\2C negative = regen. Typical e-bike mid-drive cruise 0.3-1 Nm at the motor shaft (before the gearbox).\0A- Motor Parameters\3A defaults describe a generic 250-500 W\2C 36 V\2C 4-pole-pair mid-drive motor. Change them to match a real motor.\0A\0AOUTPUT (MCU Status cluster\2C same order as the CAN signals)\0AMotor Speed\2C Torque\2C Phase Current RMS\2C DC Voltage\2C DC Current\2C Electrical Power\2C Winding Temp\2C Controller Temp.\0A\0AEQUATIONS (one labelled frame each on the block diagram)\0A1) omega = rpm x 2pi/60;  P_mech = T x omega\0A2) I_ph = I_noload + |T|/Kt;  P_copper = 3 x R_ph x I_ph^2;  P_iron+friction = k x rpm;  P_loss = sum\0A3) P_elec = P_mech + P_loss;  V_dc = V_batt - R_batt x P_elec/V_batt;  I_dc = P_elec/V_dc\0A4) T_winding = T_amb + Rth_w x P_loss;  T_controller = T_amb + Rth_c x |P_elec|\0A\0AEXAMPLE (defaults)\3A 4500 rpm\2C 0.5 Nm -&gt; 11.5 A rms\2C 273 W\2C 35.6 V\2C 7.7 A DC\2C winding 47.7 degC\2C controller 35.9 degC.\0A\0ALIMITATIONS\0ATemperatures jump instantly (no thermal time constant); efficiency map is approximate; field weakening\2C voltage limit and current limit are not modelled.">
+  <Control _name="Speed (rpm)" type="double" uid="51" uid_parent="root" value="0" conIdx="0" connection="required" outputs="value:51.value" />
+  <Control _name="Load Torque (Nm)" type="double" uid="52" uid_parent="root" value="0" conIdx="5" connection="recommended" outputs="value:52.value" />
+  <Control _name="Motor Parameters" type="cluster{double.Kt (Nm per A),double.No-load Current (A),double.Phase Resistance (ohm),double.Iron+Friction Loss (W per rpm),double.Battery Voltage (V),double.Battery Resistance (ohm),double.Ambient Temp (degC),double.Winding Rth (K per W),double.Controller Rth (K per W)}" uid="53" uid_parent="root" value="[0.05,1.5,0.05,0.004,36,0.05,25,0.6,0.04]" conIdx="7" connection="recommended" outputs="value:53.value" />
+  <Node _name="Unbundle By Name" uid="1001" uid_parent="root" fields="Kt (Nm per A),No-load Current (A),Phase Resistance (ohm),Iron+Friction Loss (W per rpm),Battery Voltage (V),Battery Resistance (ohm),Ambient Temp (degC),Winding Rth (K per W),Controller Rth (K per W)" inputs="input cluster:53.value" outputs="Kt (Nm per A):1001.Kt (Nm per A),No-load Current (A):1001.No-load Current (A),Phase Resistance (ohm):1001.Phase Resistance (ohm),Iron+Friction Loss (W per rpm):1001.Iron+Friction Loss (W per rpm),Battery Voltage (V):1001.Battery Voltage (V),Battery Resistance (ohm):1001.Battery Resistance (ohm),Ambient Temp (degC):1001.Ambient Temp (degC),Winding Rth (K per W):1001.Winding Rth (K per W),Controller Rth (K per W):1001.Controller Rth (K per W)" />
+  <Structure _name="Flat Sequence Frame" uid="1002" uid_parent="root" label="1) MECHANICAL POWER\0Aomega [rad/s] = rpm x 2pi/60\0AP_mech [W] = Torque x omega">
+    <Tunnel _id="In1" uid="1003" uid_parent="1002" inputs="value:51.value" outputs="value:1003.value" />
+    <Tunnel _id="In2" uid="1006" uid_parent="1002" inputs="value:52.value" outputs="value:1006.value" />
+    <Constant _name="2pi/60 (rad/s per rpm)" type="double" uid="1004" uid_parent="1002" value="0.10471975511965977" outputs="value:1004.value" />
+    <Node _name="Multiply" uid="1005" uid_parent="1002" inputs="x:1003.value,y:1004.value" outputs="x*y:1005.x*y" />
+    <Node _name="Multiply" uid="1007" uid_parent="1002" inputs="x:1006.value,y:1005.x*y" outputs="x*y:1007.x*y" />
+    <Tunnel _id="Out1" uid="1008" uid_parent="1002" inputs="value:1007.x*y" outputs="value:1008.value" />
+  </Structure>
+  <Structure _name="Flat Sequence Frame" uid="1009" uid_parent="root" label="2) PHASE CURRENT AND LOSSES\0AI_ph [A rms] = I_noload + |Torque| / Kt\0AP_copper [W] = 3 x R_ph x I_ph^2\0AP_iron+friction [W] = k x rpm\0AP_loss = P_copper + P_iron+friction">
+    <Tunnel _id="In1" uid="1010" uid_parent="1009" inputs="value:1001.No-load Current (A)" outputs="value:1010.value" />
+    <Tunnel _id="In2" uid="1011" uid_parent="1009" inputs="value:52.value" outputs="value:1011.value" />
+    <Tunnel _id="In3" uid="1013" uid_parent="1009" inputs="value:1001.Kt (Nm per A)" outputs="value:1013.value" />
+    <Tunnel _id="In4" uid="1018" uid_parent="1009" inputs="value:1001.Phase Resistance (ohm)" outputs="value:1018.value" />
+    <Tunnel _id="In5" uid="1021" uid_parent="1009" inputs="value:51.value" outputs="value:1021.value" />
+    <Tunnel _id="In6" uid="1022" uid_parent="1009" inputs="value:1001.Iron+Friction Loss (W per rpm)" outputs="value:1022.value" />
+    <Node _name="Absolute Value" uid="1012" uid_parent="1009" inputs="x:1011.value" outputs="abs(x):1012.abs(x)" />
+    <Node _name="Divide" uid="1014" uid_parent="1009" inputs="x:1012.abs(x),y:1013.value" outputs="x/y:1014.x/y" />
+    <Node _name="Add" uid="1015" uid_parent="1009" inputs="x:1010.value,y:1014.x/y" outputs="x+y:1015.x+y" />
+    <Node _name="Multiply" uid="1016" uid_parent="1009" inputs="x:1015.x+y,y:1015.x+y" outputs="x*y:1016.x*y" />
+    <Constant _name="3 phases" type="double" uid="1017" uid_parent="1009" value="3" outputs="value:1017.value" />
+    <Node _name="Multiply" uid="1019" uid_parent="1009" inputs="x:1017.value,y:1018.value" outputs="x*y:1019.x*y" />
+    <Node _name="Multiply" uid="1020" uid_parent="1009" inputs="x:1016.x*y,y:1019.x*y" outputs="x*y:1020.x*y" />
+    <Node _name="Multiply" uid="1023" uid_parent="1009" inputs="x:1021.value,y:1022.value" outputs="x*y:1023.x*y" />
+    <Node _name="Add" uid="1025" uid_parent="1009" inputs="x:1020.x*y,y:1023.x*y" outputs="x+y:1025.x+y" />
+    <Tunnel _id="Out1" uid="1024" uid_parent="1009" inputs="value:1015.x+y" outputs="value:1024.value" />
+    <Tunnel _id="Out2" uid="1026" uid_parent="1009" inputs="value:1025.x+y" outputs="value:1026.value" />
+  </Structure>
+  <Structure _name="Flat Sequence Frame" uid="1027" uid_parent="root" label="3) ELECTRICAL INPUT (BATTERY SIDE)\0AP_elec [W] = P_mech + P_loss  (negative = regen)\0AV_dc [V] = V_batt - R_batt x (P_elec / V_batt)\0AI_dc [A] = P_elec / V_dc">
+    <Tunnel _id="In1" uid="1028" uid_parent="1027" inputs="value:1008.value" outputs="value:1028.value" />
+    <Tunnel _id="In2" uid="1029" uid_parent="1027" inputs="value:1026.value" outputs="value:1029.value" />
+    <Tunnel _id="In3" uid="1031" uid_parent="1027" inputs="value:1001.Battery Voltage (V)" outputs="value:1031.value" />
+    <Tunnel _id="In4" uid="1033" uid_parent="1027" inputs="value:1001.Battery Resistance (ohm)" outputs="value:1033.value" />
+    <Node _name="Add" uid="1030" uid_parent="1027" inputs="x:1028.value,y:1029.value" outputs="x+y:1030.x+y" />
+    <Node _name="Divide" uid="1032" uid_parent="1027" inputs="x:1030.x+y,y:1031.value" outputs="x/y:1032.x/y" />
+    <Node _name="Multiply" uid="1034" uid_parent="1027" inputs="x:1032.x/y,y:1033.value" outputs="x*y:1034.x*y" />
+    <Node _name="Subtract" uid="1035" uid_parent="1027" inputs="x:1031.value,y:1034.x*y" outputs="x-y:1035.x-y" />
+    <Node _name="Divide" uid="1036" uid_parent="1027" inputs="x:1030.x+y,y:1035.x-y" outputs="x/y:1036.x/y" />
+    <Tunnel _id="Out1" uid="1037" uid_parent="1027" inputs="value:1030.x+y" outputs="value:1037.value" />
+    <Tunnel _id="Out2" uid="1038" uid_parent="1027" inputs="value:1035.x-y" outputs="value:1038.value" />
+    <Tunnel _id="Out3" uid="1039" uid_parent="1027" inputs="value:1036.x/y" outputs="value:1039.value" />
+  </Structure>
+  <Structure _name="Flat Sequence Frame" uid="1040" uid_parent="root" label="4) STEADY-STATE TEMPERATURES (no thermal lag)\0AT_winding [degC] = T_ambient + Rth_winding x P_loss\0AT_controller [degC] = T_ambient + Rth_controller x |P_elec|">
+    <Tunnel _id="In1" uid="1041" uid_parent="1040" inputs="value:1001.Ambient Temp (degC)" outputs="value:1041.value" />
+    <Tunnel _id="In2" uid="1042" uid_parent="1040" inputs="value:1026.value" outputs="value:1042.value" />
+    <Tunnel _id="In3" uid="1043" uid_parent="1040" inputs="value:1001.Winding Rth (K per W)" outputs="value:1043.value" />
+    <Tunnel _id="In4" uid="1046" uid_parent="1040" inputs="value:1037.value" outputs="value:1046.value" />
+    <Tunnel _id="In5" uid="1048" uid_parent="1040" inputs="value:1001.Controller Rth (K per W)" outputs="value:1048.value" />
+    <Node _name="Multiply" uid="1044" uid_parent="1040" inputs="x:1042.value,y:1043.value" outputs="x*y:1044.x*y" />
+    <Node _name="Add" uid="1045" uid_parent="1040" inputs="x:1041.value,y:1044.x*y" outputs="x+y:1045.x+y" />
+    <Node _name="Absolute Value" uid="1047" uid_parent="1040" inputs="x:1046.value" outputs="abs(x):1047.abs(x)" />
+    <Node _name="Multiply" uid="1049" uid_parent="1040" inputs="x:1047.abs(x),y:1048.value" outputs="x*y:1049.x*y" />
+    <Node _name="Add" uid="1050" uid_parent="1040" inputs="x:1041.value,y:1049.x*y" outputs="x+y:1050.x+y" />
+    <Tunnel _id="Out1" uid="1051" uid_parent="1040" inputs="value:1045.x+y" outputs="value:1051.value" />
+    <Tunnel _id="Out2" uid="1052" uid_parent="1040" inputs="value:1050.x+y" outputs="value:1052.value" />
+  </Structure>
+  <Node _name="Bundle" uid="1053" uid_parent="root" inputs="element:51.value,element:52.value,element:1024.value,element:1038.value,element:1039.value,element:1037.value,element:1051.value,element:1052.value,cluster:" outputs="output cluster:1053.output cluster" />
+  <Indicator _name="MCU Status" type="cluster{double.Motor Speed (rpm),double.Torque (Nm),double.Phase Current RMS (A),double.DC Voltage (V),double.DC Current (A),double.Electrical Power (W),double.Winding Temp (degC),double.Controller Temp (degC)}" uid="61" uid_parent="root" value="[0,0,0,0,0,0,0,0]" conIdx="4" connection="recommended" inputs="value:1053.output cluster" />
+  <FreeLabel comment="Outputs = CAN frame MCU_Status (0x300)" uid="1054" uid_parent="root" />
+</VI>

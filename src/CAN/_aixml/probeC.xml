@@ -1,0 +1,6 @@
+<VI _name="probeC.vi" description="p">
+  <Control _name="iface" type="string" uid="50" uid_parent="root" value="CAN1" conIdx="0" connection="required" outputs="value:50.value" />
+  <Constant _name="mode" type="uint32" uid="51" uid_parent="root" value="3" outputs="value:51.value" />
+  <Call adapt="true" instance="XNET Create Session (Generic).vi" target="XNET Create Session.vi" uid="60" uid_parent="root" inputs=" list (empty):,mode:51.value,interface:50.value,error in (no error):,database (\3Amemory\3A):,cluster (empty):" outputs="session out:,error out:60.error out" />
+  <Indicator _name="error out" type="cluster{bool.status,int32.code,string.source}" uid="52" uid_parent="root" value="[false,0,]" conIdx="15" connection="recommended" inputs="value:60.error out" />
+</VI>

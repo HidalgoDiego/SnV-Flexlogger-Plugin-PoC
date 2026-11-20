@@ -1,0 +1,28 @@
+<HTML>
+<HEAD>
+<TITLE>eDyno NVH Sim + CAN.vi</TITLE>
+<META NAME="Author" CONTENT="">
+<META NAME="GENERATOR" CONTENT="G Development Environment">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<A NAME="eDyno NVH Sim _ CAN.vi"></A><H2>eDyno NVH Sim + CAN.vi</H2>
+<P>eDyno NVH simulator + CAN (eDyno_NVH_PoC.dbc, CAN FD) - copy of eDyno NVH Accel + RPM Simulator.vi with an NI-XNET Signal Output Single-point session on the PXIe-8510 Port1. Once per AO block it publishes DYNO_Cmd, DYNO_Status, SIM_FaultCmd, SIM_FaultStatus and SIM_Config; NI-XNET retransmits each frame at its DBC cycle time (10/100/1000 ms) with the latest values. FlexLogger on Port2 (loopback) logs them next to the raw accel. DynoSts_BlockCounter = AO block index.</P>
+<P></P>
+<P>Manual: leave Run Auto Sequence OFF and toggle Fault Injection / Speed Profile on the panel. Automated: switch Run Auto Sequence ON - each row of Steps is applied for Dwell (s), the run-up restarts at every step, Test Step increments; after the last row the panel values apply again (Seq State 3 = AutoDone).</P>
+<P></P>
+<P>Setup: import eDyno_NVH_PoC.dbc as XNET database alias eDyno_NVH_PoC (NI-XNET Database Editor or MAX) and confirm the cluster is CAN FD+BRS, 500 kbit/s / 2 Mbit/s. CAN Interface = the 8510 port wired to FlexLogger's port (default CAN1).</P>
+<HR>
+<H3>Connector Pane</H3>
+<P><IMG SRC="eDynoNVHSimCANc.png" ALT="eDyno NVH Sim + CAN.vi"></P>
+<HR>
+<H3>Front Panel</H3>
+<P><IMG SRC="eDynoNVHSimCANp.png" ALT="eDyno NVH Sim + CAN.vi"></P>
+<HR>
+<H3>Block Diagram</H3>
+<P><IMG SRC="eDynoNVHSimCANd.png" ALT="eDyno NVH Sim + CAN.vi"></P>
+<HR>
+<H3></H3>
+<Table>
+</Table>
+</BODY>
+</HTML>

@@ -1,0 +1,22 @@
+<HTML>
+<HEAD>
+<TITLE>OA Hold and Valid.vi</TITLE>
+<META NAME="Author" CONTENT="">
+<META NAME="GENERATOR" CONTENT="G Development Environment">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<A NAME="OA Hold and Valid.vi"></A><H2>OA Hold and Valid.vi</H2>
+<P>Order Analysis helper. Holds the order values between spectra and while Data Valid = 0, and computes Data Valid and Residual RMS. Held Values = [Order 1 RMS, Order 1 Phase, Order 2, Order 3.57, Order 4, Order 24, Total Order RMS, Residual RMS]. Values update only on a new spectrum while speed OK, and the phase only once a spectrum exists since the last (re)start. Residual RMS = sqrt(max(0, time-domain mean square since the previous spectrum - Total Order RMS^2)). Data Valid = speed OK AND a spectrum since the last restart or speed recovery AND no error.</P>
+<HR>
+<H3>Connector Pane</H3>
+<P><IMG SRC="OAHoldandValidc.png" ALT="OA Hold and Valid.vi"></P>
+<HR>
+<H3>Front Panel</H3>
+<P><IMG SRC="OAHoldandValidp.png" ALT="OA Hold and Valid.vi"></P>
+<HR>
+<H3>Block Diagram</H3>
+<P><IMG SRC="OAHoldandValidd.png" ALT="OA Hold and Valid.vi"></P>
+<HR>
+<H3></H3>
+</BODY>
+</HTML>

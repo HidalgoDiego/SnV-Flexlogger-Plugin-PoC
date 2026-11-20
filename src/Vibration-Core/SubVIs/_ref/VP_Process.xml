@@ -1,0 +1,63 @@
+<VI _name="Vibration Parameters.lvlib:Vibration Parameters.lvclass:Process.vi" description="">
+  <Control _name="error in" type="cluster{bool.status,int32.code,string.source}" description="The &lt;B&gt;error in&lt;/B&gt; cluster can accept error information wired from VIs previously called.  Use this information to decide if any functionality should be bypassed in the event of errors from other VIs.\0A\0AThe pop-up option &lt;B&gt;Explain Error&lt;/B&gt; (or Explain Warning) gives more information about the error displayed." uid="21" uid_parent="root" value="[false,0,]" conIdx="8" connection="recommended" outputs="value:21.value" />
+  <Indicator _name="error out" type="cluster{bool.status,int32.code,string.source}" description="The &lt;B&gt;error out&lt;/B&gt; cluster passes error or warning information out of a VI to be used by other VIs.\0A\0AThe pop-up option &lt;B&gt;Explain Error&lt;/B&gt; (or Explain Warning) gives more information about the error displayed." uid="99" uid_parent="root" value="[false,0,]" conIdx="0" connection="recommended" inputs="value:607.value" />
+  <Control _name="Plugin in" type="ref{UDClassInst}" uid="477" uid_parent="root" value="" conIdx="11" connection="dynamic" outputs="value:477.value" />
+  <Indicator _name="Plugin out" type="ref{UDClassInst}" uid="567" uid_parent="root" value="" conIdx="3" connection="dynamic" inputs="value:559.value" />
+  <Structure _name="Case Structure" uid="426" uid_parent="root" selectin="21.value">
+    <Tunnel _id="In1" uid="570" uid_parent="426" inputs="value:477.value" />
+    <CaseFrame selector="No Error" uid="507" uid_parent="426" selectout="507.value" label="Perform a calculation on input data and return it to FlexLogger">
+      <Tunnel _id="Out1" uid="555" uid_parent="507" inputs="value:1254.value" />
+      <Tunnel _id="In1" uid="569" uid_parent="507" outputs="value:569.value" />
+      <Tunnel _id="Out2" uid="606" uid_parent="507" inputs="value:1241.value" />
+      <Constant _name="Unique Channel Identifers (empty = all)" type="array{string.String}" uid="3901" uid_parent="507" value="[]" outputs="value:3901.value" />
+      <Structure _name="Case Structure" uid="942" uid_parent="507" selectin="1283.size(s)">
+        <Tunnel _id="In1" uid="1007" uid_parent="942" inputs="value:467.Data" />
+        <Tunnel _id="In2" uid="1510" uid_parent="942" inputs="value:467.Plugin out" />
+        <Tunnel _id="In3" uid="1543" uid_parent="942" inputs="value:467.error out" />
+        <Tunnel _id="In4" uid="370" uid_parent="942" inputs="value:467.Stream Names" />
+        <CaseFrame selector="0" uid="967" uid_parent="942" selectout="" label="No channels sending data to the plugin">
+          <Tunnel _id="In1" uid="1005" uid_parent="967" outputs="value:" />
+          <Tunnel _id="Out1" uid="1234" uid_parent="967" inputs="value:1536.value" />
+          <Tunnel _id="Out2" uid="1252" uid_parent="967" inputs="value:1503.value" />
+          <Tunnel _id="In2" uid="1503" uid_parent="967" outputs="value:1503.value" />
+          <Tunnel _id="In3" uid="1536" uid_parent="967" outputs="value:1536.value" />
+          <Tunnel _id="In4" uid="362" uid_parent="967" outputs="value:" />
+        </CaseFrame>
+        <CaseFrame selector="Default" uid="973" uid_parent="942" selectout="" label="Use data from other channels to perform a calculation">
+          <Tunnel _id="In1" uid="1006" uid_parent="973" outputs="value:1006.value" />
+          <Tunnel _id="Out1" uid="1238" uid_parent="973" inputs="value:509.error out" />
+          <Tunnel _id="Out2" uid="1253" uid_parent="973" inputs="value:509.Plugin out" />
+          <Tunnel _id="In2" uid="1506" uid_parent="973" outputs="value:1506.value" />
+          <Tunnel _id="In3" uid="1539" uid_parent="973" outputs="value:1539.value" />
+          <Tunnel _id="In4" uid="366" uid_parent="973" outputs="value:" />
+          <Constant _name="index" type="int32" uid="663" uid_parent="973" value="0" outputs="value:663.value" />
+          <Constant _name="Auto Calculate T0 (f)" type="bool" uid="729" uid_parent="973" value="true" outputs="value:729.value" />
+          <Call uid="509" uid_parent="973" instance="PluginSDK.lvlibp:Plugin.lvclass:Write 1D Wfm (DBL)_v2.vi" target="PluginSDK.lvlibp:Plugin.lvclass:Write Data.vi" inputs="Auto Calculate T0 (f):729.value,error in (no error):409.error out,Data:409.Array of Waveforms,Plugin in:1506.value" outputs="error out:509.error out,Plugin out:509.Plugin out" comment="Write the channel data to FlexLogger" />
+          <Node _name="Unbundle By Name" uid="759" uid_parent="973" fields="Window" outputs="Window:759.Window" inputs="input cluster:1506.value" />
+          <Call uid="409" uid_parent="973" target="Calculations.lvlib:PowerSpectrum.vi" inputs="error in (no error):1539.value,averaging parameters:,Window:759.Window,Data In:210.element" outputs="error out:409.error out,Array of Waveforms:409.Array of Waveforms,power spectrum [dB EU]:" />
+          <Node _name="Index Array" uid="210" uid_parent="973" inputs="array:1006.value,index:663.value" outputs="element:210.element" />
+        </CaseFrame>
+        <Tunnel _id="Out1" uid="1241" uid_parent="942" outputs="value:1241.value" />
+        <Tunnel _id="Out2" uid="1254" uid_parent="942" outputs="value:1254.value" />
+      </Structure>
+      <Node _name="Array Size" uid="1283" uid_parent="507" outputs="size(s):1283.size(s)" inputs="array:467.Data" />
+      <Call uid="467" uid_parent="507" target="PluginSDK.lvlibp:Plugin.lvclass:Read 1D Wfm (DBL)_v2.vi" outputs="error out:467.error out,Stream Names:467.Stream Names,Data:467.Data,Plugin out:467.Plugin out" inputs="error in (no error):507.value,Unique Identifiers (empty = all):3901.value,Plugin in:569.value" comment="Read waveform data.\0ASince a list of channel names is not provided\2C read data from all channels passed as parameters to this plug-in.\0A(See the channel parameter definition in Initialize.vi)" />
+    </CaseFrame>
+    <CaseFrame selector="Error" uid="501" uid_parent="426" selectout="501.value" label="">
+      <Tunnel _id="Out1" uid="551" uid_parent="501" inputs="value:568.value" />
+      <Tunnel _id="In1" uid="568" uid_parent="501" outputs="value:568.value" />
+      <Tunnel _id="Out2" uid="605" uid_parent="501" inputs="value:501.value" />
+    </CaseFrame>
+    <Tunnel _id="Out1" uid="559" uid_parent="426" outputs="value:559.value" />
+    <Tunnel _id="Out2" uid="607" uid_parent="426" outputs="value:607.value" />
+  </Structure>
+</VI>
+<?lvmcp pane="4815"?>
+<?lvmcp dynamic uids="567,477"?>
+<?lvmcp paneflags="0:0D08,3:8D0B,8:0A00,11:9200"?>
+<?lvmcp exec IsReentrant="1" PooledReentrancy="1" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>
+<?lvmcp classes uid="567" names="Vibration Parameters.lvlib:Vibration Parameters.lvclass"?>
+<?lvmcp classes uid="477" names="Vibration Parameters.lvlib:Vibration Parameters.lvclass"?>
+<?lvmcp calllink uid="509" tp="0" path="&lt;vilib&gt;|FlexLogger|SDK|PluginSDK.lvlibp|PEFClasses|SDK|Plugin|DataHelpers|Write 1D Wfm (DBL)_v2.vi"?>
+<?lvmcp calllink uid="409" tp="1" path="|||Vibration-Core|SubVIs|PowerSpectrum.vi"?>
+<?lvmcp calllink uid="467" tp="0" path="&lt;vilib&gt;|FlexLogger|SDK|PluginSDK.lvlibp|PEFClasses|SDK|Plugin|DataHelpers|Read 1D Wfm (DBL)_v2.vi"?>

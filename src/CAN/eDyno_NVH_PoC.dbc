@@ -1,0 +1,144 @@
+VERSION "eDyno_NVH_PoC v0.5"
+
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	BA_DEF_DEF_
+	VAL_TABLE_
+
+BS_:
+
+BU_: DYNO_HOST EDYNO_SIM FLEXLOGGER MCU
+
+
+
+BO_ 256 DYNO_Cmd: 16 DYNO_HOST
+ SG_ DynoCmd_Mode : 0|4@1+ (1,0) [0|3] "" EDYNO_SIM,FLEXLOGGER
+ SG_ DynoCmd_Enable : 4|1@1+ (1,0) [0|1] "" EDYNO_SIM,FLEXLOGGER
+ SG_ DynoCmd_Alive : 8|4@1+ (1,0) [0|15] "" EDYNO_SIM,FLEXLOGGER
+ SG_ DynoCmd_SpeedSetpoint : 16|16@1+ (0.25,0) [0|16383.75] "rpm" EDYNO_SIM,FLEXLOGGER
+ SG_ DynoCmd_RunUpStart : 32|16@1+ (0.25,0) [0|16383.75] "rpm" EDYNO_SIM,FLEXLOGGER
+ SG_ DynoCmd_RunUpEnd : 48|16@1+ (0.25,0) [0|16383.75] "rpm" EDYNO_SIM,FLEXLOGGER
+ SG_ DynoCmd_RunUpDuration : 64|16@1+ (0.1,0) [0|6553.5] "s" EDYNO_SIM,FLEXLOGGER
+
+BO_ 272 DYNO_Status: 16 EDYNO_SIM
+ SG_ DynoSts_Mode : 0|4@1+ (1,0) [0|3] "" DYNO_HOST,FLEXLOGGER
+ SG_ DynoSts_AtSpeed : 4|1@1+ (1,0) [0|1] "" DYNO_HOST,FLEXLOGGER
+ SG_ DynoSts_SimRunning : 5|1@1+ (1,0) [0|1] "" DYNO_HOST,FLEXLOGGER
+ SG_ DynoSts_Alive : 8|4@1+ (1,0) [0|15] "" DYNO_HOST,FLEXLOGGER
+ SG_ DynoSts_SpeedAct : 16|16@1+ (0.25,0) [0|16383.75] "rpm" DYNO_HOST,FLEXLOGGER
+ SG_ DynoSts_BlockCounter : 48|32@1+ (1,0) [0|4294967295] "" DYNO_HOST,FLEXLOGGER
+
+BO_ 512 SIM_FaultCmd: 16 DYNO_HOST
+ SG_ FltCmd_Imbalance_On : 0|1@1+ (1,0) [0|1] "" EDYNO_SIM,FLEXLOGGER
+ SG_ FltCmd_Misalign_On : 1|1@1+ (1,0) [0|1] "" EDYNO_SIM,FLEXLOGGER
+ SG_ FltCmd_BPFO_On : 2|1@1+ (1,0) [0|1] "" EDYNO_SIM,FLEXLOGGER
+ SG_ FltCmd_Ripple_On : 3|1@1+ (1,0) [0|1] "" EDYNO_SIM,FLEXLOGGER
+ SG_ FltCmd_PWM_On : 4|1@1+ (1,0) [0|1] "" EDYNO_SIM,FLEXLOGGER
+ SG_ FltCmd_Alive : 8|4@1+ (1,0) [0|15] "" EDYNO_SIM,FLEXLOGGER
+ SG_ FltCmd_Imbalance_Amp : 16|16@1+ (0.001,0) [0|65.535] "g" EDYNO_SIM,FLEXLOGGER
+ SG_ FltCmd_Misalign_Amp : 32|16@1+ (0.001,0) [0|65.535] "g" EDYNO_SIM,FLEXLOGGER
+ SG_ FltCmd_BPFO_Amp : 48|16@1+ (0.001,0) [0|65.535] "g" EDYNO_SIM,FLEXLOGGER
+ SG_ FltCmd_Ripple_Amp : 64|16@1+ (0.001,0) [0|65.535] "g" EDYNO_SIM,FLEXLOGGER
+ SG_ FltCmd_PWM_Amp : 80|16@1+ (0.001,0) [0|65.535] "g" EDYNO_SIM,FLEXLOGGER
+
+BO_ 528 SIM_FaultStatus: 48 EDYNO_SIM
+ SG_ FltSts_Imbalance_On : 0|1@1+ (1,0) [0|1] "" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_Misalign_On : 1|1@1+ (1,0) [0|1] "" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_BPFO_On : 2|1@1+ (1,0) [0|1] "" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_Ripple_On : 3|1@1+ (1,0) [0|1] "" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_PWM_On : 4|1@1+ (1,0) [0|1] "" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_ActiveId : 8|4@1+ (1,0) [0|6] "" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_Alive : 16|4@1+ (1,0) [0|15] "" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_Freq_1x : 32|32@1+ (0.01,0) [0|42949672.95] "Hz" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_Freq_2x : 64|32@1+ (0.01,0) [0|42949672.95] "Hz" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_Freq_BPFO : 96|32@1+ (0.01,0) [0|42949672.95] "Hz" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_Freq_Ripple : 128|32@1+ (0.01,0) [0|42949672.95] "Hz" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_Freq_PWM : 160|32@1+ (0.01,0) [0|42949672.95] "Hz" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_Imbalance_Amp : 208|16@1+ (0.001,0) [0|65.535] "g" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_Misalign_Amp : 224|16@1+ (0.001,0) [0|65.535] "g" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_BPFO_Amp : 240|16@1+ (0.001,0) [0|65.535] "g" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_Ripple_Amp : 256|16@1+ (0.001,0) [0|65.535] "g" DYNO_HOST,FLEXLOGGER
+ SG_ FltSts_PWM_Amp : 272|16@1+ (0.001,0) [0|65.535] "g" DYNO_HOST,FLEXLOGGER
+
+BO_ 544 SIM_Config: 24 EDYNO_SIM
+ SG_ SimCfg_BPFO_Order : 0|16@1+ (0.001,0) [0|65.535] "" DYNO_HOST,FLEXLOGGER
+ SG_ SimCfg_Resonance : 16|16@1+ (1,0) [0|65535] "Hz" DYNO_HOST,FLEXLOGGER
+ SG_ SimCfg_Decay : 32|16@1+ (0.01,0) [0|655.35] "ms" DYNO_HOST,FLEXLOGGER
+ SG_ SimCfg_PolePairs : 48|8@1+ (1,0) [0|255] "" DYNO_HOST,FLEXLOGGER
+ SG_ SimCfg_SampleRate : 64|32@1+ (1,0) [0|4294967295] "Hz" DYNO_HOST,FLEXLOGGER
+ SG_ SimCfg_PWMCarrier : 96|16@1+ (1,0) [0|65535] "Hz" DYNO_HOST,FLEXLOGGER
+ SG_ SimCfg_RefSpeed : 112|16@1+ (0.25,0) [0|16383.75] "rpm" DYNO_HOST,FLEXLOGGER
+ SG_ SimCfg_Baseline1x : 128|16@1+ (0.001,0) [0|65.535] "g" DYNO_HOST,FLEXLOGGER
+ SG_ SimCfg_NoiseFloor : 144|16@1+ (0.0001,0) [0|6.5535] "g rms" DYNO_HOST,FLEXLOGGER
+
+
+BO_ 768 MCU_Status: 16 MCU
+ SG_ MCU_MotorSpeed : 0|16@1+ (0.25,0) [0|16383.75] "rpm" FLEXLOGGER,DYNO_HOST
+ SG_ MCU_TorqueEst : 16|16@1- (0.001,0) [-32.768|32.767] "Nm" FLEXLOGGER,DYNO_HOST
+ SG_ MCU_PhaseCurrentRms : 32|16@1+ (0.01,0) [0|655.35] "A" FLEXLOGGER,DYNO_HOST
+ SG_ MCU_DCVoltage : 48|16@1+ (0.01,0) [0|655.35] "V" FLEXLOGGER,DYNO_HOST
+ SG_ MCU_DCCurrent : 64|16@1- (0.01,0) [-327.68|327.67] "A" FLEXLOGGER,DYNO_HOST
+ SG_ MCU_ElecPower : 80|16@1- (1,0) [-32768|32767] "W" FLEXLOGGER,DYNO_HOST
+ SG_ MCU_WindingTemp : 96|16@1- (0.1,0) [-3276.8|3276.7] "degC" FLEXLOGGER,DYNO_HOST
+ SG_ MCU_ControllerTemp : 112|16@1- (0.1,0) [-3276.8|3276.7] "degC" FLEXLOGGER,DYNO_HOST
+
+CM_ "eDyno NVH PoC - CAN FD database. PXIe-8510 loopback: Port1 = DYNO_HOST + EDYNO_SIM (LabVIEW simulator VI), Port2 = FLEXLOGGER (logging). Arbitration 500 kbit/s, data phase 2 Mbit/s, BRS on.";
+CM_ BU_ DYNO_HOST "Mimics the dyno host/test automation. Sends speed and fault commands (automated workflow only).";
+CM_ BU_ EDYNO_SIM "eDyno NVH signal simulator (PXIe-4468 AO). Publishes actual speed and active-fault state in both manual and automated workflows.";
+CM_ BU_ MCU "Simulated e-bike motor controller (computed in eDyno CAN Pack Signals.vi from speed and load torque).";
+CM_ BU_ FLEXLOGGER "FlexLogger on Port2. Receive-only, logs all signals alongside raw accel and plug-in results.";
+CM_ BO_ 256 "Dyno speed command. Maps to simulator Speed Profile cluster (Mode RunUp -> Run-up Enabled = TRUE).";
+CM_ BO_ 272 "Dyno feedback from simulator. BlockCounter = AO block index, used to correlate CAN events with the raw accel.";
+CM_ BO_ 512 "Fault injection command (automated workflow). Maps 1:1 to simulator Fault Injection cluster.";
+CM_ BO_ 528 "Applied fault state. ActiveId is a single step channel for FlexLogger event/trigger correlation. Freq_* mirror the simulator Fault Frequencies output.";
+CM_ SG_ 528 FltSts_ActiveId "0 = none, 1 = Imbalance, 2 = Misalignment, 3 = BPFO, 4 = Torque ripple, 5 = PWM, 6 = more than one fault active. (No value table: FlexLogger 2026 Q3 does not decode signals from DBCs with VAL_ tables.)";
+CM_ BO_ 768 "Simulated motor-controller status, 10 ms. Steady-state model: Kt 0.05 Nm/A, no-load current 1.5 A, Rph 0.05 ohm, iron+friction 0.004 W/rpm, 36 V battery with 0.05 ohm, Rth winding 0.6 K/W, controller 0.04 K/W of electrical power, 25 degC ambient.";
+CM_ BO_ 544 "Simulator Sim Config cluster, 1 s cyclic so every TDMS file carries the settings used to generate the accel.";
+
+BA_DEF_  "BusType" STRING ;
+BA_DEF_  "DBName" STRING ;
+BA_DEF_  "Baudrate" INT 0 1000000;
+BA_DEF_  "BaudrateCANFD" INT 0 8000000;
+BA_DEF_ BO_  "VFrameFormat" ENUM  "StandardCAN","ExtendedCAN","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","StandardCAN_FD","ExtendedCAN_FD";
+BA_DEF_ BO_  "CANFD_BRS" ENUM  "0","1";
+BA_DEF_ BO_  "GenMsgSendType" ENUM  "Cyclic","NoMsgSendType";
+BA_DEF_ BO_  "GenMsgCycleTime" INT 0 65535;
+BA_DEF_ SG_  "GenSigStartValue" INT 0 2147483647;
+BA_DEF_DEF_  "BusType" "CAN FD";
+BA_DEF_DEF_  "DBName" "";
+BA_DEF_DEF_  "Baudrate" 500000;
+BA_DEF_DEF_  "BaudrateCANFD" 2000000;
+BA_DEF_DEF_  "VFrameFormat" "StandardCAN_FD";
+BA_DEF_DEF_  "CANFD_BRS" "1";
+BA_DEF_DEF_  "GenMsgSendType" "Cyclic";
+BA_DEF_DEF_  "GenMsgCycleTime" 0;
+BA_DEF_DEF_  "GenSigStartValue" 0;
+BA_ "BusType" "CAN FD";
+BA_ "DBName" "eDyno_NVH_PoC";
+BA_ "Baudrate" 500000;
+BA_ "BaudrateCANFD" 2000000;
+BA_ "VFrameFormat" BO_ 256 14;
+BA_ "VFrameFormat" BO_ 272 14;
+BA_ "VFrameFormat" BO_ 512 14;
+BA_ "VFrameFormat" BO_ 528 14;
+BA_ "VFrameFormat" BO_ 544 14;
+BA_ "VFrameFormat" BO_ 768 14;
+BA_ "CANFD_BRS" BO_ 256 1;
+BA_ "CANFD_BRS" BO_ 272 1;
+BA_ "CANFD_BRS" BO_ 512 1;
+BA_ "CANFD_BRS" BO_ 528 1;
+BA_ "CANFD_BRS" BO_ 544 1;
+BA_ "CANFD_BRS" BO_ 768 1;
+BA_ "GenMsgCycleTime" BO_ 256 10;
+BA_ "GenMsgCycleTime" BO_ 272 10;
+BA_ "GenMsgCycleTime" BO_ 512 100;
+BA_ "GenMsgCycleTime" BO_ 528 100;
+BA_ "GenMsgCycleTime" BO_ 544 1000;
+BA_ "GenMsgCycleTime" BO_ 768 10;
+
+

@@ -1,0 +1,27 @@
+<Configuration>
+  <Target name="My Computer">
+    <EnableDebuggingForAllVIs>0</EnableDebuggingForAllVIs>
+    <VI name="eDyno NVH Accel Simulator.vi">
+      <Breakpoints>
+        <NodeIndexes>
+        </NodeIndexes>
+        <SignalIndexes>
+        </SignalIndexes>
+      </Breakpoints>
+      <Probes>
+        <Generic>
+          <SignalUID value="4432"/>
+          <SignalUID value="2021"/>
+          <SignalUID value="566"/>
+          <SignalUID value="585"/>
+          <SignalUID value="4101"/>
+          <SignalUID value="1919"/>
+          <SignalUID value="328"/>
+        </Generic>
+        <Smart>
+          <Probe signalUID="4085" menuID="-1" itemID="-1" path="C:\Program Files\National Instruments\LabVIEW 2026\vi.lib\_probes\default\ConditionalErrorProbe.vi"/>
+        </Smart>
+      </Probes>
+    </VI>
+  </Target>
+</Configuration>

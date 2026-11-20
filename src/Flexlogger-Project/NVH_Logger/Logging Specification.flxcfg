@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SourceFile Checksum="4D984B99D74E41C75628E83D9922CA223EDE9E5FD163F8B6B22840BAA3C5A567C88EE48824918023FD2FF32CC673D8F87FCEAA69FEE4D20DE469E450C071492B" Timestamp="1DD7916ABFA4D2A" xmlns="http://www.ni.com/PlatformFramework">
+	<SourceModelFeatureSet>
+		<ParsableNamespace AssemblyFileVersion="9.21.0.50035" FeatureSetName="Lumberjack Core" Name="http://www.ni.com/Lumberjack.Core" OldestCompatibleVersion="9.19.0.49152" Version="9.19.0.49152" />
+		<ParsableNamespace AssemblyFileVersion="9.21.0.50035" FeatureSetName="Editor" Name="http://www.ni.com/PlatformFramework" OldestCompatibleVersion="8.1.0.49152" Version="8.1.0.49152" />
+		<ApplicationVersionInfo Build="9.21.0.50035" Name="FlexLogger" Version="26.5.0.0" />
+	</SourceModelFeatureSet>
+	<LoggingSpecification xmlns="http://www.ni.com/Lumberjack.Core">
+		<LoggingConfigurationModel Id="5ecf1bb5bb6544129cbe1dbe6608c633">
+			<ProcessingElementModelOwner Id="f8694f56422046fcb937c373ed656d83">
+				<TriggeredLoggingProvider Id="405d8e1a067d4009a29185e26cba2faa" ModelTypeId="[string]CBA104E4-2D21-4AC7-915B-D7DCC1243DCE" StartTime="2026-11-20T11:34:13.033167399999999999985443588368383416309370659291744232177734375-05:00" />
+				<TdmsLoggingProvider DataReductionStrategy="Decimate" Id="5e0d818149b4fcdbfbb610019fbb6a0" LogFileBackupPath="&quot;C:\\Users\\dihidalg\\Documents\\FlexLogger\\data\\backups&quot;" LogFileBasePath="&quot;C:\\Users\\dihidalg\\Desktop\\MCP\\MCP_SnV_Test\\data&quot;" ModelTypeId="[string]59163356-411F-436B-A6B6-82FB1EFB19E1">
+					<UserDefinedMetadata Id="63125af5e3bc4605882511151b0fc0fd">
+						<UserDefinedMetadataItem DataType="String" Id="da293ca5942b4a2c87aa2aded379736f" Name="Operator">
+							<p.Value>dihidalg</p.Value>
+						</UserDefinedMetadataItem>
+						<UserDefinedMetadataItem DataType="String" Id="39304af0f5d74fb9adbd55d37f6f85d8" Name="DUT">
+							<p.Value>""</p.Value>
+						</UserDefinedMetadataItem>
+					</UserDefinedMetadata>
+				</TdmsLoggingProvider>
+			</ProcessingElementModelOwner>
+		</LoggingConfigurationModel>
+	</LoggingSpecification>
+</SourceFile>

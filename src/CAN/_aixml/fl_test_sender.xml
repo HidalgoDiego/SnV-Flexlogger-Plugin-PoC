@@ -1,0 +1,41 @@
+<VI _name="CAN FlexLogger Test Sender.vi" description="Sends known test values on CAN (eDyno_NVH_PoC database) so FlexLogger signal decoding can be checked without the simulator.\0A\0AEvery 10 ms\3A DynoSts_SpeedAct ramps 1000 -&gt; 3990 rpm every 3 s\2C DynoSts_BlockCounter = loop count\2C DynoSts_Mode = 1\2C FltSts_ActiveId steps 0..6 every 2 s\2C FltSts_Freq_1x = speed/60.\0A\0AStop eDyno NVH Accel Simulator.vi first (both write the same frames on CAN1). Bus settings (CAN FD+BRS\2C 500k/2M) come from the database alias.">
+  <Control _name="CAN Interface" type="string" uid="50" uid_parent="root" value="CAN1" outputs="value:50.value" />
+  <Control _name="XNET Database" type="string" uid="51" uid_parent="root" value="eDyno_NVH_PoC" outputs="value:51.value" />
+  <Constant _name="signals" type="array{string}" uid="52" uid_parent="root" value="[DYNO_Status.DynoSts_SpeedAct,DYNO_Status.DynoSts_BlockCounter,DYNO_Status.DynoSts_Mode,SIM_FaultStatus.FltSts_ActiveId,SIM_FaultStatus.FltSts_Freq_1x]" outputs="value:52.value" />
+  <Constant _name="Signal Output Single-point" type="uint32" uid="53" uid_parent="root" value="3" outputs="value:53.value" />
+  <Constant _name="cluster" type="string" uid="54" uid_parent="root" value="" outputs="value:54.value" />
+  <Call adapt="true" instance="XNET Create Session (Generic).vi" target="XNET Create Session.vi" uid="60" uid_parent="root" inputs=" list (empty):52.value,mode:53.value,interface:50.value,error in (no error):,database (\3Amemory\3A):51.value,cluster (empty):54.value" outputs="session out:60.session out,error out:60.error out" />
+  <Structure _name="While Loop" uid="100" uid_parent="root" count="100.value" label="10 ms\3A build known values -&gt; XNET Write">
+    <Control _name="STOP" type="bool" style="latched" uid="101" uid_parent="100" value="false" outputs="value:101.value" />
+    <Indicator _name="Loop Count" type="double" uid="102" uid_parent="100" value="0" inputs="value:110.double precision float" />
+    <Indicator _name="Values Sent" type="array{double}" uid="103" uid_parent="100" value="[]" inputs="value:140.appended array" />
+    <Constant _name="10 ms" type="int32" uid="104" uid_parent="100" value="10" outputs="value:104.value" />
+    <Node _name="Wait (ms)" uid="105" uid_parent="100" inputs="milliseconds to wait:104.value" outputs="millisecond timer value:" />
+    <Node _name="To Double Precision Float" uid="110" uid_parent="100" inputs="number:100.value" outputs="double precision float:110.double precision float" />
+    <Constant _name="300" type="double" uid="111" uid_parent="100" value="300" outputs="value:111.value" />
+    <Node _name="Quotient &amp; Remainder" uid="112" uid_parent="100" inputs="x:110.double precision float,y:111.value" outputs="x-y*floor(x/y):112.r,floor(x/y):" />
+    <Constant _name="10 rpm/step" type="double" uid="113" uid_parent="100" value="10" outputs="value:113.value" />
+    <Node _name="Multiply" uid="114" uid_parent="100" inputs="x:112.r,y:113.value" outputs="x*y:114.x*y" />
+    <Constant _name="1000 rpm" type="double" uid="115" uid_parent="100" value="1000" outputs="value:115.value" />
+    <Node _name="Add" uid="116" uid_parent="100" inputs="x:114.x*y,y:115.value" outputs="x+y:116.speed" />
+    <Constant _name="200" type="double" uid="120" uid_parent="100" value="200" outputs="value:120.value" />
+    <Node _name="Quotient &amp; Remainder" uid="121" uid_parent="100" inputs="x:110.double precision float,y:120.value" outputs="x-y*floor(x/y):,floor(x/y):121.q" />
+    <Constant _name="7" type="double" uid="122" uid_parent="100" value="7" outputs="value:122.value" />
+    <Node _name="Quotient &amp; Remainder" uid="123" uid_parent="100" inputs="x:121.q,y:122.value" outputs="x-y*floor(x/y):123.id,floor(x/y):" />
+    <Constant _name="60" type="double" uid="124" uid_parent="100" value="60" outputs="value:124.value" />
+    <Node _name="Divide" uid="125" uid_parent="100" inputs="x:116.speed,y:124.value" outputs="x/y:125.x/y" />
+    <Constant _name="mode 1" type="double" uid="126" uid_parent="100" value="1" outputs="value:126.value" />
+    <Node _name="Build Array" uid="140" uid_parent="100" inputs="element:116.speed,element:110.double precision float,element:126.value,element:123.id,element:125.x/y" outputs="appended array:140.appended array" />
+    <Call adapt="true" instance="XNET Write (Signal Single-point).vi" target="XNET Write.vi" uid="141" uid_parent="100" inputs="session in:150.value,data:140.appended array,error in (no error):161.value" outputs="session out:,error out:141.error out" />
+    <Node _name="Unbundle By Name" uid="142" uid_parent="100" fields="status" inputs="input cluster:141.error out" outputs="status:142.status" />
+    <Node _name="Or" uid="143" uid_parent="100" inputs="x:101.value,y:142.status" outputs="x .or. y?:143.x .or. y?" />
+    <Tunnel _id="In1" uid="151" uid_parent="100" inputs="value:60.session out" outputs="value:150.value" />
+    <ShiftReg uid="160" uid_parent="100">
+      <Left uid="162" uid_parent="160" inputs="value:60.error out" outputs="value:161.value" />
+      <Right uid="163" uid_parent="160" inputs="value:141.error out" outputs="value:164.value" />
+    </ShiftReg>
+    <Condition uid="170" uid_parent="100" value="stop" inputs="value:143.x .or. y?" />
+  </Structure>
+  <Call uid="70" uid_parent="root" target="XNET Clear.vi" inputs="session in:60.session out,error in (no error):164.value" outputs="error out:70.error out" />
+  <Call uid="71" uid_parent="root" target="Simple Error Handler.vi" inputs="error code (no error\3A0):,error source (&quot; &quot;):,type of dialog (OK msg\3A1):,error in (no error):70.error out" outputs="error?:,code out:,source out:,error out:,message:" />
+</VI>

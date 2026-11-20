@@ -1,0 +1,40 @@
+<VI _name="eDyno MCU Model.vi" description="Steady-state e-bike motor/controller model for the simulated MCU_Status CAN frame. Phase current = 1.5 A + |T|/Kt (Kt 0.05 Nm/A); copper loss = 3 x 0.05 ohm x I^2; iron+friction = 0.004 W/rpm; Pelec = T*omega + losses; Vdc = 36 V - Rbatt(0.05) x Pelec/36; Idc = Pelec/Vdc; winding temp = 25 + 0.6 K/W x losses; controller temp = 25 + 0.04 K/W x |Pelec|. Edit the constants to match a real motor.">
+  <Control _name="Speed (rpm)" type="double" uid="51" uid_parent="root" value="0" conIdx="0" connection="required" outputs="value:51.value" />
+  <Control _name="Load Torque (Nm)" type="double" uid="52" uid_parent="root" value="0" conIdx="5" connection="recommended" outputs="value:52.value" />
+  <Indicator _name="MCU Status" type="cluster{double.Motor Speed (rpm),double.Torque (Nm),double.Phase Current RMS (A),double.DC Voltage (V),double.DC Current (A),double.Electrical Power (W),double.Winding Temp (degC),double.Controller Temp (degC)}" uid="61" uid_parent="root" value="[0,0,0,0,0,0,0,0]" conIdx="4" connection="recommended" inputs="value:1032.output cluster" />
+  <Constant _name="rad/s per rpm" type="double" uid="1001" uid_parent="root" value="0.10471975511965977" outputs="value:1001.value" />
+  <Constant _name="no-load current (A)" type="double" uid="1003" uid_parent="root" value="1.5" outputs="value:1003.value" />
+  <Constant _name="Kt (Nm/A)" type="double" uid="1005" uid_parent="root" value="0.050000000000000003" outputs="value:1005.value" />
+  <Constant _name="3 x Rph (ohm)" type="double" uid="1010" uid_parent="root" value="0.14999999999999999" outputs="value:1010.value" />
+  <Constant _name="iron+friction (W/rpm)" type="double" uid="1012" uid_parent="root" value="0.0040000000000000001" outputs="value:1012.value" />
+  <Constant _name="battery (V)" type="double" uid="1016" uid_parent="root" value="36" outputs="value:1016.value" />
+  <Constant _name="nominal (V)" type="double" uid="1017" uid_parent="root" value="36" outputs="value:1017.value" />
+  <Constant _name="Rbatt (ohm)" type="double" uid="1019" uid_parent="root" value="0.050000000000000003" outputs="value:1019.value" />
+  <Constant _name="ambient (degC)" type="double" uid="1023" uid_parent="root" value="25" outputs="value:1023.value" />
+  <Constant _name="Rth winding (K/W)" type="double" uid="1024" uid_parent="root" value="0.59999999999999998" outputs="value:1024.value" />
+  <Constant _name="ambient (degC)" type="double" uid="1027" uid_parent="root" value="25" outputs="value:1027.value" />
+  <Constant _name="controller (K/W)" type="double" uid="1029" uid_parent="root" value="0.040000000000000001" outputs="value:1029.value" />
+  <Node _name="Multiply" uid="1002" uid_parent="root" inputs="y:1001.value,x:51.value" outputs="x*y:1002.x*y" />
+  <Node _name="Absolute Value" uid="1004" uid_parent="root" inputs="x:52.value" outputs="abs(x):1004.abs(x)" />
+  <Node _name="Multiply" uid="1013" uid_parent="root" inputs="y:1012.value,x:51.value" outputs="x*y:1013.x*y" />
+  <Node _name="Divide" uid="1006" uid_parent="root" inputs="y:1005.value,x:1004.abs(x)" outputs="x/y:1006.x/y" />
+  <Node _name="Multiply" uid="1008" uid_parent="root" inputs="y:1002.x*y,x:52.value" outputs="x*y:1008.x*y" />
+  <Node _name="Add" uid="1007" uid_parent="root" inputs="y:1006.x/y,x:1003.value" outputs="x+y:1007.x+y" />
+  <Node _name="Multiply" uid="1009" uid_parent="root" inputs="y:1007.x+y,x:1007.x+y" outputs="x*y:1009.x*y" />
+  <Node _name="Multiply" uid="1011" uid_parent="root" inputs="y:1010.value,x:1009.x*y" outputs="x*y:1011.x*y" />
+  <Node _name="Add" uid="1014" uid_parent="root" inputs="y:1013.x*y,x:1011.x*y" outputs="x+y:1014.x+y" />
+  <Node _name="Add" uid="1015" uid_parent="root" inputs="y:1014.x+y,x:1008.x*y" outputs="x+y:1015.x+y" />
+  <Node _name="Multiply" uid="1025" uid_parent="root" inputs="y:1024.value,x:1014.x+y" outputs="x*y:1025.x*y" />
+  <Node _name="Divide" uid="1018" uid_parent="root" inputs="y:1017.value,x:1015.x+y" outputs="x/y:1018.x/y" />
+  <Node _name="Add" uid="1026" uid_parent="root" inputs="y:1025.x*y,x:1023.value" outputs="x+y:1026.x+y" />
+  <Node _name="Absolute Value" uid="1028" uid_parent="root" inputs="x:1015.x+y" outputs="abs(x):1028.abs(x)" />
+  <Node _name="Multiply" uid="1020" uid_parent="root" inputs="y:1019.value,x:1018.x/y" outputs="x*y:1020.x*y" />
+  <Node _name="Multiply" uid="1030" uid_parent="root" inputs="y:1029.value,x:1028.abs(x)" outputs="x*y:1030.x*y" />
+  <Node _name="Subtract" uid="1021" uid_parent="root" inputs="y:1020.x*y,x:1016.value" outputs="x-y:1021.x-y" />
+  <Node _name="Add" uid="1031" uid_parent="root" inputs="y:1030.x*y,x:1027.value" outputs="x+y:1031.x+y" />
+  <Node _name="Divide" uid="1022" uid_parent="root" inputs="y:1021.x-y,x:1015.x+y" outputs="x/y:1022.x/y" />
+  <Node _name="Bundle" uid="1032" uid_parent="root" inputs="Speed (rpm):51.value,Load Torque (Nm):52.value,element:1007.x+y,element:1021.x-y,element:1022.x/y,element:1015.x+y,element:1026.x+y,element:1031.x+y,cluster:" outputs="output cluster:1032.output cluster" />
+</VI>
+<?lvmcp pane="4833"?>
+<?lvmcp paneflags="0:1000,4:0900,5:0800"?>
+<?lvmcp exec IsReentrant="0" PooledReentrancy="0" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="0"?>

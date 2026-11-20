@@ -1,0 +1,30 @@
+<VI _name="order-spectrum-flexlogger-hold-test.vi" description="Hold/reset unit test for OrderSpectrumToFlexLogger.vi: calls it 5 times with (0) reset + spectrum A, (1) empty magnitude, (2) empty array, (3) spectrum B, (4) reset + empty array. Returns numeric arrays only.">
+  <Control uid="101" _name="error in (no error)" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" outputs="value:101.value" conIdx="8" connection="required" uid_parent="root" />
+  <Constant uid="102" _name="call sequence" type="array{cluster{array{cluster{double.order 0,double.delta order,array{double}.magnitude}.s}.spectra,bool.reset}}" value="[[[[1,0.5,[0.01,0.04,0.0025]]],true],[[[1,0.5,[]]],false],[[],false],[[[2,0.25,[0.09,0.01]]],false],[[],true]]" outputs="value:102.value" uid_parent="root" />
+  <Constant uid="103" _name="zero" type="double" value="0" outputs="value:103.value" uid_parent="root" />
+  <Constant uid="104" _name="100 samples" type="int32" value="100" outputs="value:104.value" uid_parent="root" />
+  <Node uid="105" _name="Initialize Array" inputs="element:103.value,dimension size:104.value" outputs="initialized array:105.initialized array" uid_parent="root" />
+  <Constant uid="106" _name="dt" type="double" value="0.001" outputs="value:106.value" uid_parent="root" />
+  <Node uid="107" _name="Build Waveform" fields="dt,Y" inputs="waveform:,dt:106.value,Y:105.initialized array" outputs="output waveform:107.output waveform" uid_parent="root" />
+  <Constant uid="108" _name="display settings" type="cluster{int32.channels,int32.plot points per block,bool.plot in dB? (F),double.window ENBW (bins)}" value="[1,5,false,1.5]" outputs="value:108.value" uid_parent="root" />
+  <Structure _name="For Loop" count="" maxin="" maxout="" uid="109" uid_parent="root">
+    <Tunnel uid="110" _id="In1" inputs="value:102.value" outputs="value:110.value" mode="index" uid_parent="109" />
+    <Tunnel uid="111" _id="In2" inputs="value:107.output waveform" outputs="value:111.value" uid_parent="109" />
+    <Tunnel uid="112" _id="In3" inputs="value:108.value" outputs="value:112.value" uid_parent="109" />
+    <Tunnel uid="113" _id="In4" inputs="value:101.value" outputs="value:113.value" uid_parent="109" />
+    <Node uid="114" _name="Unbundle By Name" fields="spectra,reset" inputs="input cluster:110.value" outputs="spectra:114.spectra,reset:114.reset" uid_parent="109" />
+    <Call uid="115" target="OrderSpectrumToFlexLogger.vi" inputs="order power spectra:114.spectra,Timing Reference:111.value,reset? (F):114.reset,error in (no error):113.value,Spectrum Display Settings:112.value" outputs="Log Values:115.Log Values,Plot Values:115.Plot Values,Plot Waveforms:115.Plot Waveforms,Log Waveforms:115.Log Waveforms" uid_parent="109" />
+    <Node uid="116" _name="Array Size" inputs="array:115.Plot Waveforms" outputs="size(s):116.size(s)" uid_parent="109" />
+    <Node uid="117" _name="Array Size" inputs="array:115.Log Waveforms" outputs="size(s):117.size(s)" uid_parent="109" />
+    <Tunnel uid="118" _id="Out1" mode="index" inputs="value:115.Log Values" outputs="value:118.value" uid_parent="109" />
+    <Tunnel uid="120" _id="Out2" mode="index" inputs="value:115.Plot Values" outputs="value:120.value" uid_parent="109" />
+    <Tunnel uid="122" _id="Out3" mode="index" inputs="value:116.size(s)" outputs="value:122.value" uid_parent="109" />
+    <Tunnel uid="124" _id="Out4" mode="index" inputs="value:117.size(s)" outputs="value:124.value" uid_parent="109" />
+  </Structure>
+  <Indicator uid="119" _name="Log Values" type="array.2{double}" value="[]" inputs="value:118.value" conIdx="3" connection="recommended" uid_parent="root" />
+  <Indicator uid="121" _name="Plot Values" type="array.3{double}" value="[]" inputs="value:120.value" conIdx="2" connection="recommended" uid_parent="root" />
+  <Indicator uid="123" _name="Plot Waveform Count" type="array{int32}" value="[]" inputs="value:122.value" conIdx="1" connection="recommended" uid_parent="root" />
+  <Indicator uid="125" _name="Log Waveform Count" type="array{int32}" value="[]" inputs="value:124.value" conIdx="4" connection="recommended" uid_parent="root" />
+  <Indicator uid="126" _name="error out" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" inputs="value:101.value" conIdx="0" connection="recommended" uid_parent="root" />
+</VI>
+<?lvmcp pane="4815"?>

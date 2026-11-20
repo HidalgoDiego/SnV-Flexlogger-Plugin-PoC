@@ -1,0 +1,11 @@
+<VI _name="probeN.vi" description="p">
+  <Control _name="x" type="double" uid="50" uid_parent="root" value="1" conIdx="0" connection="required" outputs="value:50.value" />
+  <Constant _name="nd" type="cluster{double.A,bool.Stop}" uid="51" uid_parent="root" value="[0,false]" outputs="value:51.value" />
+  <Node _name="Obtain Notifier" uid="60" uid_parent="root" inputs="name (unnamed):,notification data type:51.value,create if not found? (T):,error in (no error):" outputs="notifier out:60.notifier out,created new?:,error out:" />
+  <Node _name="Bundle By Name" uid="61" uid_parent="root" fields="A" inputs="A:50.value,input cluster:51.value" outputs="output cluster:61.output cluster" />
+  <Node _name="Send Notification" uid="62" uid_parent="root" inputs="notifier:60.notifier out,notification:61.output cluster,error in (no error):" outputs="notifier out:,error out:" />
+  <Node _name="Get Notifier Status" uid="63" uid_parent="root" inputs="notifier:60.notifier out,error in (no error):" outputs="notifier name:,notifier out:,current notification:63.current notification,# waiting:,error out:63.error out" />
+  <Node _name="Release Notifier" uid="64" uid_parent="root" inputs="notifier:60.notifier out,force destroy? (F):,error in (no error):63.error out" outputs="notifier name:,last notification:,error out:64.error out" />
+  <Indicator _name="out" type="cluster{double.A,bool.Stop}" uid="70" uid_parent="root" value="[0,false]" conIdx="4" connection="recommended" inputs="value:63.current notification" />
+  <Indicator _name="error out" type="cluster{bool.status,int32.code,string.source}" uid="71" uid_parent="root" value="[false,0,]" conIdx="15" connection="recommended" inputs="value:64.error out" />
+</VI>

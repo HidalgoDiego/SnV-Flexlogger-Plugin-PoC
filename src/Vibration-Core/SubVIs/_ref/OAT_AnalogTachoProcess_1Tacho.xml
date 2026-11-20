@@ -1,0 +1,133 @@
+<VI _name="SoundVib_TachProcess.lvlib:OAT Analog Tacho Process (1 Tacho).vi" description="Locates tachometer pulse positions in analog tachometer signals using the number of generated pulses per revolution\2C the pulse width\2C and the arrival edge of the tachometer pulse. This VI also calculates the rotational speed of the device. Wire data to the &lt;B&gt;analog tacho signal&lt;/B&gt; input to determine the polymorphic instance to use or manually select the instance.">
+  <Control _name="analog tacho signal" type="doublewaveform" description="&lt;B&gt;analog tacho signal&lt;/B&gt; specifies the input analog tachometer signal." uid="321" uid_parent="root" value="" conIdx="0" connection="recommended" outputs="value:321.value" />
+  <Indicator _name="speed profile" type="cluster{array{double.time [s]}.time [s],array{double.speed [rpm]}.speed [RPM]}" description="contains information about tachometer pulse arrival time and the rotational speed at each pulse." uid="1134" uid_parent="root" value="[[],[]]" conIdx="4" connection="recommended" inputs="value:442.value" />
+  <Indicator _name="speed position info" type="cluster{array{double.time [s]}.positions [s],double.samples/rev}" description="&lt;B&gt;speed position info&lt;/B&gt; returns the position information of the &lt;B&gt;speed [RPM]&lt;/B&gt; subparameter." uid="143" uid_parent="root" value="[[],0]" conIdx="8" connection="recommended" inputs="value:447.value" />
+  <Indicator _name="error out" type="cluster{bool.status,int32.code,string.source}" description="&lt;B&gt;error out&lt;/B&gt; contains error information. This output provides standard error out functionality." uid="90" uid_parent="root" value="[false,0,]" conIdx="15" connection="recommended" inputs="value:443.value" />
+  <Control _name="threshold (auto)" type="double" description="&lt;B&gt;threshold&lt;/B&gt; specifies the trigger level that a tachometer pulse must cross to be considered valid. The default is Inf. When &lt;B&gt;threshold&lt;/B&gt; is Inf\2C this VI sets the threshold level automatically." uid="76" uid_parent="root" value="inf" conIdx="5" connection="recommended" outputs="value:76.value" />
+  <Constant _name="y" type="double" uid="1175" uid_parent="root" value="inf" outputs="value:1175.value" />
+  <Indicator _name="no tacho?" type="bool" description="&lt;B&gt;no tacho?&lt;/B&gt; indicates whether tachometer pulses exist in &lt;B&gt;analog tacho signal&lt;/B&gt;." uid="65" uid_parent="root" value="false" conIdx="10" connection="recommended" inputs="value:446.value" />
+  <Control _name="error in (no error)" type="cluster{bool.status,int32.code,string.source}" description="&lt;B&gt;error in&lt;/B&gt; describes error conditions that occur before this node runs. This input provides standard error in functionality." uid="22" uid_parent="root" value="[false,0,]" conIdx="11" connection="recommended" outputs="value:22.value" />
+  <Control _name="reset? (F)" type="bool" description="&lt;B&gt;reset?&lt;/B&gt; specifies the initialization of the internal states. The first time this VI runs\2C or when &lt;B&gt;reset?&lt;/B&gt; is TRUE\2C the internal states initialize to zero. If &lt;B&gt;reset?&lt;/B&gt; is FALSE\2C this VI sets the internal states to the final states from the previous call to the VI. The default is FALSE." style="latched" uid="133" uid_parent="root" value="false" conIdx="2" connection="recommended" outputs="value:133.value" />
+  <Indicator _name="actual threshold" type="double" description="&lt;B&gt;actual threshold&lt;/B&gt; returns the threshold that this VI uses." uid="1354" uid_parent="root" value="0" conIdx="6" connection="recommended" inputs="value:1585.value" />
+  <Node _name="Equal?" uid="1148" uid_parent="root" inputs="y:1175.value,x:76.value" outputs="x = y?:1148.x = y?" />
+  <Structure _name="Case Structure" uid="438" uid_parent="root" selectin="22.value">
+    <Tunnel _id="In3" uid="441" uid_parent="438" inputs="value:321.value" />
+    <Tunnel _id="In1" uid="444" uid_parent="438" inputs="value:1148.x = y?" />
+    <Tunnel _id="In4" uid="445" uid_parent="438" inputs="value:76.value" />
+    <Tunnel _id="In2" uid="2143" uid_parent="438" inputs="value:133.value" />
+    <CaseFrame selector="No Error" uid="450" uid_parent="438" selectout="450.value">
+      <Tunnel _id="In3" uid="908" uid_parent="450" outputs="value:908.value" />
+      <Tunnel _id="Out2" uid="921" uid_parent="450" inputs="value:571.speed profile" />
+      <Tunnel _id="Out3" uid="916" uid_parent="450" inputs="value:571.error out" />
+      <Tunnel _id="In1" uid="881" uid_parent="450" outputs="value:881.value" />
+      <Tunnel _id="In4" uid="911" uid_parent="450" outputs="value:911.value" />
+      <Tunnel _id="Out1" uid="902" uid_parent="450" inputs="value:571.no tacho? (F)" />
+      <Tunnel _id="Out4" uid="924" uid_parent="450" inputs="value:519.output cluster" />
+      <Tunnel _id="In2" uid="1383" uid_parent="450" outputs="value:1383.value" />
+      <Tunnel _id="Out5" uid="1577" uid_parent="450" inputs="value:816.value" />
+      <Control _name="pulse width (2)" type="int32" description="&lt;B&gt;pulse width&lt;/B&gt; specifies the minimum number of points a valid tachometer pulse must contain. &lt;B&gt;pulse width&lt;/B&gt; must be greater than zero. The default is 2." uid="309" uid_parent="450" value="2" conIdx="12" connection="optional" outputs="value:309.value" />
+      <Control _name="missing pulses? (no\3AF)" type="bool" description="&lt;B&gt;missing pulses?&lt;/B&gt; specifies if pulses are missing in &lt;B&gt;analog tacho signal&lt;/B&gt;. If &lt;B&gt;missing pulses?&lt;/B&gt; is TRUE\2C this VI automatically finds and interpolates the missing pulses. The default is FALSE." uid="298" uid_parent="450" value="false" conIdx="1" connection="recommended" outputs="value:298.value" />
+      <Control _name="pulse/revolution (1)" type="int32" description="&lt;B&gt;pulse/revolution&lt;/B&gt; specifies the number of pulses the tachometer generates during each revolution. The default is 1." uid="274" uid_parent="450" value="1" conIdx="7" connection="recommended" outputs="value:274.value" />
+      <Constant _name="y" type="int32" uid="893" uid_parent="450" value="1" outputs="value:893.value" />
+      <Constant _name="y" type="int32" uid="1159" uid_parent="450" value="2" outputs="value:1159.value" />
+      <Control _name="slope (Rising)" type="uint16" description="&lt;B&gt;slope&lt;/B&gt; specifies the type of edge that indicates the arrival of a tachometer pulse." items="Rising,Falling" style="Ring" uid="994" uid_parent="450" value="0" conIdx="13" connection="recommended" outputs="value:994.value" />
+      <Control _name="hysteresis (0)" type="double" description="&lt;B&gt;hysteresis&lt;/B&gt; specifies a level above or below the &lt;B&gt;threshold&lt;/B&gt; level. Use &lt;B&gt;hysteresis&lt;/B&gt; to reduce false triggering that noise in an analog tachometer signal might cause. When the &lt;B&gt;slope&lt;/B&gt; is &lt;B&gt;Rising&lt;/B&gt;\2C the analog tachometer signal must fall below &lt;B&gt;threshold&lt;/B&gt; minus &lt;B&gt;hysteresis&lt;/B&gt; before this VI detects the next pulse. When the &lt;B&gt;slope&lt;/B&gt; is &lt;B&gt;Falling&lt;/B&gt;\2C the analog tachometer signal must rise above &lt;B&gt;threshold&lt;/B&gt; plus &lt;B&gt;hysteresis&lt;/B&gt; before this VI detects the next pulse. The default is 0." uid="8" uid_parent="450" value="0" conIdx="9" connection="recommended" outputs="value:8.value" />
+      <Constant _name="checks for channel parameter change" type="cluster{bool.dt,bool.t0 continuity,bool.array length,bool.channel info,bool.name}" uid="1201" uid_parent="450" value="[true,true,false,true,false]" outputs="value:1201.value" />
+      <Node _name="First Call?" uid="503" uid_parent="450" outputs="First Call?\3A T/F:503.First Call?\3A T/F" />
+      <Node _name="Or" uid="1083" uid_parent="450" inputs="y:503.First Call?\3A T/F,x:1383.value" outputs="x .or. y?:1083.x .or. y?" />
+      <Node _name="Max &amp; Min" uid="1075" uid_parent="450" inputs="y:1159.value,x:309.value" outputs="min(x\2Cy):,max(x\2Cy):1075.max(x\2Cy)" />
+      <Node _name="Max &amp; Min" uid="649" uid_parent="450" outputs="min(x\2Cy):,max(x\2Cy):649.max(x\2Cy)" inputs="y:893.value,x:274.value" />
+      <Call uid="686" uid_parent="450" target="svc_Check for Waveform Parameter Continuity (1 Ch).vi" outputs="error out:686.error out,channel info:,waveform parameter changed:686.waveform parameter changed,dup scaled signal [EU]:686.dup scaled signal [EU],array length:,dt:" inputs="restart averaging (F):1083.x .or. y?,error in (no error):450.value,checks for channel parameter change:1201.value,scaled signal [EU]:908.value" />
+      <Call uid="532" uid_parent="450" adapt="true" instance="WDT Waveform Duration DBL.vi" target="Waveform Duration.vi" inputs="open interval? (T):,error in (no error):686.error out,waveform in:686.dup scaled signal [EU]" outputs="error out:532.error out,duration:532.duration,waveform out:532.waveform out" />
+      <Node _name="Get Waveform Components" uid="866" uid_parent="450" fields="Y,dt" outputs="Y:866.Y,dt:866.dt" inputs="waveform:532.waveform out" />
+      <Node _name="Reciprocal" uid="858" uid_parent="450" outputs="1/x:858.1/x" inputs="x:866.dt" />
+      <Node _name="Or" uid="1647" uid_parent="450" outputs="x .or. y?:1647.x .or. y?" inputs="y:686.waveform parameter changed,x:1083.x .or. y?" />
+      <Structure _name="While Loop" uid="663" uid_parent="450" count="">
+        <Constant type="bool" uid="812" uid_parent="663" value="false" outputs="value:812.value" />
+        <Structure _name="Case Structure" uid="675" uid_parent="663" selectin="668.value">
+          <Tunnel _id="In1" uid="678" uid_parent="675" inputs="value:665.value" />
+          <Tunnel _id="In2" uid="680" uid_parent="675" inputs="value:821.value" />
+          <Tunnel _id="In3" uid="681" uid_parent="675" inputs="value:670.value" />
+          <Tunnel _id="In4" uid="682" uid_parent="675" inputs="value:669.value" />
+          <CaseFrame selector="False" uid="685" uid_parent="675" selectout="">
+            <Tunnel _id="In1" uid="693" uid_parent="685" outputs="value:" />
+            <Tunnel _id="Out1" uid="696" uid_parent="685" inputs="value:699.value" />
+            <Tunnel _id="In2" uid="699" uid_parent="685" outputs="value:699.value" />
+            <Tunnel _id="In3" uid="702" uid_parent="685" outputs="value:" />
+            <Tunnel _id="In4" uid="705" uid_parent="685" outputs="value:" />
+          </CaseFrame>
+          <CaseFrame selector="True" uid="712" uid_parent="675" selectout="">
+            <Tunnel _id="In1" uid="778" uid_parent="712" outputs="value:778.value" />
+            <Tunnel _id="Out1" uid="782" uid_parent="712" inputs="value:718.value" />
+            <Tunnel _id="In2" uid="779" uid_parent="712" outputs="value:779.value" />
+            <Tunnel _id="In3" uid="780" uid_parent="712" outputs="value:780.value" />
+            <Tunnel _id="In4" uid="781" uid_parent="712" outputs="value:781.value" />
+            <Structure _name="Case Structure" uid="714" uid_parent="712" selectin="781.value">
+              <Tunnel _id="In1" uid="717" uid_parent="714" inputs="value:778.value" />
+              <Tunnel _id="In2" uid="719" uid_parent="714" inputs="value:779.value" />
+              <Tunnel _id="In3" uid="720" uid_parent="714" inputs="value:780.value" />
+              <CaseFrame selector="False" uid="723" uid_parent="714" selectout="">
+                <Tunnel _id="In1" uid="731" uid_parent="723" outputs="value:" />
+                <Tunnel _id="Out1" uid="740" uid_parent="723" inputs="value:737.value" />
+                <Tunnel _id="In2" uid="734" uid_parent="723" outputs="value:" />
+                <Tunnel _id="In3" uid="737" uid_parent="723" outputs="value:737.value" />
+              </CaseFrame>
+              <CaseFrame selector="True" uid="747" uid_parent="714" selectout="">
+                <Tunnel _id="In1" uid="762" uid_parent="747" outputs="value:762.value" />
+                <Tunnel _id="Out1" uid="765" uid_parent="747" inputs="value:749.threshold" />
+                <Tunnel _id="In2" uid="763" uid_parent="747" outputs="value:" />
+                <Tunnel _id="In3" uid="764" uid_parent="747" outputs="value:" />
+                <Call uid="749" uid_parent="747" target="SoundVib_TachProcess.lvlib:Auto Threshold.vi" outputs="threshold:749.threshold" inputs="x[n]:762.value" />
+              </CaseFrame>
+              <Tunnel _id="Out1" uid="718" uid_parent="714" outputs="value:718.value" />
+            </Structure>
+          </CaseFrame>
+          <Tunnel _id="Out1" uid="679" uid_parent="675" outputs="value:679.value" />
+        </Structure>
+        <Tunnel _id="In1" uid="665" uid_parent="663" inputs="value:866.Y" outputs="value:665.value" />
+        <Tunnel _id="In2" uid="668" uid_parent="663" inputs="value:1647.x .or. y?" outputs="value:668.value" />
+        <Tunnel _id="In3" uid="669" uid_parent="663" inputs="value:881.value" outputs="value:669.value" />
+        <Tunnel _id="In4" uid="670" uid_parent="663" inputs="value:911.value" outputs="value:670.value" />
+        <ShiftReg uid="817" uid_parent="663">
+          <Left uid="821" uid_parent="817" outputs="value:821.value" inputs="value:" />
+          <Right uid="816" uid_parent="817" outputs="value:816.value" inputs="value:679.value" />
+        </ShiftReg>
+        <Condition uid="807" uid_parent="663" inputs="value:812.value" />
+      </Structure>
+      <Call uid="452" uid_parent="450" target="SoundVib_TachProcess.lvlib:oa_Analog Tacho Hysteresis(1 Channel).vi" inputs="input signal:866.Y,reset? (T):1647.x .or. y?,threshold (auto):816.value,slope (Rising):994.value,hysteresis(0):8.value,error in (no error):532.error out" outputs="output signal:452.output signal,error out:452.error out" />
+      <Call uid="610" uid_parent="450" adapt="true" instance="SoundVib_TachProcess.lvlib:OAT Edge Detection (1 Tach).vi" target="SoundVib_TachProcess.lvlib:OAT Edge Detection.vi" inputs="reset? (True):1647.x .or. y?,sampling frequency [Hz]:858.1/x,missing pulses? (no\3AF):298.value,slope (Rising):994.value,pulse width (2):1075.max(x\2Cy),threshold (0.0):816.value,x[n]:452.output signal" outputs="number of pulses:,pulse positions [s]:610.pulse positions [s]" />
+      <Call uid="571" uid_parent="450" adapt="true" instance="SoundVib_TachProcess.lvlib:oa_Get Angular Speed (1 Tach).vi" target="SoundVib_TachProcess.lvlib:oa_Get Angular Speed.vi" inputs="reset? (True):1647.x .or. y?,error in (no error):452.error out,input data duration [s]:532.duration,pulse/revolution (1):649.max(x\2Cy),pulse positions [s]:610.pulse positions [s]" outputs="error out:571.error out,no tacho? (F):571.no tacho? (F),pulse positions [s]:571.pulse positions [s],speed profile:571.speed profile" />
+      <Node _name="Bundle" uid="519" uid_parent="450" outputs="output cluster:519.output cluster" inputs="pulse positions [s]:571.pulse positions [s],element:649.max(x\2Cy),cluster:" />
+    </CaseFrame>
+    <CaseFrame selector="Error" uid="1015" uid_parent="438" selectout="1015.value">
+      <Tunnel _id="In3" uid="1031" uid_parent="1015" outputs="value:" />
+      <Tunnel _id="Out2" uid="1132" uid_parent="1015" inputs="value:171.value" />
+      <Tunnel _id="Out3" uid="1131" uid_parent="1015" inputs="value:1015.value" />
+      <Tunnel _id="In1" uid="1020" uid_parent="1015" outputs="value:" />
+      <Tunnel _id="In4" uid="1032" uid_parent="1015" outputs="value:" />
+      <Tunnel _id="Out1" uid="1029" uid_parent="1015" inputs="value:1024.value" />
+      <Tunnel _id="Out4" uid="1133" uid_parent="1015" inputs="value:1097.value" />
+      <Tunnel _id="In2" uid="2139" uid_parent="1015" outputs="value:" />
+      <Tunnel _id="Out5" uid="1581" uid_parent="1015" inputs="value:1570.value" />
+      <Constant _name="No Tach? (False)" type="bool" uid="1024" uid_parent="1015" value="false" outputs="value:1024.value" />
+      <Constant _name="speed profile" type="cluster{array{double.time [s]}.time [s],array{double.speed [rpm]}.speed [RPM]}" uid="171" uid_parent="1015" value="[[],[]]" outputs="value:171.value" />
+      <Constant type="cluster{array{double.Numeric}.pulse positions [s],int32}" uid="1097" uid_parent="1015" value="[[],0]" outputs="value:1097.value" />
+      <Constant _name="threshold" type="double" uid="1570" uid_parent="1015" value="0" outputs="value:1570.value" />
+    </CaseFrame>
+    <Tunnel _id="Out2" uid="442" uid_parent="438" cond="true" outputs="value:442.value" />
+    <Tunnel _id="Out3" uid="443" uid_parent="438" outputs="value:443.value" />
+    <Tunnel _id="Out1" uid="446" uid_parent="438" outputs="value:446.value" />
+    <Tunnel _id="Out4" uid="447" uid_parent="438" outputs="value:447.value" />
+    <Tunnel _id="Out5" uid="1585" uid_parent="438" outputs="value:1585.value" />
+  </Structure>
+</VI>
+<?lvmcp pane="4833"?>
+<?lvmcp paneflags="0:0A00,1:0A00,2:0A00,4:0900,5:0A00,6:0900,7:0A00,8:0900,9:0A00,10:0900,11:0A00,12:0200,13:0A00,15:0D0B"?>
+<?lvmcp exec IsReentrant="1" PooledReentrancy="0" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>
+<?lvmcp calllink uid="686" tp="0" path="&lt;vilib&gt;|addons|_NISVFA|_Shared subVIs|Common|svc_Check for Waveform Parameter Continuity (1 Ch).vi"?>
+<?lvmcp calllink uid="532" tp="0" path="&lt;vilib&gt;|Waveform|WDTOps.llb|WDT Waveform Duration DBL.vi"?>
+<?lvmcp calllink uid="749" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Tach Process|SubVIs|Auto Threshold.vi"?>
+<?lvmcp calllink uid="452" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Tach Process|SubVIs|oa_Analog Tacho Hysteresis(1 Channel).vi"?>
+<?lvmcp calllink uid="610" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Tach Process|SubVIs|OAT Edge Detection (1 Tach).vi"?>
+<?lvmcp calllink uid="571" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Tach Process|SubVIs|oa_Get Angular Speed (1 Tach).vi"?>
+<?lvmcp srtype uid="817" type="double"?>

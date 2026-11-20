@@ -1,0 +1,48 @@
+<VI _name="OA Hold and Valid.vi" description="Order Analysis helper. Holds the order values between spectra and while Data Valid = 0, and computes Data Valid and Residual RMS. Held Values = [Order 1 RMS, Order 1 Phase, Order 2, Order 3.57, Order 4, Order 24, Total Order RMS, Residual RMS]. Values update only on a new spectrum while speed OK, and the phase only once a spectrum exists since the last (re)start. Residual RMS = sqrt(max(0, time-domain mean square since the previous spectrum - Total Order RMS^2)). Data Valid = speed OK AND a spectrum since the last restart or speed recovery AND no error.">
+  <Control uid="101" _name="Order State in" type="cluster{double.Sample Count,double.Last Time,double.Last RPM,double.Prev Time,double.Prev RPM,double.Anchor Time,double.Anchor RPM,double.RPM Rate,array{double}.Held Values,bool.Has Spectrum,bool.Was Valid,double.Acc SumSq,double.Acc N}" value="[0,-1000000000,0,-1000000000,0,-1000000000,0,0,[0,0,0,0,0,0,0,0],false,false,0,0]" outputs="value:101.value" conIdx="11" connection="required" uid_parent="root" />
+  <Control uid="102" _name="Order Result" type="cluster{bool.new spectrum,array{double}.order RMS,double.total order RMS,bool.phase available,double.order 1 phase (deg)}" value="[false,[],0,false,0]" outputs="value:102.value" conIdx="10" connection="recommended" uid_parent="root" />
+  <Control uid="103" _name="block sum of squares" type="double" value="0" outputs="value:103.value" conIdx="9" connection="recommended" uid_parent="root" />
+  <Control uid="104" _name="error in (no error)" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" outputs="value:104.value" conIdx="8" connection="recommended" uid_parent="root" />
+  <Control uid="105" _name="block samples" type="double" value="0" outputs="value:105.value" conIdx="7" connection="recommended" uid_parent="root" />
+  <Control uid="106" _name="speed OK" type="bool" value="false" outputs="value:106.value" conIdx="6" connection="recommended" uid_parent="root" />
+  <Control uid="107" _name="clear spectrum?" type="bool" value="false" outputs="value:107.value" conIdx="5" connection="recommended" uid_parent="root" />
+  <Node uid="108" _name="Unbundle By Name" fields="Held Values,Has Spectrum,Acc SumSq,Acc N" inputs="input cluster:101.value" outputs="Held Values:108.Held Values,Has Spectrum:108.Has Spectrum,Acc SumSq:108.Acc SumSq,Acc N:108.Acc N" uid_parent="root" />
+  <Node uid="109" _name="Unbundle By Name" fields="new spectrum,order RMS,total order RMS,phase available,order 1 phase (deg)" inputs="input cluster:102.value" outputs="new spectrum:109.new spectrum,order RMS:109.order RMS,total order RMS:109.total order RMS,phase available:109.phase available,order 1 phase (deg):109.order 1 phase (deg)" uid_parent="root" />
+  <Constant uid="110" _name="zero" type="double" value="0" outputs="value:110.value" uid_parent="root" />
+  <Node uid="111" _name="Select" inputs="t:110.value,s:107.value,f:108.Acc SumSq" outputs="s? t\3Af:111.s? t_f" uid_parent="root" />
+  <Node uid="112" _name="Add" inputs="x:111.s? t_f,y:103.value" outputs="x+y:112.x+y" uid_parent="root" />
+  <Node uid="113" _name="Select" inputs="t:110.value,s:107.value,f:108.Acc N" outputs="s? t\3Af:113.s? t_f" uid_parent="root" />
+  <Node uid="114" _name="Add" inputs="x:113.s? t_f,y:105.value" outputs="x+y:114.x+y" uid_parent="root" />
+  <Node uid="115" _name="Divide" inputs="x:112.x+y,y:114.x+y" outputs="x/y:115.x/y" uid_parent="root" />
+  <Node uid="116" _name="Square" inputs="x:109.total order RMS" outputs="x^2:116.x^2" uid_parent="root" />
+  <Node uid="117" _name="Subtract" inputs="x:115.x/y,y:116.x^2" outputs="x-y:117.x-y" uid_parent="root" />
+  <Node uid="118" _name="Max &amp; Min" inputs="x:117.x-y,y:110.value" outputs="max(x\2Cy):118.max(x_y),min(x\2Cy):118.min(x_y)" uid_parent="root" />
+  <Node uid="119" _name="Square Root" inputs="x:118.max(x_y)" outputs="sqrt(x):119.sqrt(x)" uid_parent="root" />
+  <Node uid="120" _name="Select" inputs="t:110.value,s:109.new spectrum,f:112.x+y" outputs="s? t\3Af:120.s? t_f" uid_parent="root" />
+  <Node uid="121" _name="Select" inputs="t:110.value,s:109.new spectrum,f:114.x+y" outputs="s? t\3Af:121.s? t_f" uid_parent="root" />
+  <Node uid="122" _name="And" inputs="x:109.new spectrum,y:106.value" outputs="x .and. y?:122.x .and. y?" uid_parent="root" />
+  <Constant uid="123" _name="cleared" type="bool" value="false" outputs="value:123.value" uid_parent="root" />
+  <Node uid="124" _name="Select" inputs="t:123.value,s:107.value,f:108.Has Spectrum" outputs="s? t\3Af:124.s? t_f" uid_parent="root" />
+  <Node uid="125" _name="Or" inputs="x:124.s? t_f,y:122.x .and. y?" outputs="x .or. y?:125.x .or. y?" uid_parent="root" />
+  <Node uid="126" _name="And" inputs="x:109.phase available,y:106.value" outputs="x .and. y?:126.x .and. y?" uid_parent="root" />
+  <Node uid="127" _name="And" inputs="x:126.x .and. y?,y:125.x .or. y?" outputs="x .and. y?:127.x .and. y?" uid_parent="root" />
+  <Node uid="128" _name="Index Array" inputs="array:108.Held Values,index:,index:,index:,index:,index:,index:,index:,index:" outputs="element:128.element0,element:128.element1,element:128.element2,element:128.element3,element:128.element4,element:128.element5,element:128.element6,element:128.element7" uid_parent="root" />
+  <Node uid="129" _name="Select" inputs="t:109.order 1 phase (deg),s:127.x .and. y?,f:128.element1" outputs="s? t\3Af:129.s? t_f" uid_parent="root" />
+  <Node uid="130" _name="Index Array" inputs="array:109.order RMS,index:,index:,index:,index:,index:" outputs="element:130.element0,element:130.element1,element:130.element2,element:130.element3,element:130.element4" uid_parent="root" />
+  <Node uid="131" _name="Build Array" inputs="element:130.element0,element:129.s? t_f,element:130.element1,element:130.element2,element:130.element3,element:130.element4,element:109.total order RMS,element:119.sqrt(x)" outputs="appended array:131.appended array" uid_parent="root" />
+  <Node uid="132" _name="Build Array" inputs="element:128.element0,element:129.s? t_f,element:128.element2,element:128.element3,element:128.element4,element:128.element5,element:128.element6,element:128.element7" outputs="appended array:132.appended array" uid_parent="root" />
+  <Node uid="133" _name="Select" inputs="t:131.appended array,s:122.x .and. y?,f:132.appended array" outputs="s? t\3Af:133.s? t_f" uid_parent="root" />
+  <Node uid="134" _name="Unbundle By Name" fields="status" inputs="input cluster:104.value" outputs="status:134.status" uid_parent="root" />
+  <Node uid="135" _name="And" inputs="x:106.value,y:125.x .or. y?" outputs="x .and. y?:135.x .and. y?" uid_parent="root" />
+  <Node uid="136" _name="Not" inputs="x:134.status" outputs=".not. x?:136..not. x?" uid_parent="root" />
+  <Node uid="137" _name="And" inputs="x:135.x .and. y?,y:136..not. x?" outputs="x .and. y?:137.x .and. y?" uid_parent="root" />
+  <Node uid="138" _name="Bundle By Name" fields="Held Values,Has Spectrum,Acc SumSq,Acc N" inputs="Held Values:133.s? t_f,Has Spectrum:125.x .or. y?,Acc SumSq:120.s? t_f,Acc N:121.s? t_f,input cluster:101.value" outputs="output cluster:138.output cluster" uid_parent="root" />
+  <Indicator uid="139" _name="Held Values" type="array{double}" value="[]" inputs="value:133.s? t_f" conIdx="3" connection="recommended" uid_parent="root" />
+  <Indicator uid="140" _name="Data Valid" type="bool" value="false" inputs="value:137.x .and. y?" conIdx="2" connection="recommended" uid_parent="root" />
+  <Indicator uid="141" _name="Order State out" type="cluster{double.Sample Count,double.Last Time,double.Last RPM,double.Prev Time,double.Prev RPM,double.Anchor Time,double.Anchor RPM,double.RPM Rate,array{double}.Held Values,bool.Has Spectrum,bool.Was Valid,double.Acc SumSq,double.Acc N}" value="[0,-1000000000,0,-1000000000,0,-1000000000,0,0,[0,0,0,0,0,0,0,0],false,false,0,0]" inputs="value:138.output cluster" conIdx="1" connection="recommended" uid_parent="root" />
+  <Constant uid="142" _name="no error" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" outputs="value:142.value" uid_parent="root" />
+  <Node uid="143" _name="Select" inputs="t:104.value,s:134.status,f:142.value" outputs="s? t\3Af:143.s? t_f" uid_parent="root" />
+  <Indicator uid="144" _name="error out" type="cluster{bool.status,int32.code,string.source}" value="[false,0,]" inputs="value:143.s? t_f" conIdx="0" connection="recommended" uid_parent="root" />
+</VI>
+<?lvmcp pane="4815"?>
+<?lvmcp exec IsReentrant="1" PooledReentrancy="0" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>

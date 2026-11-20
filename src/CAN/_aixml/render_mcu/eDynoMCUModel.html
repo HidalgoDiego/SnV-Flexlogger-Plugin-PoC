@@ -1,0 +1,42 @@
+<HTML>
+<HEAD>
+<TITLE>eDyno MCU Model.vi</TITLE>
+<META NAME="Author" CONTENT="">
+<META NAME="GENERATOR" CONTENT="G Development Environment">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<A NAME="eDyno MCU Model.vi"></A><H2>eDyno MCU Model.vi</H2>
+<P>PURPOSE</P>
+<P>Simulates what an e-bike motor controller (MCU) would report on CAN, so the eDyno PoC can log electrical and thermal channels next to vibration. Feeds the MCU_Status frame (0x300) through eDyno CAN Pack Signals.vi. It is a simple STEADY-STATE model for demos - not a validated motor model.</P>
+<P></P>
+<P>INPUTS</P>
+<P>- Speed (rpm): shaft speed (the simulator's Shaft Speed).</P>
+<P>- Load Torque (Nm): torque at the motor shaft. Positive = motoring, negative = regen. Typical e-bike mid-drive cruise 0.3-1 Nm at the motor shaft (before the gearbox).</P>
+<P>- Motor Parameters: defaults describe a generic 250-500 W, 36 V, 4-pole-pair mid-drive motor. Change them to match a real motor.</P>
+<P></P>
+<P>OUTPUT (MCU Status cluster, same order as the CAN signals)</P>
+<P>Motor Speed, Torque, Phase Current RMS, DC Voltage, DC Current, Electrical Power, Winding Temp, Controller Temp.</P>
+<P></P>
+<P>EQUATIONS (one labelled frame each on the block diagram)</P>
+<P>1) omega = rpm x 2pi/60;  P_mech = T x omega</P>
+<P>2) I_ph = I_noload + |T|/Kt;  P_copper = 3 x R_ph x I_ph^2;  P_iron+friction = k x rpm;  P_loss = sum</P>
+<P>3) P_elec = P_mech + P_loss;  V_dc = V_batt - R_batt x P_elec/V_batt;  I_dc = P_elec/V_dc</P>
+<P>4) T_winding = T_amb + Rth_w x P_loss;  T_controller = T_amb + Rth_c x |P_elec|</P>
+<P></P>
+<P>EXAMPLE (defaults): 4500 rpm, 0.5 Nm -&gt; 11.5 A rms, 273 W, 35.6 V, 7.7 A DC, winding 47.7 degC, controller 35.9 degC.</P>
+<P></P>
+<P>LIMITATIONS</P>
+<P>Temperatures jump instantly (no thermal time constant); efficiency map is approximate; field weakening, voltage limit and current limit are not modelled.</P>
+<HR>
+<H3>Connector Pane</H3>
+<P><IMG SRC="eDynoMCUModelc.png" ALT="eDyno MCU Model.vi"></P>
+<HR>
+<H3>Front Panel</H3>
+<P><IMG SRC="eDynoMCUModelp.png" ALT="eDyno MCU Model.vi"></P>
+<HR>
+<H3>Block Diagram</H3>
+<P><IMG SRC="eDynoMCUModeld.png" ALT="eDyno MCU Model.vi"></P>
+<HR>
+<H3></H3>
+</BODY>
+</HTML>

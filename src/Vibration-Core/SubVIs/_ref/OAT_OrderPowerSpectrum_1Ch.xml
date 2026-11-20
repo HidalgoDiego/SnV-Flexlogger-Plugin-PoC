@@ -1,0 +1,113 @@
+<VI _name="SoundVib_OrderTracking.lvlib:OAT Order Power Spectrum (1 Channel).vi" description="Computes the order power spectrum of an even-angle signal.  Wire data to the &lt;B&gt;even-angle signal&lt;/B&gt; input to determine the polymorphic instance to use or manually select the instance.">
+  <Indicator _name="order power spectrum" type="cluster{double.order 0,double.delta order,array{double}.magnitude}" description="&lt;B&gt;order power spectrum&lt;/B&gt; returns the averaged order power spectrum." uid="674" uid_parent="root" value="[0,1,[]]" conIdx="4" connection="recommended" inputs="value:756.value" />
+  <Control _name="even-angle signal" type="cluster{double.r0,double.dr,array{double.Y}.Y}" description="&lt;B&gt;even-angle signal&lt;/B&gt; specifies the even-angle-resampled data. &lt;B&gt;even-angled signal&lt;/B&gt; is synchronous to the rotational speed with a constant number of samples per revolution." uid="608" uid_parent="root" value="[0,1,[]]" conIdx="0" connection="recommended" outputs="value:608.value" />
+  <Indicator _name="unit label" type="string" description="&lt;B&gt;unit label&lt;/B&gt; returns the selected engineering units." uid="599" uid_parent="root" value="" conIdx="6" connection="recommended" inputs="value:757.value" />
+  <Control _name="error in (no error)" type="cluster{bool.status,int32.code,string.source}" description="&lt;B&gt;error in&lt;/B&gt; describes error conditions that occur before this node runs. This input provides standard error in functionality." uid="556" uid_parent="root" value="[false,0,]" conIdx="11" connection="recommended" outputs="value:556.value" />
+  <Indicator _name="error out" type="cluster{bool.status,int32.code,string.source}" description="&lt;B&gt;error out&lt;/B&gt; contains error information. This output provides standard error out functionality." uid="513" uid_parent="root" value="[false,0,]" conIdx="15" connection="recommended" inputs="value:754.value" />
+  <Control _name="restart averaging? (F)" type="bool" description="&lt;B&gt;restart averaging&lt;/B&gt; specifies if the selected averaging process has to be restarted. The default is FALSE. When you call this VI for the first time\2C the averaging process restarts automatically." style="latched" uid="500" uid_parent="root" value="false" conIdx="13" connection="recommended" outputs="value:500.value" />
+  <Control _name="averaging parameters" type="cluster{uint16{No averaging,Vector averaging,RMS averaging,Peak hold}.averaging mode,uint16{Linear,Exponential}.weighting mode,uint32.number of averages,uint16{One shot,Auto restart}.linear mode}" description="&lt;B&gt;averaging parameters&lt;/B&gt; specifies how the averaging is computed. The specifications of the parameters include the type of averaging\2C the type of weighting\2C and the number of averages." uid="439" uid_parent="root" value="[0,1,10,0]" conIdx="12" connection="recommended" outputs="value:439.value" />
+  <Indicator _name="averaging done?" type="bool" description="&lt;B&gt;averaging done&lt;/B&gt; returns TRUE when &lt;B&gt;averages completed&lt;/B&gt; is greater than or equal to the &lt;B&gt;number of averages&lt;/B&gt; specified in &lt;B&gt;averaging parameters&lt;/B&gt;. Otherwise\2C &lt;B&gt;averaging done&lt;/B&gt; returns FALSE. &lt;B&gt;averaging done&lt;/B&gt; is always TRUE if the selected &lt;B&gt;averaging mode&lt;/B&gt; is No averaging." uid="428" uid_parent="root" value="false" conIdx="14" connection="recommended" inputs="value:759.value" />
+  <Indicator _name="averages completed" type="double" description="&lt;B&gt;averages completed&lt;/B&gt; returns the number of averages completed by the VI at that time." uid="414" uid_parent="root" value="0" conIdx="8" connection="recommended" inputs="value:758.value" />
+  <Indicator _name="spectrum info" type="cluster{string.channel name,string.description,uint16.x-axis units,cluster{uint16{FFT Spectrum [complex\5D,Amplitude [Magnitude\5D,Power [Magnitude^2\5D,Cross Spectrum [complex\5D,Frequency Response [Complex\5D}.spectrum type,uint16{linear,dB}.linear/dB,uint16.window,int32.window size,int32.FFT size}.spectral info,uint16.engineering units,string.custom label,double.dB reference [EU],uint16{rms,peak,peak-peak}.peak units,uint16.weighting filter,bool.spectral density?,string.unit label,bool.spectrum skewed?,uint16{none,radians,degrees,cycles,imaginary}.complimentary spectrum units}" description="&lt;B&gt;spectrum info&lt;/B&gt; returns information about the spectrum needed by the Spectrum Extended Measurements VIs\2C the Display VIs\2C and the Tone and Distortion VIs." uid="184" uid_parent="root" value="[,,0,[2,0,0,0,0],1,,0,0,0,false,,false,0]" conIdx="10" connection="recommended" inputs="value:755.value" />
+  <Control _name="dB on? (T)" type="bool" description="&lt;B&gt;dB on?&lt;/B&gt; specifies whether to return the resulting order power spectrum in decibels. If &lt;B&gt;dB on?&lt;/B&gt; is FALSE\2C this VI returns the order power spectrum linearly. The default is TRUE." uid="169" uid_parent="root" value="true" conIdx="1" connection="recommended" outputs="value:169.value" />
+  <Control _name="even-angle channel info" type="cluster{string.channel name,string.description,cluster{double.sensor sensitivity,uint16.engineering units,double.dB reference,string.custom label,uint16.weighting filter,double.pregain}. channel info}" description="&lt;B&gt;even-angle channel info&lt;/B&gt; specifies the information about the measurement configuration that this VI uses to acquire the resampled data." uid="36" uid_parent="root" value="[,,[1000,1,1,EU,0,0]]" conIdx="5" connection="required" outputs="value:36.value" />
+  <Control _name="window" type="uint32" description="&lt;B&gt;window&lt;/B&gt; specifies the window this VI uses to compute the order power spectrum." items="None,Hanning,Hamming,Blackman-Harris,Exact Blackman,Blackman,Flat Top,4 Term B-Harris,7 Term B-Harris,Low Sidelobe,Gaussian" style="Ring" values="[0,1,2,3,4,5,6,7,8,9,62]" uid="22" uid_parent="root" value="1" conIdx="7" connection="recommended" outputs="value:22.value" />
+  <Control _name="block size" type="int32" description="&lt;B&gt;block size&lt;/B&gt; specifies the block size of the even-angle signal this VI uses to compute the order power spectrum. The default is 1024." uid="8" uid_parent="root" value="1024" conIdx="9" connection="recommended" outputs="value:8.value" />
+  <Indicator _name="new spectrum available?" type="bool" description="&lt;B&gt;new spectrum available&lt;/B&gt; returns TRUE if &lt;B&gt;order power spectrum&lt;/B&gt; contains a new measurement. When you wire this output value to the selector terminal of a Case structure\2C you can perform subsequent measurements or display this output value in the TRUE case of the Case structure." uid="1263" uid_parent="root" value="false" conIdx="3" connection="recommended" inputs="value:1370.value" />
+  <Node _name="Bundle" uid="1311" uid_parent="root" outputs="output cluster:1311.output cluster" inputs="window:22.value,block size:8.value,cluster:" />
+  <Structure _name="Case Structure" uid="746" uid_parent="root" selectin="556.value">
+    <Tunnel _id="In3" uid="749" uid_parent="746" inputs="value:608.value" />
+    <Tunnel _id="In4" uid="750" uid_parent="746" inputs="value:439.value" />
+    <Tunnel _id="In1" uid="751" uid_parent="746" inputs="value:500.value" />
+    <Tunnel _id="In5" uid="752" uid_parent="746" inputs="value:36.value" />
+    <Tunnel _id="In2" uid="753" uid_parent="746" inputs="value:169.value" />
+    <Tunnel _id="In6" uid="760" uid_parent="746" inputs="value:1311.output cluster" />
+    <CaseFrame selector="No Error" uid="763" uid_parent="746" selectout="763.value">
+      <Tunnel _id="In3" uid="1116" uid_parent="763" outputs="value:1116.value" />
+      <Tunnel _id="In4" uid="1119" uid_parent="763" outputs="value:1119.value" />
+      <Tunnel _id="In1" uid="1098" uid_parent="763" outputs="value:1098.value" />
+      <Tunnel _id="In5" uid="1122" uid_parent="763" outputs="value:1122.value" />
+      <Tunnel _id="In2" uid="1101" uid_parent="763" outputs="value:1101.value" />
+      <Tunnel _id="Out5" uid="1128" uid_parent="763" inputs="value:789.value" />
+      <Tunnel _id="Out6" uid="1131" uid_parent="763" inputs="value:790.value" />
+      <Tunnel _id="Out7" uid="1134" uid_parent="763" inputs="value:990.value" />
+      <Tunnel _id="Out1" uid="1104" uid_parent="763" inputs="value:792.value" />
+      <Tunnel _id="Out4" uid="1113" uid_parent="763" inputs="value:793.value" />
+      <Tunnel _id="Out2" uid="1107" uid_parent="763" inputs="value:794.value" />
+      <Tunnel _id="In6" uid="1125" uid_parent="763" outputs="value:1125.value" />
+      <Tunnel _id="Out3" uid="1358" uid_parent="763" inputs="value:1391.value" />
+      <Constant _name="parameter controls" type="cluster{bool.ignore dt,bool.ignore t0 continuity,bool.ignore array length,bool.ignore channel info,bool.ignore channel name}" uid="65" uid_parent="763" value="[false,true,true,false,true]" outputs="value:65.value" />
+      <Node _name="First Call?" uid="765" uid_parent="763" outputs="First Call?\3A T/F:765.First Call?\3A T/F" />
+      <Node _name="Or" uid="770" uid_parent="763" outputs="x .or. y?:770.x .or. y?" inputs="y:765.First Call?\3A T/F,x:1098.value" />
+      <Call uid="960" uid_parent="763" target="svc_Check for Resampled Signal Continuity (1 Ch).vi" inputs="even angle channel info:1122.value,restart averaging (F):770.x .or. y?,error in (no error):763.value,parameter controls:65.value,even angle signal:1116.value" outputs="error out:960.error out,dup even angle channel info:960.dup even angle channel info,waveform parameter changed:960.waveform parameter changed,dup even angle signal:960.dup even angle signal,array length:,dt:" />
+      <Node _name="Or" uid="382" uid_parent="763" inputs="y:960.waveform parameter changed,x:770.x .or. y?" outputs="x .or. y?:382.x .or. y?" />
+      <Structure _name="While Loop" uid="781" uid_parent="763" count="">
+        <Constant type="bool" uid="1003" uid_parent="781" value="true" outputs="value:1003.value" />
+        <Constant _name="t" type="cluster{double.f0,double.df,array{double}.magnitude}" uid="1073" uid_parent="781" value="[0,0,[]]" outputs="value:1073.value" />
+        <Node _name="Select" uid="805" uid_parent="781" outputs="s? t\3Af:805.s? t\3Af" inputs="f:963.value,s:786.value,t:1073.value" />
+        <Call uid="904" uid_parent="781" target="SoundVib_Resampling.lvlib:oa_Data Check [OPS] (1 Channel).vi" inputs="resampled signal:783.value,restart averaging (F):786.value,resampled channel info:787.value,spectrum settings:797.value,averaging parameters:785.value,error in (no error):112.value,processing control in:1012.value" outputs="dup resampled signal:904.dup resampled signal, dup resampled channel info:904. dup resampled channel info,dup spectrum settings:904.dup spectrum settings,dup averaging parameters:904.dup averaging parameters,processing control out:904.processing control out,error out:904.error out" />
+        <Call uid="853" uid_parent="781" target="SoundVib_Resampling.lvlib:oa_Process Order Power Spectrum (1 Channel).vi" outputs="new spectrum available?:853.new spectrum available?,averages completed:853.averages completed,order spectrum:853.order spectrum,averaging done:853.averaging done,spectrum info:853.spectrum info,processing control out:853.processing control out,error out:853.error out" inputs="resampled signal:904.dup resampled signal,resampled channel info:904. dup resampled channel info,spectrum settings:904.dup spectrum settings,averaging parameters:904.dup averaging parameters,error in:904.error out,processing control in:904.processing control out" />
+        <Call uid="41" uid_parent="781" target="svc_Log View for Power Spectrum (1 Ch).vi" outputs="unit label:41.unit label,power spectrum [dB EU]:41.power spectrum [dB EU],spectrum info out:41.spectrum info out,error out:41.error out" inputs="power spectrum [EU^2 rms]:853.order spectrum,dB On (T):788.value,spectrum info:853.spectrum info,error in (no error):853.error out" />
+        <Node _name="Select" uid="854" uid_parent="781" inputs="f:805.s? t\3Af,s:853.new spectrum available?,t:41.power spectrum [dB EU]" outputs="s? t\3Af:854.s? t\3Af" />
+        <Tunnel _id="In1" uid="783" uid_parent="781" inputs="value:960.dup even angle signal" outputs="value:783.value" />
+        <Tunnel _id="In2" uid="785" uid_parent="781" inputs="value:1119.value" outputs="value:785.value" />
+        <Tunnel _id="In3" uid="786" uid_parent="781" inputs="value:382.x .or. y?" outputs="value:786.value" />
+        <Tunnel _id="In4" uid="787" uid_parent="781" inputs="value:960.dup even angle channel info" outputs="value:787.value" />
+        <Tunnel _id="In5" uid="788" uid_parent="781" inputs="value:1101.value" outputs="value:788.value" />
+        <Tunnel _id="Out1" uid="789" uid_parent="781" outputs="value:789.value" inputs="value:41.error out" />
+        <Tunnel _id="Out2" uid="790" uid_parent="781" outputs="value:790.value" inputs="value:41.spectrum info out" />
+        <Tunnel _id="Out3" uid="792" uid_parent="781" outputs="value:792.value" inputs="value:41.unit label" />
+        <Tunnel _id="Out4" uid="793" uid_parent="781" outputs="value:793.value" inputs="value:853.averages completed" />
+        <Tunnel _id="Out5" uid="794" uid_parent="781" outputs="value:794.value" inputs="value:853.averaging done" />
+        <Tunnel _id="In6" uid="797" uid_parent="781" inputs="value:1125.value" outputs="value:797.value" />
+        <Tunnel _id="Out6" uid="1391" uid_parent="781" outputs="value:1391.value" inputs="value:853.new spectrum available?" />
+        <Tunnel _id="In7" uid="112" uid_parent="781" inputs="value:960.error out" outputs="value:112.value" />
+        <ShiftReg uid="1008" uid_parent="781">
+          <Left uid="1012" uid_parent="1008" outputs="value:1012.value" inputs="value:" />
+          <Right uid="1007" uid_parent="1008" inputs="value:853.processing control out" outputs="value:" />
+        </ShiftReg>
+        <ShiftReg uid="908" uid_parent="781">
+          <Left uid="963" uid_parent="908" outputs="value:963.value" inputs="value:" />
+          <Right uid="990" uid_parent="908" outputs="value:990.value" inputs="value:854.s? t\3Af" />
+        </ShiftReg>
+        <Condition uid="962" uid_parent="781" value="stop" inputs="value:1003.value" />
+      </Structure>
+    </CaseFrame>
+    <CaseFrame selector="Error" uid="1183" uid_parent="746" selectout="1183.value">
+      <Tunnel _id="In3" uid="1284" uid_parent="1183" outputs="value:" />
+      <Tunnel _id="In4" uid="1285" uid_parent="1183" outputs="value:" />
+      <Tunnel _id="In1" uid="1251" uid_parent="1183" outputs="value:" />
+      <Tunnel _id="In5" uid="1286" uid_parent="1183" outputs="value:" />
+      <Tunnel _id="In2" uid="1252" uid_parent="1183" outputs="value:" />
+      <Tunnel _id="Out5" uid="1288" uid_parent="1183" inputs="value:1183.value" />
+      <Tunnel _id="Out6" uid="1289" uid_parent="1183" inputs="value:370.dead spectrum info" />
+      <Tunnel _id="Out7" uid="1290" uid_parent="1183" inputs="value:370.empty spectrum" />
+      <Tunnel _id="Out1" uid="1270" uid_parent="1183" inputs="value:1264.value" />
+      <Tunnel _id="Out4" uid="1283" uid_parent="1183" inputs="value:1276.value" />
+      <Tunnel _id="Out2" uid="1271" uid_parent="1183" inputs="value:1256.value" />
+      <Tunnel _id="In6" uid="1287" uid_parent="1183" outputs="value:" />
+      <Tunnel _id="Out3" uid="1364" uid_parent="1183" inputs="value:" />
+      <Constant _name="averaging done" type="bool" uid="1256" uid_parent="1183" value="false" outputs="value:1256.value" />
+      <Constant _name="unit label" type="string" uid="1264" uid_parent="1183" value="" outputs="value:1264.value" />
+      <Constant _name="averages completed" type="double" uid="1276" uid_parent="1183" value="0" outputs="value:1276.value" />
+      <Call uid="370" uid_parent="1183" target="svc_Complex Datatype Defaults.vi" outputs="spectral info:,resampled channel info:,channel info:,empty spectrum:370.empty spectrum,dead spectrum info:370.dead spectrum info,empty array of spectra:,empty array of spectrum info:,empty array of peaks:,complex spectrum:" />
+    </CaseFrame>
+    <Tunnel _id="Out5" uid="754" uid_parent="746" outputs="value:754.value" />
+    <Tunnel _id="Out6" uid="755" uid_parent="746" outputs="value:755.value" />
+    <Tunnel _id="Out7" uid="756" uid_parent="746" outputs="value:756.value" />
+    <Tunnel _id="Out1" uid="757" uid_parent="746" outputs="value:757.value" />
+    <Tunnel _id="Out4" uid="758" uid_parent="746" outputs="value:758.value" />
+    <Tunnel _id="Out2" uid="759" uid_parent="746" outputs="value:759.value" />
+    <Tunnel _id="Out3" uid="1370" uid_parent="746" cond="true" outputs="value:1370.value" />
+  </Structure>
+</VI>
+<?lvmcp pane="4833"?>
+<?lvmcp paneflags="0:0800,1:0800,3:0900,4:0900,5:1000,6:0900,7:0800,8:0900,9:0800,10:0900,11:0A00,12:0800,13:0A00,14:0900,15:0D0B"?>
+<?lvmcp exec IsReentrant="1" PooledReentrancy="0" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>
+<?lvmcp calllink uid="960" tp="0" path="&lt;vilib&gt;|addons|_NISVFA|_Shared subVIs|Common|svc_Check for Resampled Signal Continuity (1 Ch).vi"?>
+<?lvmcp calllink uid="904" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Resample Order Tracking|SubVIs|oa_Data Check [OPS] (1 Channel).vi"?>
+<?lvmcp calllink uid="853" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Resample Order Tracking|SubVIs|oa_Process Order Power Spectrum (1 Channel).vi"?>
+<?lvmcp calllink uid="41" tp="0" path="&lt;vilib&gt;|addons|_NISVFA|_Shared subVIs|Common|svc_Log View for Power Spectrum (1 Ch).vi"?>
+<?lvmcp calllink uid="370" tp="0" path="&lt;vilib&gt;|addons|_NISVFA|_Shared subVIs|Common|svc_Complex Datatype Defaults.vi"?>
+<?lvmcp srtype uid="1008" type="uint16{Restart processing,Continue processing,Skip processing}"?>
+<?lvmcp srtype uid="908" type="cluster{double.f0,double.df,array{double}.magnitude}"?>

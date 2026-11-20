@@ -1,0 +1,14 @@
+<VI _name="XNET Create Session (Signal Output Single-point).vi" description="Creates an XNET session at run time for the Signal Output Single-point mode.">
+  <Control _name="error in (no error)" type="cluster{bool.status,int32.code,string.source}" description="The &lt;B&gt;error in&lt;/B&gt; cluster can accept error information wired from VIs previously called.  Use this information to decide if any functionality should be bypassed in the event of errors from other VIs.\0A\0AThe pop-up option &lt;B&gt;Explain Error&lt;/B&gt; (or Explain Warning) gives more information about the error displayed." uid="88" uid_parent="root" value="[false,0,]" conIdx="11" connection="recommended" outputs="value:88.value" />
+  <Indicator _name="error out" type="cluster{bool.status,int32.code,string.source}" description="The &lt;B&gt;error out&lt;/B&gt; cluster passes error or warning information out of a VI to be used by other VIs.\0A\0AThe pop-up option &lt;B&gt;Explain Error&lt;/B&gt; (or Explain Warning) gives more information about the error displayed." uid="55" uid_parent="root" value="[false,0,]" conIdx="15" connection="recommended" inputs="value:95.error out" />
+  <Indicator _name="session out" type="ref{GenClassTag.XNET Session.xnet}" uid="128" uid_parent="root" value="" conIdx="4" connection="recommended" inputs="value:95.session out" />
+  <Control _name="signal list" type="array{ref{GenClassTag.XNET Signal.xnet}.XNET Signal}" uid="737" uid_parent="root" value="[]" conIdx="5" connection="required" outputs="value:737.value" />
+  <Control _name="interface" type="ref{GenClassTag.XNET Interface.xnet}" uid="241" uid_parent="root" value="" conIdx="9" connection="required" outputs="value:241.value" />
+  <Constant _name="mode" type="uint32" uid="80" uid_parent="root" value="3" outputs="value:80.value" />
+  <Call uid="95" uid_parent="root" target="_XNET Create Session.vi" inputs="database (empty):,interface:241.value,mode:80.value,cluster (empty):,signal/frame list (empty):737.value,error in (no error):88.value" outputs="session out:95.session out,error out:95.error out" />
+  <FreeLabel comment="NOTE\3A This diagram contains internal implementation of an NI-XNET VI... do not change. \0AFor help\2C select VI and press Ctrl-H." uid="9" uid_parent="root" />
+</VI>
+<?lvmcp pane="4833"?>
+<?lvmcp paneflags="4:0900,5:21000,9:1000,11:0A00,15:0D0B"?>
+<?lvmcp exec IsReentrant="1" PooledReentrancy="0" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>
+<?lvmcp calllink uid="95" tp="1" path="|_XNET Create Session.vi"?>

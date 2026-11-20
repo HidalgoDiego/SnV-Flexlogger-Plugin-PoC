@@ -1,0 +1,29 @@
+<VI _name="OT Order Amplitude.vi" description="Amplitude of one order in a linear order power spectrum (same math as SVFA Power in Band).\0Aamplitude (EU rms) = sqrt( sum of bins from order - half-width to order + half-width / window ENBW ).\0ABins are rounded to the nearest index and clipped to the spectrum. Empty spectrum or a band outside it -&gt; 0.\0Awindow ENBW = 1.5 for Hanning (it undoes the window's spreading of one order over several bins).">
+  <Control uid="101" _name="magnitude" type="array{double}" value="[]" outputs="value:101.value" conIdx="11" connection="required" description="Linear power spectrum (EU^2 rms) of one channel." uid_parent="root" />
+  <Control uid="102" _name="order 0" type="double" value="0" outputs="value:102.value" conIdx="10" connection="recommended" uid_parent="root" />
+  <Control uid="103" _name="delta order" type="double" value="0.1" outputs="value:103.value" conIdx="9" connection="recommended" uid_parent="root" />
+  <Control uid="104" _name="order" type="double" value="1" outputs="value:104.value" conIdx="7" connection="recommended" description="Order to measure." uid_parent="root" />
+  <Control uid="105" _name="band half-width (orders)" type="double" value="0.2" outputs="value:105.value" conIdx="6" connection="recommended" uid_parent="root" />
+  <Control uid="106" _name="window ENBW (bins)" type="double" value="1.5" outputs="value:106.value" conIdx="5" connection="recommended" uid_parent="root" />
+  <Node uid="107" _name="Array Size" inputs="array:101.value" outputs="size(s):107.size(s)" uid_parent="root" />
+  <Node uid="108" _name="Subtract" inputs="x:104.value,y:105.value" outputs="x-y:108.x-y" uid_parent="root" />
+  <Node uid="109" _name="Add" inputs="x:104.value,y:105.value" outputs="x+y:109.x+y" uid_parent="root" />
+  <Node uid="110" _name="Subtract" inputs="x:108.x-y,y:102.value" outputs="x-y:110.x-y" uid_parent="root" />
+  <Node uid="111" _name="Divide" comment="first bin" inputs="x:110.x-y,y:103.value" outputs="x/y:111.x/y" uid_parent="root" />
+  <Node uid="112" _name="Subtract" inputs="x:109.x+y,y:102.value" outputs="x-y:112.x-y" uid_parent="root" />
+  <Node uid="113" _name="Divide" comment="last bin" inputs="x:112.x-y,y:103.value" outputs="x/y:113.x/y" uid_parent="root" />
+  <Node uid="114" _name="To Long Integer" inputs="number:111.x/y" outputs="32bit integer:114.32bit integer" uid_parent="root" />
+  <Node uid="115" _name="To Long Integer" inputs="number:113.x/y" outputs="32bit integer:115.32bit integer" uid_parent="root" />
+  <Constant uid="116" _name="0" type="int32" value="0" outputs="value:116.value" uid_parent="root" />
+  <Node uid="117" _name="Max &amp; Min" inputs="x:114.32bit integer,y:116.value" outputs="max(x\2Cy):117.max(x_y),min(x\2Cy):117.min(x_y)" uid_parent="root" />
+  <Node uid="118" _name="Decrement" inputs="x:107.size(s)" outputs="x-1:118.x-1" uid_parent="root" />
+  <Node uid="119" _name="Max &amp; Min" inputs="x:115.32bit integer,y:118.x-1" outputs="max(x\2Cy):119.max(x_y),min(x\2Cy):119.min(x_y)" uid_parent="root" />
+  <Node uid="120" _name="Subtract" inputs="x:119.min(x_y),y:117.max(x_y)" outputs="x-y:120.x-y" uid_parent="root" />
+  <Node uid="121" _name="Increment" inputs="x:120.x-y" outputs="x+1:121.x+1" uid_parent="root" />
+  <Node uid="122" _name="Array Subset" inputs="array:101.value,index:117.max(x_y),length:121.x+1" outputs="subarray:122.subarray" uid_parent="root" />
+  <Node uid="123" _name="Add Array Elements" comment="band power" inputs="numeric array:122.subarray" outputs="sum:123.sum" uid_parent="root" />
+  <Node uid="124" _name="Divide" inputs="x:123.sum,y:106.value" outputs="x/y:124.x/y" uid_parent="root" />
+  <Node uid="125" _name="Square Root" inputs="x:124.x/y" outputs="sqrt(x):125.sqrt(x)" uid_parent="root" />
+  <Indicator uid="126" _name="amplitude (EU rms)" type="double" value="0" inputs="value:125.sqrt(x)" conIdx="3" connection="recommended" uid_parent="root" />
+</VI>
+<?lvmcp pane="4815"?>

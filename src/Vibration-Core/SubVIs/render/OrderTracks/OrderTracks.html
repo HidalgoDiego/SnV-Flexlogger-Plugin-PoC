@@ -1,0 +1,29 @@
+<HTML>
+<HEAD>
+<TITLE>OrderTracks.vi</TITLE>
+<META NAME="Author" CONTENT="">
+<META NAME="GENERATOR" CONTENT="G Development Environment">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<A NAME="OrderTracks.vi"></A><H2>OrderTracks.vi</H2>
+<P>RPM and order amplitudes for the FlexLogger plug-in Process.vi (order tracks: plot them against RPM on an XY Graph). Same S&amp;V steps as the shipping example Order Power Spectrum (Analog Tach, DAQmx).vi, with the DAQmx Read replaced by Data In.</P>
+<P>Data In = Read 1D Wfm (DBL)_v2 data: element 0 accelerometer (g), element 1 analog pulse tach (V).</P>
+<P>Steps: OAT Analog Tacho Process -&gt; RPM (last tach speed point of the block); OAT Convert to Even Angle Signal; OAT Order Power Spectrum; SVFA Power in Band for each order range (sqrt -&gt; g rms).</P>
+<P>Array of Waveforms (to Write 1D Wfm, Auto Calculate T0 = TRUE), one 1-point waveform per channel, t0 = block t0, dt = block length: RPM, then one order amplitude (g rms) per order range. Values are held between spectra so every channel is written every block; amplitudes are 0 until the first spectrum after reset.</P>
+<P>reset? restarts the tach processing, resampling and averaging - wire TRUE on the first Process call after Configure Session.</P>
+<HR>
+<H3>Connector Pane</H3>
+<P><IMG SRC="OrderTracksc.png" ALT="OrderTracks.vi"></P>
+<HR>
+<H3>Front Panel</H3>
+<P><IMG SRC="OrderTracksp.png" ALT="OrderTracks.vi"></P>
+<HR>
+<H3>Block Diagram</H3>
+<P><IMG SRC="OrderTracksd.png" ALT="OrderTracks.vi"></P>
+<P><IMG SRC="OrderTracksd1.png" ALT="OrderTracks.vi"></P>
+<HR>
+<H3></H3>
+<Table>
+</Table>
+</BODY>
+</HTML>

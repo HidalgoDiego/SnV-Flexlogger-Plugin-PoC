@@ -1,0 +1,39 @@
+<HTML>
+<HEAD>
+<TITLE>eDyno Load Torque.vi</TITLE>
+<META NAME="Author" CONTENT="">
+<META NAME="GENERATOR" CONTENT="G Development Environment">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<A NAME="eDyno Load Torque.vi"></A><H2>eDyno Load Torque.vi</H2>
+<P>PURPOSE</P>
+<P>Supplies the motor LOAD TORQUE that the eDyno NVH simulator does not produce, so the MCU_Status frame (0x300) carries a realistic torque instead of 0. Drop it in the CAN Status Generator Loop and wire Load Torque (Nm) into the Torque (Nm) element of the Status cluster of eDyno CAN Pack Signals.vi (which passes it to eDyno MCU Model.vi). Simple demo model - not a validated vehicle model.</P>
+<P></P>
+<P>INPUTS</P>
+<P>- Speed (rpm): the simulator's Shaft Speed.</P>
+<P>- Speed Profile: the simulator's Speed Profile cluster (used to know whether a run-up is in progress and how fast it accelerates).</P>
+<P>- Load Parameters: drag and inertia coefficients. Defaults give about 0.2 Nm at standstill and about 0.8 Nm at 4500 rpm (typical e-bike mid-drive motor shaft before the gearbox).</P>
+<P></P>
+<P>OUTPUT</P>
+<P>- Load Torque (Nm): positive = motoring. Limited to +/- Max Torque (and to the DBC range of MCU_TorqueEst, +/-32.767 Nm).</P>
+<P></P>
+<P>EQUATIONS (one labelled frame each on the block diagram)</P>
+<P>1) T_drag = T0 + k x rpm^2  (rolling + aero-like drag seen by the motor)</P>
+<P>2) alpha = (Run-up End - Run-up Start)/Run-up Duration x 2pi/60 while a run-up is active and Speed &lt; Run-up End, else 0;  T_inertia = J x alpha</P>
+<P>3) Load Torque = T_drag + T_inertia, coerced to +/- Max Torque</P>
+<P></P>
+<P>LIMITATIONS</P>
+<P>No regen, no gear ratio, run-up acceleration assumed linear (matches the simulator's linear run-up). Duration is clamped to at least 0.1 s.</P>
+<HR>
+<H3>Connector Pane</H3>
+<P><IMG SRC="eDynoLoadTorquec.png" ALT="eDyno Load Torque.vi"></P>
+<HR>
+<H3>Front Panel</H3>
+<P><IMG SRC="eDynoLoadTorquep.png" ALT="eDyno Load Torque.vi"></P>
+<HR>
+<H3>Block Diagram</H3>
+<P><IMG SRC="eDynoLoadTorqued.png" ALT="eDyno Load Torque.vi"></P>
+<HR>
+<H3></H3>
+</BODY>
+</HTML>

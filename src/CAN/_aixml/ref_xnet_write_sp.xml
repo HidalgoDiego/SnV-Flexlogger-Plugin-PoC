@@ -1,0 +1,182 @@
+<VI _name="XNET Write (Signal Single-point).vi" description="Writes data to a session of Signal Output Single-Point mode.">
+  <Control _name="session in" type="ref{GenClassTag.XNET Session.xnet}" uid="80" uid_parent="root" value="" conIdx="0" connection="required" outputs="value:80.value" />
+  <Indicator _name="session out" type="ref{GenClassTag.XNET Session.xnet}" uid="124" uid_parent="root" value="" conIdx="4" connection="recommended" inputs="value:80.value" />
+  <Control _name="error in (no error)" type="cluster{bool.status,int32.code,string.source}" description="The &lt;B&gt;error in&lt;/B&gt; cluster can accept error information wired from VIs previously called.  Use this information to decide if any functionality should be bypassed in the event of errors from other VIs.\0A\0AThe pop-up option &lt;B&gt;Explain Error&lt;/B&gt; (or Explain Warning) gives more information about the error displayed." uid="98" uid_parent="root" value="[false,0,]" conIdx="11" connection="recommended" outputs="value:98.value" />
+  <Indicator _name="error out" type="cluster{bool.status,int32.code,string.source}" description="The &lt;B&gt;error out&lt;/B&gt; cluster passes error or warning information out of a VI to be used by other VIs.\0A\0AThe pop-up option &lt;B&gt;Explain Error&lt;/B&gt; (or Explain Warning) gives more information about the error displayed." uid="63" uid_parent="root" value="[false,0,]" conIdx="15" connection="recommended" inputs="value:222.value" />
+  <Control _name="data" type="array{double.Data}" uid="627" uid_parent="root" value="[]" conIdx="5" connection="required" outputs="value:627.value" />
+  <Structure _name="Case Structure" uid="218" uid_parent="root" selectin="98.value">
+    <Tunnel _id="In1" uid="221" uid_parent="218" inputs="value:80.value" />
+    <Tunnel _id="In2" uid="425" uid_parent="218" inputs="value:627.value" />
+    <CaseFrame selector="No Error" uid="227" uid_parent="218" selectout="227.value">
+      <Tunnel _id="In1" uid="384" uid_parent="227" outputs="value:384.value" />
+      <Tunnel _id="Out1" uid="432" uid_parent="227" inputs="value:234.error out" />
+      <Tunnel _id="In2" uid="410" uid_parent="227" outputs="value:410.value" />
+      <Node _name="Call Library Function Node" uid="244" uid_parent="227" outputs="error out:244.error out,return type:244.return type,SessionRef:,Data:" inputs="error in (no error):,SessionRef:384.value,Data:410.value" />
+      <Structure _name="Case Structure" uid="215" uid_parent="227" selectin="244.return type">
+        <Tunnel _id="In1" uid="416" uid_parent="215" inputs="value:227.value" />
+        <CaseFrame selector="0" uid="434" uid_parent="215" selectout="">
+          <Tunnel _id="In1" uid="421" uid_parent="434" outputs="value:421.value" />
+          <Tunnel _id="Out1" uid="426" uid_parent="434" inputs="value:421.value" />
+        </CaseFrame>
+        <CaseFrame selector="Default" uid="445" uid_parent="215" selectout="445.value">
+          <Tunnel _id="In1" uid="422" uid_parent="445" outputs="value:422.value" />
+          <Tunnel _id="Out1" uid="427" uid_parent="445" inputs="value:452.error out" />
+          <Call uid="452" uid_parent="445" target="XNET Fill In Error Info.vi" inputs="depth (1):,status code:445.value,extended error info (empty):,error in:422.value" outputs="error out:452.error out" />
+        </CaseFrame>
+        <Tunnel _id="Out1" uid="423" uid_parent="215" outputs="value:423.value" />
+      </Structure>
+      <Node _name="Merge Errors" uid="234" uid_parent="227" inputs="error in:244.error out,error in:423.value" outputs="error out:234.error out" />
+    </CaseFrame>
+    <CaseFrame selector="Error" uid="475" uid_parent="218" selectout="475.value">
+      <Tunnel _id="In1" uid="480" uid_parent="475" outputs="value:" />
+      <Tunnel _id="Out1" uid="484" uid_parent="475" inputs="value:475.value" />
+      <Tunnel _id="In2" uid="415" uid_parent="475" outputs="value:" />
+    </CaseFrame>
+    <Tunnel _id="Out1" uid="222" uid_parent="218" outputs="value:222.value" />
+  </Structure>
+  <FreeLabel comment="For performance reasons\2C the priority of this VI is subroutine.\0AThe diagram executes in the caller's thread\2C and the front-panel is not updated." uid="230" uid_parent="root" />
+  <FreeLabel comment="NOTE\3A This diagram contains internal implementation of an NI-XNET VI... do not change.  For help\2C select VI and press Ctrl-H." uid="288" uid_parent="root" />
+</VI>
+<?lvmcp pane="4833"?>
+<?lvmcp paneflags="0:1000,4:0D00,5:1000,11:0A00,15:0D0B"?>
+<?lvmcp exec IsReentrant="1" PooledReentrancy="0" IsSubroutine="1" Priority="5" PrefExecSyst="-1" SaveParallel="0" InStBit4="0"?>
+<?lvmcp calllink uid="452" tp="1" path="|XNET Fill In Error Info.vi"?>
+<?lvmcp clfn uid="244" node="&lt;SL__arrayElement class=&quot;extFunc&quot; uid=&quot;244&quot;&gt;
+                &lt;objFlags&gt;262656&lt;/objFlags&gt;
+                &lt;termList elements=&quot;10&quot;&gt;
+                  &lt;SL__arrayElement class=&quot;term&quot; uid=&quot;316&quot;&gt;
+                    &lt;objFlags&gt;8392705&lt;/objFlags&gt;
+                    &lt;dco class=&quot;hGrowCItem&quot; uid=&quot;312&quot;&gt;
+                      &lt;objFlags&gt;134283264&lt;/objFlags&gt;
+                      &lt;typeDesc&gt;&lt;TypeDesc Type=&quot;Void&quot; Format=&quot;inline&quot; Label=&quot;path in&quot; /&gt;&lt;/typeDesc&gt;
+                      &lt;termBounds&gt;(0, 0, 9, 13)&lt;/termBounds&gt;
+                      &lt;/dco&gt;
+                    &lt;/SL__arrayElement&gt;
+                  &lt;SL__arrayElement class=&quot;term&quot; uid=&quot;322&quot;&gt;
+                    &lt;objFlags&gt;8392704&lt;/objFlags&gt;
+                    &lt;dco class=&quot;hGrowCItem&quot; uid=&quot;317&quot;&gt;
+                      &lt;objFlags&gt;134479873&lt;/objFlags&gt;
+                      &lt;typeDesc&gt;&lt;TypeDesc Type=&quot;Void&quot; Format=&quot;inline&quot; Label=&quot;path out&quot; /&gt;&lt;/typeDesc&gt;
+                      &lt;termBounds&gt;(0, 27, 9, 40)&lt;/termBounds&gt;
+                      &lt;/dco&gt;
+                    &lt;/SL__arrayElement&gt;
+                  &lt;SL__arrayElement class=&quot;term&quot; uid=&quot;326&quot; lvmcp_name=&quot;error in (no error)&quot; lvmcp_dir=&quot;in&quot;&gt;
+                    &lt;objFlags&gt;4097&lt;/objFlags&gt;
+                    &lt;dco class=&quot;hGrowCItem&quot; uid=&quot;323&quot;&gt;
+                      &lt;objFlags&gt;131072&lt;/objFlags&gt;
+                      &lt;typeDesc&gt;&lt;TypeDesc Type=&quot;Cluster&quot; Format=&quot;inline&quot; Label=&quot;error in (no error)&quot;&gt;&lt;TypeDesc Type=&quot;Boolean&quot; Format=&quot;inline&quot; Label=&quot;status&quot; /&gt;&lt;TypeDesc Type=&quot;NumInt32&quot; Prop1=&quot;0&quot; Format=&quot;inline&quot; Label=&quot;code&quot; /&gt;&lt;TypeDesc Type=&quot;String&quot; Prop1=&quot;0xFFFFFFFF&quot; Format=&quot;inline&quot; Label=&quot;source&quot; /&gt;&lt;/TypeDesc&gt;&lt;/typeDesc&gt;
+                      &lt;termBounds&gt;(9, 0, 18, 13)&lt;/termBounds&gt;
+                      &lt;/dco&gt;
+                    &lt;/SL__arrayElement&gt;
+                  &lt;SL__arrayElement class=&quot;term&quot; uid=&quot;333&quot; lvmcp_name=&quot;error out&quot; lvmcp_dir=&quot;out&quot;&gt;
+                    &lt;objFlags&gt;4096&lt;/objFlags&gt;
+                    &lt;dco class=&quot;hGrowCItem&quot; uid=&quot;328&quot;&gt;
+                      &lt;objFlags&gt;524289&lt;/objFlags&gt;
+                      &lt;typeDesc&gt;&lt;TypeDesc Type=&quot;Cluster&quot; Format=&quot;inline&quot; Label=&quot;error out&quot;&gt;&lt;TypeDesc Type=&quot;Boolean&quot; Format=&quot;inline&quot; Label=&quot;status&quot; /&gt;&lt;TypeDesc Type=&quot;NumInt32&quot; Prop1=&quot;0&quot; Format=&quot;inline&quot; Label=&quot;code&quot; /&gt;&lt;TypeDesc Type=&quot;String&quot; Prop1=&quot;0xFFFFFFFF&quot; Format=&quot;inline&quot; Label=&quot;source&quot; /&gt;&lt;/TypeDesc&gt;&lt;/typeDesc&gt;
+                      &lt;termBounds&gt;(9, 27, 18, 40)&lt;/termBounds&gt;
+                      &lt;/dco&gt;
+                    &lt;/SL__arrayElement&gt;
+                  &lt;SL__arrayElement class=&quot;term&quot; uid=&quot;246&quot;&gt;
+                    &lt;objFlags&gt;4097&lt;/objFlags&gt;
+                    &lt;dco class=&quot;extFuncArg&quot; uid=&quot;247&quot;&gt;
+                      &lt;objFlags&gt;65536&lt;/objFlags&gt;
+                      &lt;termList elements=&quot;2&quot;&gt;
+                        &lt;SL__arrayElement uid=&quot;246&quot; /&gt;
+                        &lt;SL__arrayElement uid=&quot;249&quot; /&gt;
+                        &lt;/termList&gt;
+                      &lt;typeDesc&gt;&lt;TypeDesc Type=&quot;NumInt32&quot; Prop1=&quot;0&quot; Format=&quot;inline&quot; Label=&quot;return type&quot; /&gt;&lt;/typeDesc&gt;
+                      &lt;termBounds&gt;(18, 0, 26, 20)&lt;/termBounds&gt;
+                      &lt;/dco&gt;
+                    &lt;/SL__arrayElement&gt;
+                  &lt;SL__arrayElement class=&quot;term&quot; uid=&quot;249&quot; lvmcp_name=&quot;return type&quot; lvmcp_dir=&quot;out&quot;&gt;
+                    &lt;objFlags&gt;131073&lt;/objFlags&gt;
+                    &lt;dco uid=&quot;247&quot; /&gt;
+                    &lt;/SL__arrayElement&gt;
+                  &lt;SL__arrayElement class=&quot;term&quot; uid=&quot;250&quot; lvmcp_name=&quot;SessionRef&quot; lvmcp_dir=&quot;in&quot;&gt;
+                    &lt;objFlags&gt;299009&lt;/objFlags&gt;
+                    &lt;dco class=&quot;extFuncArg&quot; uid=&quot;251&quot;&gt;
+                      &lt;termList elements=&quot;2&quot;&gt;
+                        &lt;SL__arrayElement uid=&quot;250&quot; /&gt;
+                        &lt;SL__arrayElement uid=&quot;253&quot; /&gt;
+                        &lt;/termList&gt;
+                      &lt;typeDesc&gt;&lt;TypeDesc Type=&quot;NumUInt64&quot; Prop1=&quot;0&quot; Format=&quot;inline&quot; Label=&quot;SessionRef&quot; /&gt;&lt;/typeDesc&gt;
+                      &lt;dsw&gt;3072&lt;/dsw&gt;
+                      &lt;termBounds&gt;(26, 0, 34, 20)&lt;/termBounds&gt;
+                      &lt;/dco&gt;
+                    &lt;/SL__arrayElement&gt;
+                  &lt;SL__arrayElement class=&quot;term&quot; uid=&quot;253&quot; lvmcp_name=&quot;SessionRef&quot; lvmcp_dir=&quot;out&quot;&gt;
+                    &lt;objFlags&gt;131073&lt;/objFlags&gt;
+                    &lt;dco uid=&quot;251&quot; /&gt;
+                    &lt;/SL__arrayElement&gt;
+                  &lt;SL__arrayElement class=&quot;term&quot; uid=&quot;254&quot; lvmcp_name=&quot;Data&quot; lvmcp_dir=&quot;in&quot;&gt;
+                    &lt;objFlags&gt;36864&lt;/objFlags&gt;
+                    &lt;dco class=&quot;extFuncArg&quot; uid=&quot;255&quot;&gt;
+                      &lt;termList elements=&quot;2&quot;&gt;
+                        &lt;SL__arrayElement uid=&quot;254&quot; /&gt;
+                        &lt;SL__arrayElement uid=&quot;257&quot; /&gt;
+                        &lt;/termList&gt;
+                      &lt;typeDesc&gt;&lt;TypeDesc Type=&quot;Array&quot; Format=&quot;inline&quot; Label=&quot;Data&quot;&gt;&lt;Dimension Flags=&quot;0x00FF&quot; FixedSize=&quot;0xFFFFFF&quot; /&gt;
+        &lt;TypeDesc Type=&quot;NumFloat64&quot; Prop1=&quot;0&quot; Format=&quot;inline&quot; /&gt;&lt;/TypeDesc&gt;&lt;/typeDesc&gt;
+                      &lt;termBounds&gt;(34, 0, 42, 20)&lt;/termBounds&gt;
+                      &lt;/dco&gt;
+                    &lt;/SL__arrayElement&gt;
+                  &lt;SL__arrayElement class=&quot;term&quot; uid=&quot;257&quot; lvmcp_name=&quot;Data&quot; lvmcp_dir=&quot;out&quot;&gt;
+                    &lt;objFlags&gt;131072&lt;/objFlags&gt;
+                    &lt;dco uid=&quot;255&quot; /&gt;
+                    &lt;/SL__arrayElement&gt;
+                  &lt;/termList&gt;
+                &lt;label class=&quot;label&quot; uid=&quot;274&quot;&gt;
+                  &lt;objFlags&gt;1511754&lt;/objFlags&gt;
+                  &lt;partID&gt;16&lt;/partID&gt;
+                  &lt;howGrow&gt;4096&lt;/howGrow&gt;
+                  &lt;bounds&gt;(-17, 0, 0, 9)&lt;/bounds&gt;
+                  &lt;image class=&quot;Image&quot;&gt;
+                    &lt;ImageResID&gt;-619&lt;/ImageResID&gt;
+                    &lt;/image&gt;
+                  &lt;bgColor&gt;00FFFFFF&lt;/bgColor&gt;
+                  &lt;textRec class=&quot;textHair&quot;&gt;
+                    &lt;flags&gt;1536&lt;/flags&gt;
+                    &lt;mode&gt;82948&lt;/mode&gt;
+                    &lt;text&gt;&quot;&amp;amp;#x00;&quot;&lt;/text&gt;
+                    &lt;bgColor&gt;00FFFFFF&lt;/bgColor&gt;
+                    &lt;/textRec&gt;
+                  &lt;/label&gt;
+                &lt;bounds&gt;(62, 102, 105, 142)&lt;/bounds&gt;
+                &lt;shortCount&gt;2&lt;/shortCount&gt;
+                &lt;clumpNum&gt;196611&lt;/clumpNum&gt;
+                &lt;dcoList elements=&quot;3&quot;&gt;
+                  &lt;SL__arrayElement uid=&quot;247&quot; /&gt;
+                  &lt;SL__arrayElement uid=&quot;251&quot; /&gt;
+                  &lt;SL__arrayElement uid=&quot;255&quot; /&gt;
+                  &lt;/dcoList&gt;
+                &lt;permDCOList elements=&quot;4&quot;&gt;
+                  &lt;SL__arrayElement uid=&quot;312&quot; /&gt;
+                  &lt;SL__arrayElement uid=&quot;317&quot; /&gt;
+                  &lt;SL__arrayElement uid=&quot;323&quot; /&gt;
+                  &lt;SL__arrayElement uid=&quot;328&quot; /&gt;
+                  &lt;/permDCOList&gt;
+                &lt;nodeName&gt;&quot;nixlvWriteSignalSinglePoint&quot;&lt;/nodeName&gt;
+                &lt;funcTD&gt;&lt;TypeDesc Type=&quot;Cluster&quot; Format=&quot;inline&quot; Label=&quot;nixlvWriteSignalSinglePoint&quot;&gt;&lt;TypeDesc Type=&quot;NumInt32&quot; Prop1=&quot;0&quot; Format=&quot;inline&quot; Label=&quot;return type&quot; /&gt;&lt;TypeDesc Type=&quot;NumUInt64&quot; Prop1=&quot;1&quot; Format=&quot;inline&quot; Label=&quot;SessionRef&quot; /&gt;&lt;TypeDesc Type=&quot;Array&quot; Format=&quot;inline&quot; Label=&quot;Data&quot;&gt;&lt;Dimension Flags=&quot;0x00FF&quot; FixedSize=&quot;0xFFFFFF&quot; /&gt;
+        &lt;TypeDesc Type=&quot;NumFloat64&quot; Prop1=&quot;0&quot; Format=&quot;inline&quot; /&gt;&lt;/TypeDesc&gt;&lt;/TypeDesc&gt;&lt;/funcTD&gt;
+                &lt;callType&gt;01&lt;/callType&gt;
+                &lt;libPath&gt;505448300000000F000100010A6E69786C766170692E2A&lt;/libPath&gt;
+                &lt;threadInfo&gt;01&lt;/threadInfo&gt;
+                &lt;reserveCB /&gt;
+                &lt;unreserveCB /&gt;
+                &lt;abortCB /&gt;
+                &lt;paramInfo elements=&quot;3&quot;&gt;
+                  &lt;SL__arrayElement class=&quot;ExtFuncParam&quot;&gt;
+                    &lt;Tag0000&gt;00&lt;/Tag0000&gt;
+                    &lt;activeDiag /&gt;
+                    &lt;/SL__arrayElement&gt;
+                  &lt;SL__arrayElement class=&quot;ExtFuncParam&quot;&gt;
+                    &lt;Tag0000&gt;00&lt;/Tag0000&gt;
+                    &lt;activeDiag /&gt;
+                    &lt;/SL__arrayElement&gt;
+                  &lt;SL__arrayElement class=&quot;ExtFuncParam&quot;&gt;
+                    &lt;Tag0000&gt;01&lt;/Tag0000&gt;
+                    &lt;activeDiag /&gt;
+                    &lt;/SL__arrayElement&gt;
+                  &lt;/paramInfo&gt;
+                &lt;lvmcpLink LinkSaveFlag=&quot;0&quot; ExtFuncProp3=&quot;0&quot; ExtFuncProp4=&quot;0&quot; ExtFuncProp6=&quot;0&quot; tp=&quot;1&quot; function=&quot;nixlvWriteSignalSinglePoint&quot;&gt;&lt;Qual&gt;nixlvapi.*&lt;/Qual&gt;&lt;Path&gt;nixlvapi.dll&lt;/Path&gt;&lt;/lvmcpLink&gt;&lt;/SL__arrayElement&gt;
+              "?>

@@ -1,0 +1,22 @@
+<HTML>
+<HEAD>
+<TITLE>OA Speed Estimate.vi</TITLE>
+<META NAME="Author" CONTENT="">
+<META NAME="GENERATOR" CONTENT="G Development Environment">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<A NAME="OA Speed Estimate.vi"></A><H2>OA Speed Estimate.vi</H2>
+<P>Order Analysis helper. Takes the speed points of OAT Analog Tacho Process for this block and returns RPM at the block centre (last speed point extrapolated with the slope of the last two points, clamped at 0), RPM Rate (rpm/s, slope over &gt;= 0.5 s), speed OK (tach alive AND RPM &gt;= Min Valid RPM) and became valid (rising edge of speed OK). Tach alive = last speed point younger than max(4 pulse periods, 1 s). Keeps its history in Order State (class data), no hidden state.</P>
+<HR>
+<H3>Connector Pane</H3>
+<P><IMG SRC="OASpeedEstimatec.png" ALT="OA Speed Estimate.vi"></P>
+<HR>
+<H3>Front Panel</H3>
+<P><IMG SRC="OASpeedEstimatep.png" ALT="OA Speed Estimate.vi"></P>
+<HR>
+<H3>Block Diagram</H3>
+<P><IMG SRC="OASpeedEstimated.png" ALT="OA Speed Estimate.vi"></P>
+<HR>
+<H3></H3>
+</BODY>
+</HTML>

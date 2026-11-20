@@ -1,0 +1,38 @@
+<HTML>
+<HEAD>
+<TITLE>OT Spectra to FlexLogger.vi</TITLE>
+<META NAME="Author" CONTENT="">
+<META NAME="GENERATOR" CONTENT="G Development Environment">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<A NAME="OT Spectra to FlexLogger.vi"></A><H2>OT Spectra to FlexLogger.vi</H2>
+<P>Turns the outputs of the order power spectrum example into FlexLogger channels: RPM plus one order amplitude (EU rms) per accel channel and per order.</P>
+<P></P>
+<P>Inputs come straight from the example diagram:</P>
+<P>- speed [RPM]: the speed profile speed array of this block (OAT Analog Tacho Process). RPM = its last point.</P>
+<P>- order 0 / delta order / magnitude: the order power spectra unbundled in a For Loop (one element or row per accel channel). magnitude must be LINEAR power (dB on? = FALSE on OAT Order Power Spectrum).</P>
+<P></P>
+<P>Order amplitude = sqrt( sum of the magnitude bins within order +/- band half-width / window ENBW ). ENBW = 1.5 for Hanning. This is the same math as SVFA Power in Band.</P>
+<P></P>
+<P>Output Array of Waveforms (to Write 1D Wfm with Auto Calculate T0 = TRUE): one 1-point waveform per channel with t0 = block t0 and dt = block length, in this order:</P>
+<P>RPM, then for accel channel 0 one amplitude per order, then channel 1, and so on.</P>
+<P>Initialize must create the same channels in the same order: 1 + channels x orders.</P>
+<P></P>
+<P>No new tach edges or no new spectrum in a block (empty arrays) -&gt; the last values are repeated (the While Loop shift register keeps them between calls, so this VI must stay preallocated reentrant). Every channel is written every block. Before the first result the values are 0.</P>
+<P>channels in Settings must equal the number of accel channels in the spectra.</P>
+<P>reset? TRUE on the first Process call after Configure Session.</P>
+<HR>
+<H3>Connector Pane</H3>
+<P><IMG SRC="OTSpectratoFlexLoggerc.png" ALT="OT Spectra to FlexLogger.vi"></P>
+<HR>
+<H3>Front Panel</H3>
+<P><IMG SRC="OTSpectratoFlexLoggerp.png" ALT="OT Spectra to FlexLogger.vi"></P>
+<HR>
+<H3>Block Diagram</H3>
+<P><IMG SRC="OTSpectratoFlexLoggerd.png" ALT="OT Spectra to FlexLogger.vi"></P>
+<HR>
+<H3></H3>
+<Table>
+</Table>
+</BODY>
+</HTML>

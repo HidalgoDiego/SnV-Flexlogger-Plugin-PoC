@@ -1,0 +1,254 @@
+<VI _name="OrderAnalysis.vi" description="Order analysis for one accelerometer + one tach block (FlexLogger plug-in Process.vi subVI\2C same role as PowerSpectrum.vi).\0AInputs\3A Accel In (g)\2C Tach In (V\2C pulse tach)\2C Order Settings\2C Order State in (keep in class data)\2C reset? (TRUE on first call after Configure Session).\0AOutputs\3A Array of Waveforms -&gt; Write 1D Wfm (one 1-point waveform per channel\2C t0 = block t0\2C dt = block length); Order Values (same numbers\2C DBL); Order State out -&gt; class data.\0AChannel order\3A 0 RPM\2C 1 RPM Rate (rpm/s)\2C 2 Order 1 Amplitude (g rms)\2C 3 Order 1 Phase (deg)\2C 4 Order 2\2C 5 Order 3.57\2C 6 Order 4\2C 7 Order 24 (g rms)\2C 8 Total Order RMS\2C 9 Residual RMS\2C 10 Overall RMS (g rms)\2C 11 Data Valid (0/1).\0AS&amp;V chain\3A OAT Analog Tacho Process (1 Tacho) -&gt; OAT Convert to Even Angle Signal (1 Channel) -&gt; OAT Order Power Spectrum (1 Channel) + SVFA Power in Band (1 Ch) per order; OAT Order Magnitude and Phase (1 Channel) for order-1 phase. Order values are held between spectra and while Data Valid = 0.">
+  <Control _name="Accel In" type="doublewaveform" uid="101" uid_parent="root" value="" conIdx="11" connection="required" outputs="value:101.value" />
+  <Control _name="Tach In" type="doublewaveform" uid="102" uid_parent="root" value="" conIdx="10" connection="required" outputs="value:102.value" />
+  <Control _name="Order Settings" type="cluster{int32.Pulses per Rev,double.Trigger Level (V),double.Hysteresis (V),uint16{Rising,Falling}.Slope,int32.Revs per Spectrum,double.Min Valid RPM,array{double}.Orders,double.Band Half-Width (order),double.Max Order,double.Phase Bandwidth (order)}" uid="103" uid_parent="root" value="[1,2.5,0.5,0,16,300,[1,2,3.5699999999999998,4,24],0.19,64,1]" conIdx="9" connection="recommended" outputs="value:103.value" />
+  <Control _name="Order State in" type="cluster{double.Sample Count,double.Last Time,double.Last RPM,double.Prev Time,double.Anchor Time,double.Anchor RPM,double.RPM Rate,array{double}.Held Values,bool.Has Spectrum,bool.Was Valid,double.Acc SumSq,double.Acc N}" uid="104" uid_parent="root" value="[0,-1000000000,0,-1000000000,-1000000000,0,0,[0,0,0,0,0,0,0,0],false,false,0,0]" conIdx="7" connection="recommended" outputs="value:104.value" />
+  <Control _name="reset? (F)" type="bool" uid="105" uid_parent="root" value="false" conIdx="6" connection="recommended" outputs="value:105.value" />
+  <Control _name="error in (no error)" type="cluster{bool.status,int32.code,string.source}" uid="106" uid_parent="root" value="[false,0,]" conIdx="8" connection="required" outputs="value:106.value" />
+  <Indicator _name="Order Values" type="array{double}" uid="323" uid_parent="root" value="[]" conIdx="2" connection="recommended" inputs="value:322.appended array" />
+  <Indicator _name="Array of Waveforms" type="array{doublewaveform.Waveform}" description="Every block appended per channel\2C not just the last one." uid="331" uid_parent="root" value="[]" conIdx="3" connection="recommended" inputs="value:23078.value" />
+  <Indicator _name="Order State out" type="cluster{double.Sample Count,double.Last Time,double.Last RPM,double.Prev Time,double.Anchor Time,double.Anchor RPM,double.RPM Rate,array{double}.Held Values,bool.Has Spectrum,bool.Was Valid,double.Acc SumSq,double.Acc N}" uid="333" uid_parent="root" value="[0,-1000000000,0,-1000000000,-1000000000,0,0,[0,0,0,0,0,0,0,0],false,false,0,0]" conIdx="1" connection="recommended" inputs="value:332.output cluster" />
+  <Indicator _name="error out" type="cluster{bool.status,int32.code,string.source}" uid="336" uid_parent="root" value="[false,0,]" conIdx="0" connection="recommended" inputs="value:335.s? t\3Af" />
+  <Constant _name="initial state" type="cluster{double.Sample Count,double.Last Time,double.Last RPM,double.Prev Time,double.Anchor Time,double.Anchor RPM,double.RPM Rate,array{double}.Held Values,bool.Has Spectrum,bool.Was Valid,double.Acc SumSq,double.Acc N}" uid="107" uid_parent="root" value="[0,-1000000000,0,-1000000000,-1000000000,0,0,[0,0,0,0,0,0,0,0],false,false,0,0]" outputs="value:107.value" />
+  <Constant _name="half" type="double" uid="121" uid_parent="root" value="0.5" outputs="value:121.value" />
+  <Constant _name="rate window (s)" type="double" uid="140" uid_parent="root" value="1" outputs="value:140.value" />
+  <Constant _name="pulse periods to stay alive" type="double" uid="150" uid_parent="root" value="4" outputs="value:150.value" />
+  <Constant _name="min alive window (s)" type="double" uid="152" uid_parent="root" value="1" outputs="value:152.value" />
+  <Constant _name="zero" type="double" uid="158" uid_parent="root" value="0" outputs="value:158.value" />
+  <Constant _name="cleared" type="bool" uid="312" uid_parent="root" value="false" outputs="value:312.value" />
+  <Constant _name="valid" type="double" uid="319" uid_parent="root" value="1" outputs="value:319.value" />
+  <Constant _name="no error" type="cluster{bool.status,int32.code,string.source}" uid="334" uid_parent="root" value="[false,0,]" outputs="value:334.value" />
+  <Structure _name="Case Structure" uid="173" uid_parent="root" selectin="169.x &gt; 0?">
+    <Tunnel _id="In1" uid="21722" uid_parent="173" inputs="value:105.value" />
+    <Tunnel _id="In2" uid="21766" uid_parent="173" inputs="value:110.Orders" />
+    <Tunnel _id="In3" uid="21770" uid_parent="173" inputs="value:110.Band Half-Width (order)" />
+    <Tunnel _id="In4" uid="21774" uid_parent="173" inputs="value:110.Phase Bandwidth (order)" />
+    <Tunnel _id="In5" uid="22169" uid_parent="173" inputs="value:166.even-angle signal" />
+    <Tunnel _id="In6" uid="22173" uid_parent="173" inputs="value:166.even-angle channel info" />
+    <Tunnel _id="In7" uid="22177" uid_parent="173" inputs="value:166.even-angle position info" />
+    <Tunnel _id="In8" uid="22181" uid_parent="173" inputs="value:166.error out" />
+    <Tunnel _id="In9" uid="22259" uid_parent="173" inputs="value:172.x*y" />
+    <CaseFrame selector="False" uid="20007" uid_parent="173" selectout="">
+      <Tunnel _id="In1" uid="21724" uid_parent="20007" outputs="value:" />
+      <Tunnel _id="In2" uid="21768" uid_parent="20007" outputs="value:" />
+      <Tunnel _id="In3" uid="21772" uid_parent="20007" outputs="value:" />
+      <Tunnel _id="In4" uid="21776" uid_parent="20007" outputs="value:" />
+      <Tunnel _id="Out1" uid="21780" uid_parent="20007" inputs="value:272.value" />
+      <Tunnel _id="In5" uid="22171" uid_parent="20007" outputs="value:" />
+      <Tunnel _id="In6" uid="22175" uid_parent="20007" outputs="value:" />
+      <Tunnel _id="In7" uid="22179" uid_parent="20007" outputs="value:" />
+      <Tunnel _id="In8" uid="22183" uid_parent="20007" outputs="value:22183.value" />
+      <Tunnel _id="In9" uid="22261" uid_parent="20007" outputs="value:" />
+      <Tunnel _id="Out2" uid="22689" uid_parent="20007" inputs="value:275.value" />
+      <Tunnel _id="Out3" uid="22709" uid_parent="20007" inputs="value:276.value" />
+      <Tunnel _id="Out4" uid="22713" uid_parent="20007" inputs="value:22183.value" />
+      <Tunnel _id="Out5" uid="22730" uid_parent="20007" inputs="value:273.value" />
+      <Tunnel _id="Out6" uid="22750" uid_parent="20007" inputs="value:274.value" />
+      <Constant _name="no spectrum" type="bool" uid="272" uid_parent="20007" value="false" outputs="value:272.value" />
+      <Constant _name="no amplitudes" type="array{double}" uid="273" uid_parent="20007" value="[]" outputs="value:273.value" />
+      <Constant _name="no total" type="double" uid="274" uid_parent="20007" value="0" outputs="value:274.value" />
+      <Constant _name="no phase" type="bool" uid="275" uid_parent="20007" value="false" outputs="value:275.value" />
+      <Constant _name="phase" type="double" uid="276" uid_parent="20007" value="0" outputs="value:276.value" />
+    </CaseFrame>
+    <CaseFrame selector="True" uid="20013" uid_parent="173" selectout="">
+      <Tunnel _id="In1" uid="21725" uid_parent="20013" outputs="value:21725.value" />
+      <Tunnel _id="In2" uid="21769" uid_parent="20013" outputs="value:21769.value" />
+      <Tunnel _id="In3" uid="21773" uid_parent="20013" outputs="value:21773.value" />
+      <Tunnel _id="In4" uid="21777" uid_parent="20013" outputs="value:21777.value" />
+      <Tunnel _id="Out1" uid="21781" uid_parent="20013" inputs="value:21726.value" />
+      <Tunnel _id="In5" uid="22172" uid_parent="20013" outputs="value:22172.value" />
+      <Tunnel _id="In6" uid="22176" uid_parent="20013" outputs="value:22176.value" />
+      <Tunnel _id="In7" uid="22180" uid_parent="20013" outputs="value:22180.value" />
+      <Tunnel _id="In8" uid="22184" uid_parent="20013" outputs="value:22184.value" />
+      <Tunnel _id="In9" uid="22262" uid_parent="20013" outputs="value:22262.value" />
+      <Tunnel _id="Out2" uid="22690" uid_parent="20013" inputs="value:204.x &gt; 0?" />
+      <Tunnel _id="Out3" uid="22710" uid_parent="20013" inputs="value:206.element" />
+      <Tunnel _id="Out4" uid="22714" uid_parent="20013" inputs="value:22683.value" />
+      <Tunnel _id="Out5" uid="22731" uid_parent="20013" inputs="value:22703.value" />
+      <Tunnel _id="Out6" uid="22751" uid_parent="20013" inputs="value:22724.value" />
+      <Constant _name="window" type="uint32" uid="193" uid_parent="20013" value="1" outputs="value:193.value" />
+      <Constant _name="dB on? (T)" type="bool" uid="194" uid_parent="20013" value="false" outputs="value:194.value" />
+      <Constant _name="averaging parameters" type="cluster{uint16{No averaging,Vector averaging,RMS averaging,Peak hold}.averaging mode,uint16{Linear,Exponential}.weighting mode,uint32.number of averages,uint16{One shot,Auto restart}.linear mode}" uid="195" uid_parent="20013" value="[0,0,1,0]" outputs="value:195.value" />
+      <Constant _name="orders to compute (1.0)" type="array{double}" uid="197" uid_parent="20013" value="[1]" outputs="value:197.value" />
+      <Constant _name="x-axis selection" type="uint16" uid="198" uid_parent="20013" value="0" outputs="value:198.value" />
+      <Constant _name="view" type="cluster{bool.dB on? (F),bool.unwrap phase? (T),bool.unit in degree? (T)}" uid="199" uid_parent="20013" value="[false,false,true]" outputs="value:199.value" />
+      <Structure _name="Case Structure" uid="207" uid_parent="20013" selectin="196.new spectrum available?">
+        <Tunnel _id="In1" uid="21807" uid_parent="207" inputs="value:21769.value" />
+        <Tunnel _id="In2" uid="21811" uid_parent="207" inputs="value:21773.value" />
+        <Tunnel _id="In3" uid="22413" uid_parent="207" inputs="value:196.order power spectrum" />
+        <Tunnel _id="In4" uid="22417" uid_parent="207" inputs="value:196.spectrum info" />
+        <Tunnel _id="In5" uid="22465" uid_parent="207" inputs="value:200.error out" />
+        <CaseFrame selector="False" uid="20053" uid_parent="207" selectout="">
+          <Tunnel _id="Out1" uid="21728" uid_parent="20053" inputs="value:245.value" />
+          <Tunnel _id="In1" uid="21809" uid_parent="20053" outputs="value:" />
+          <Tunnel _id="In2" uid="21813" uid_parent="20053" outputs="value:" />
+          <Tunnel _id="In3" uid="22415" uid_parent="20053" outputs="value:" />
+          <Tunnel _id="In4" uid="22419" uid_parent="20053" outputs="value:" />
+          <Tunnel _id="In5" uid="22467" uid_parent="20053" outputs="value:22467.value" />
+          <Tunnel _id="Out2" uid="22685" uid_parent="20053" inputs="value:22467.value" />
+          <Tunnel _id="Out3" uid="22705" uid_parent="20053" inputs="value:246.value" />
+          <Tunnel _id="Out4" uid="22726" uid_parent="20053" inputs="value:247.value" />
+          <Constant _name="no new spectrum" type="bool" uid="245" uid_parent="20053" value="false" outputs="value:245.value" />
+          <Constant _name="no amplitudes" type="array{double}" uid="246" uid_parent="20053" value="[]" outputs="value:246.value" />
+          <Constant _name="no total" type="double" uid="247" uid_parent="20053" value="0" outputs="value:247.value" />
+        </CaseFrame>
+        <CaseFrame selector="True" uid="20059" uid_parent="207" selectout="">
+          <Tunnel _id="Out1" uid="21729" uid_parent="20059" inputs="value:234.value" />
+          <Tunnel _id="In1" uid="21810" uid_parent="20059" outputs="value:21810.value" />
+          <Tunnel _id="In2" uid="21814" uid_parent="20059" outputs="value:21814.value" />
+          <Tunnel _id="In3" uid="22416" uid_parent="20059" outputs="value:22416.value" />
+          <Tunnel _id="In4" uid="22420" uid_parent="20059" outputs="value:22420.value" />
+          <Tunnel _id="In5" uid="22468" uid_parent="20059" outputs="value:22468.value" />
+          <Tunnel _id="Out2" uid="22686" uid_parent="20059" inputs="value:22645.value" />
+          <Tunnel _id="Out3" uid="22706" uid_parent="20059" inputs="value:231.sqrt(x)" />
+          <Tunnel _id="Out4" uid="22727" uid_parent="20059" inputs="value:233.sqrt(x)" />
+          <Constant _name="new spectrum" type="bool" uid="234" uid_parent="20059" value="true" outputs="value:234.value" />
+          <Structure _name="For Loop" uid="219" uid_parent="20059" count="" maxin="" maxout="">
+            <Node _name="Subtract" uid="225" uid_parent="219" inputs="y:21898.value,x:21894.value" outputs="x-y:225.x-y" />
+            <Node _name="Add" uid="226" uid_parent="219" inputs="y:21898.value,x:21894.value" outputs="x+y:226.x+y" />
+            <Node _name="Bundle" uid="227" uid_parent="219" inputs="element:225.x-y,element:226.x+y,cluster:" outputs="output cluster:227.output cluster" />
+            <Call uid="228" uid_parent="219" target="SVFA Power in Band (1 Ch).vi" inputs="spectrum:22469.value,range:227.output cluster,spectrum info:22472.value,error in (no error):22507.value" outputs="power in band:228.power in band,unit label:,error out:228.error out" />
+            <Tunnel _id="In1" uid="21894" uid_parent="219" mode="index" inputs="value:21810.value" outputs="value:21894.value" />
+            <Tunnel _id="In2" uid="21898" uid_parent="219" inputs="value:21814.value" outputs="value:21898.value" />
+            <Tunnel _id="In3" uid="22469" uid_parent="219" inputs="value:22416.value" outputs="value:22469.value" />
+            <Tunnel _id="In4" uid="22472" uid_parent="219" inputs="value:22420.value" outputs="value:22472.value" />
+            <Tunnel _id="In5" uid="22507" uid_parent="219" inputs="value:22468.value" outputs="value:22507.value" />
+            <Tunnel _id="Out1" uid="22641" uid_parent="219" mode="index" outputs="value:22641.value" inputs="value:228.power in band" />
+            <Tunnel _id="Out2" uid="22645" uid_parent="219" outputs="value:22645.value" inputs="value:228.error out" />
+          </Structure>
+          <Node _name="Square Root" uid="231" uid_parent="20059" inputs="x:22641.value" outputs="sqrt(x):231.sqrt(x)" />
+          <Node _name="Add Array Elements" uid="232" uid_parent="20059" inputs="numeric array:22641.value" outputs="sum:232.sum" />
+          <Node _name="Square Root" uid="233" uid_parent="20059" inputs="x:232.sum" outputs="sqrt(x):233.sqrt(x)" />
+        </CaseFrame>
+        <Tunnel _id="Out1" uid="21726" uid_parent="207" outputs="value:21726.value" />
+        <Tunnel _id="Out2" uid="22683" uid_parent="207" outputs="value:22683.value" />
+        <Tunnel _id="Out3" uid="22703" uid_parent="207" outputs="value:22703.value" />
+        <Tunnel _id="Out4" uid="22724" uid_parent="207" outputs="value:22724.value" />
+      </Structure>
+      <Call uid="196" uid_parent="20013" target="SoundVib_OrderTracking.lvlib:OAT Order Power Spectrum (1 Channel).vi" inputs="even-angle signal:22172.value,dB on? (T):194.value,even-angle channel info:22176.value,window:193.value,block size:22262.value,error in (no error):22184.value,averaging parameters:195.value,restart averaging? (F):21725.value" outputs="new spectrum available?:196.new spectrum available?,order power spectrum:196.order power spectrum,unit label:,averages completed:,spectrum info:196.spectrum info,averaging done?:,error out:196.error out" />
+      <Call uid="200" uid_parent="20013" target="SoundVib_OrderTracking.lvlib:OAT Order Magnitude and Phase (Even Angle Signal, 1 Channel).vi" inputs="even-angle signal:22172.value,x-axis selection:198.value,reset? (F):21725.value,even-angle channel info:22176.value,even-angle position info:22180.value,orders to compute (1.0):197.value,error in (no error):196.error out,bandwidth [order]:21777.value,view:199.value,zero delay? (F):" outputs="unit labels:,magnitudes [RMS]:,phases [phase lag]:200.phases [phase lag],magnitude/phase position info:,magnitude info:,error out:200.error out" />
+      <Node _name="Index Array" uid="201" uid_parent="20013" inputs="array:200.phases [phase lag],index:" outputs="element:201.element" />
+      <Node _name="Unbundle" uid="202" uid_parent="20013" inputs="cluster:201.element" outputs="time/rev/rpm:,phase:202.phase" />
+      <Node _name="Array Size" uid="203" uid_parent="20013" inputs="array:202.phase" outputs="size(s):203.size(s)" />
+      <Node _name="Greater Than 0?" uid="204" uid_parent="20013" inputs="x:203.size(s)" outputs="x &gt; 0?:204.x &gt; 0?" />
+      <Node _name="Decrement" uid="205" uid_parent="20013" inputs="x:203.size(s)" outputs="x-1:205.x-1" />
+      <Node _name="Index Array" uid="206" uid_parent="20013" inputs="array:202.phase,index:205.x-1" outputs="element:206.element" />
+    </CaseFrame>
+    <Tunnel _id="Out1" uid="21778" uid_parent="173" outputs="value:21778.value" />
+    <Tunnel _id="Out2" uid="22687" uid_parent="173" outputs="value:22687.value" />
+    <Tunnel _id="Out3" uid="22707" uid_parent="173" outputs="value:22707.value" />
+    <Tunnel _id="Out4" uid="22711" uid_parent="173" outputs="value:22711.value" />
+    <Tunnel _id="Out5" uid="22728" uid_parent="173" outputs="value:22728.value" />
+    <Tunnel _id="Out6" uid="22748" uid_parent="173" outputs="value:22748.value" />
+  </Structure>
+  <Structure _name="For Loop" uid="324" uid_parent="root" count="" maxin="" maxout="">
+    <Node _name="Build Array" uid="328" uid_parent="324" inputs="element:23053.value" outputs="appended array:328.appended array" />
+    <Node _name="Build Waveform" uid="329" uid_parent="324" fields="t0,dt,Y" inputs="waveform:,t0:21787.value,dt:22004.value,Y:328.appended array" outputs="output waveform:329.output waveform" />
+    <Tunnel _id="In1" uid="21787" uid_parent="324" inputs="value:111.t0" outputs="value:21787.value" />
+    <Tunnel _id="In2" uid="22004" uid_parent="324" inputs="value:119.x*y" outputs="value:22004.value" />
+    <Tunnel _id="In3" uid="23053" uid_parent="324" mode="index" inputs="value:322.appended array" outputs="value:23053.value" />
+    <Tunnel _id="Out1" uid="23078" uid_parent="324" mode="index" outputs="value:23078.value" inputs="value:329.output waveform" />
+  </Structure>
+  <Node _name="Select" uid="108" uid_parent="root" inputs="f:104.value,s:105.value,t:107.value" outputs="s? t\3Af:108.s? t\3Af" />
+  <Node _name="Unbundle By Name" uid="110" uid_parent="root" fields="Pulses per Rev,Trigger Level (V),Hysteresis (V),Slope,Revs per Spectrum,Min Valid RPM,Orders,Band Half-Width (order),Max Order,Phase Bandwidth (order)" inputs="input cluster:103.value" outputs="Pulses per Rev:110.Pulses per Rev,Trigger Level (V):110.Trigger Level (V),Hysteresis (V):110.Hysteresis (V),Slope:110.Slope,Revs per Spectrum:110.Revs per Spectrum,Min Valid RPM:110.Min Valid RPM,Orders:110.Orders,Band Half-Width (order):110.Band Half-Width (order),Max Order:110.Max Order,Phase Bandwidth (order):110.Phase Bandwidth (order)" />
+  <Node _name="Get Waveform Components" uid="111" uid_parent="root" fields="t0,dt,Y" inputs="waveform:101.value" outputs="t0:111.t0,dt:111.dt,Y:111.Y" />
+  <Node _name="Get Waveform Components" uid="112" uid_parent="root" fields="dt,Y" inputs="waveform:102.value" outputs="dt:112.dt,Y:112.Y" />
+  <Node _name="Unbundle By Name" uid="109" uid_parent="root" fields="Sample Count,Last Time,Last RPM,Prev Time,Anchor Time,Anchor RPM,RPM Rate,Held Values,Has Spectrum,Was Valid,Acc SumSq,Acc N" inputs="input cluster:108.s? t\3Af" outputs="Sample Count:109.Sample Count,Last Time:109.Last Time,Last RPM:109.Last RPM,Prev Time:109.Prev Time,Anchor Time:109.Anchor Time,Anchor RPM:109.Anchor RPM,RPM Rate:109.RPM Rate,Held Values:109.Held Values,Has Spectrum:109.Has Spectrum,Was Valid:109.Was Valid,Acc SumSq:109.Acc SumSq,Acc N:109.Acc N" />
+  <Node _name="Array Size" uid="113" uid_parent="root" inputs="array:111.Y" outputs="size(s):113.size(s)" />
+  <Node _name="Square" uid="289" uid_parent="root" inputs="x:111.Y" outputs="x^2:289.x^2" />
+  <Node _name="To Double Precision Float" uid="114" uid_parent="root" inputs="number:113.size(s)" outputs="double precision float:114.double precision float" />
+  <Node _name="Multiply" uid="115" uid_parent="root" inputs="y:111.dt,x:109.Sample Count" outputs="x*y:115.x*y" />
+  <Node _name="Not" uid="163" uid_parent="root" inputs="x:109.Was Valid" outputs=".not. x?:163..not. x?" />
+  <Node _name="Add Array Elements" uid="290" uid_parent="root" inputs="numeric array:289.x^2" outputs="sum:290.sum" />
+  <Node _name="Select" uid="293" uid_parent="root" inputs="f:109.Acc SumSq,s:105.value,t:158.value" outputs="s? t\3Af:293.s? t\3Af" />
+  <Node _name="Select" uid="294" uid_parent="root" inputs="f:109.Acc N,s:105.value,t:158.value" outputs="s? t\3Af:294.s? t\3Af" />
+  <Node _name="Index Array" uid="306" uid_parent="root" inputs="array:109.Held Values,index:,index:,index:,index:,index:,index:,index:,index:" outputs="element:306.element,element:306.element2,element:306.element3,element:306.element4,element:306.element5,element:306.element6,element:306.element7,element:306.element8" />
+  <Node _name="To Time Stamp" uid="116" uid_parent="root" inputs="number:115.x*y" outputs="Time Stamp:116.Time Stamp" />
+  <Node _name="Multiply" uid="119" uid_parent="root" inputs="y:111.dt,x:114.double precision float" outputs="x*y:119.x*y" />
+  <Node _name="Add" uid="124" uid_parent="root" inputs="y:114.double precision float,x:109.Sample Count" outputs="x+y:124.x+y" />
+  <Node _name="Divide" uid="291" uid_parent="root" inputs="y:114.double precision float,x:290.sum" outputs="x/y:291.x/y" />
+  <Node _name="Add" uid="295" uid_parent="root" inputs="y:290.sum,x:293.s? t\3Af" outputs="x+y:295.x+y" />
+  <Node _name="Add" uid="296" uid_parent="root" inputs="y:114.double precision float,x:294.s? t\3Af" outputs="x+y:296.x+y" />
+  <Node _name="Build Waveform" uid="117" uid_parent="root" fields="t0,dt,Y" inputs="waveform:,t0:116.Time Stamp,dt:111.dt,Y:111.Y" outputs="output waveform:117.output waveform" />
+  <Node _name="Build Waveform" uid="118" uid_parent="root" fields="t0,dt,Y" inputs="waveform:,t0:116.Time Stamp,dt:112.dt,Y:112.Y" outputs="output waveform:118.output waveform" />
+  <Node _name="Add" uid="120" uid_parent="root" inputs="y:119.x*y,x:115.x*y" outputs="x+y:120.x+y" />
+  <Node _name="Multiply" uid="122" uid_parent="root" inputs="y:121.value,x:119.x*y" outputs="x*y:122.x*y" />
+  <Node _name="Square Root" uid="292" uid_parent="root" inputs="x:291.x/y" outputs="sqrt(x):292.sqrt(x)" />
+  <Node _name="Divide" uid="297" uid_parent="root" inputs="y:296.x+y,x:295.x+y" outputs="x/y:297.x/y" />
+  <Node _name="Select" uid="302" uid_parent="root" inputs="f:295.x+y,s:21778.value,t:158.value" outputs="s? t\3Af:302.s? t\3Af" />
+  <Node _name="Select" uid="303" uid_parent="root" inputs="f:296.x+y,s:21778.value,t:158.value" outputs="s? t\3Af:303.s? t\3Af" />
+  <Node _name="Add" uid="123" uid_parent="root" inputs="y:122.x*y,x:115.x*y" outputs="x+y:123.x+y" />
+  <Call uid="125" uid_parent="root" target="SoundVib_TachProcess.lvlib:OAT Analog Tacho Process (1 Tacho).vi" inputs="analog tacho signal:118.output waveform,missing pulses? (no\3AF):,reset? (F):105.value,threshold (auto):110.Trigger Level (V),pulse/revolution (1):110.Pulses per Rev,hysteresis (0):110.Hysteresis (V),error in (no error):106.value,pulse width (2):,slope (Rising):110.Slope" outputs="speed profile:125.speed profile,actual threshold:,speed position info:,no tacho?:,error out:125.error out" />
+  <Node _name="Unbundle By Name" uid="126" uid_parent="root" fields="time [s],speed [RPM]" inputs="input cluster:125.speed profile" outputs="time [s]:126.time [s],speed [RPM]:126.speed [RPM]" />
+  <Call uid="166" uid_parent="root" target="SoundVib_OrderTracking.lvlib:OAT Convert to Even Angle Signal (1 Channel).vi" inputs="scaled signal [EU]:117.output waveform,analysis method:,reset? (F):105.value,speed profile:125.speed profile,pulse/revolution (1):110.Pulses per Rev,error in (no error):125.error out,max order (auto):110.Max Order,zero delay? (F):" outputs="even-angle signal:166.even-angle signal,even-angle channel info:166.even-angle channel info,even-angle position info:166.even-angle position info,actual max order:,error out:166.error out" />
+  <Node _name="Array Size" uid="127" uid_parent="root" inputs="array:126.speed [RPM]" outputs="size(s):127.size(s)" />
+  <Node _name="Unbundle By Name" uid="167" uid_parent="root" fields="dr,Y" inputs="input cluster:166.even-angle signal" outputs="dr:167.dr,Y:167.Y" />
+  <Node _name="Greater Than 0?" uid="128" uid_parent="root" inputs="x:127.size(s)" outputs="x &gt; 0?:128.x &gt; 0?" />
+  <Node _name="Decrement" uid="129" uid_parent="root" inputs="x:127.size(s)" outputs="x-1:129.x-1" />
+  <Node _name="Array Size" uid="168" uid_parent="root" inputs="array:167.Y" outputs="size(s):168.size(s)" />
+  <Node _name="Reciprocal" uid="170" uid_parent="root" inputs="x:167.dr" outputs="1/x:170.1/x" />
+  <Node _name="Index Array" uid="130" uid_parent="root" inputs="array:126.time [s],index:129.x-1" outputs="element:130.element" />
+  <Node _name="Index Array" uid="131" uid_parent="root" inputs="array:126.speed [RPM],index:129.x-1" outputs="element:131.element" />
+  <Node _name="Greater Than 0?" uid="169" uid_parent="root" inputs="x:168.size(s)" outputs="x &gt; 0?:169.x &gt; 0?" />
+  <Node _name="Round To Nearest" uid="171" uid_parent="root" inputs="number:170.1/x" outputs="nearest integer value:171.nearest integer value" />
+  <Node _name="Greater Than 0?" uid="132" uid_parent="root" inputs="x:131.element" outputs="x &gt; 0?:132.x &gt; 0?" />
+  <Node _name="Greater?" uid="133" uid_parent="root" inputs="y:109.Last Time,x:130.element" outputs="x &gt; y?:133.x &gt; y?" />
+  <Node _name="Multiply" uid="172" uid_parent="root" inputs="y:110.Revs per Spectrum,x:171.nearest integer value" outputs="x*y:172.x*y" />
+  <Node _name="And" uid="134" uid_parent="root" inputs="y:132.x &gt; 0?,x:128.x &gt; 0?" outputs="x .and. y?:134.x .and. y?" />
+  <Node _name="And" uid="135" uid_parent="root" inputs="y:133.x &gt; y?,x:134.x .and. y?" outputs="x .and. y?:135.x .and. y?" />
+  <Node _name="Select" uid="136" uid_parent="root" inputs="f:109.Last Time,s:135.x .and. y?,t:130.element" outputs="s? t\3Af:136.s? t\3Af" />
+  <Node _name="Select" uid="137" uid_parent="root" inputs="f:109.Last RPM,s:135.x .and. y?,t:131.element" outputs="s? t\3Af:137.s? t\3Af" />
+  <Node _name="Select" uid="138" uid_parent="root" inputs="f:109.Prev Time,s:135.x .and. y?,t:109.Last Time" outputs="s? t\3Af:138.s? t\3Af" />
+  <Node _name="Subtract" uid="139" uid_parent="root" inputs="y:109.Anchor Time,x:136.s? t\3Af" outputs="x-y:139.x-y" />
+  <Node _name="Subtract" uid="143" uid_parent="root" inputs="y:109.Anchor RPM,x:137.s? t\3Af" outputs="x-y:143.x-y" />
+  <Node _name="Subtract" uid="148" uid_parent="root" inputs="y:136.s? t\3Af,x:120.x+y" outputs="x-y:148.x-y" />
+  <Node _name="Subtract" uid="149" uid_parent="root" inputs="y:138.s? t\3Af,x:136.s? t\3Af" outputs="x-y:149.x-y" />
+  <Node _name="Subtract" uid="155" uid_parent="root" inputs="y:136.s? t\3Af,x:123.x+y" outputs="x-y:155.x-y" />
+  <Node _name="Greater Or Equal?" uid="141" uid_parent="root" inputs="y:140.value,x:139.x-y" outputs="x &gt;= y?:141.x &gt;= y?" />
+  <Node _name="Divide" uid="144" uid_parent="root" inputs="y:139.x-y,x:143.x-y" outputs="x/y:144.x/y" />
+  <Node _name="Multiply" uid="151" uid_parent="root" inputs="y:150.value,x:149.x-y" outputs="x*y:151.x*y" />
+  <Node _name="And" uid="142" uid_parent="root" inputs="y:141.x &gt;= y?,x:135.x .and. y?" outputs="x .and. y?:142.x .and. y?" />
+  <Node _name="Max &amp; Min" uid="153" uid_parent="root" inputs="y:152.value,x:151.x*y" outputs="min(x\2Cy):,max(x\2Cy):153.max(x\2Cy)" />
+  <Node _name="Select" uid="145" uid_parent="root" inputs="f:109.RPM Rate,s:142.x .and. y?,t:144.x/y" outputs="s? t\3Af:145.s? t\3Af" />
+  <Node _name="Select" uid="146" uid_parent="root" inputs="f:109.Anchor Time,s:142.x .and. y?,t:136.s? t\3Af" outputs="s? t\3Af:146.s? t\3Af" />
+  <Node _name="Select" uid="147" uid_parent="root" inputs="f:109.Anchor RPM,s:142.x .and. y?,t:137.s? t\3Af" outputs="s? t\3Af:147.s? t\3Af" />
+  <Node _name="Less?" uid="154" uid_parent="root" inputs="y:153.max(x\2Cy),x:148.x-y" outputs="x &lt; y?:154.x &lt; y?" />
+  <Node _name="Multiply" uid="156" uid_parent="root" inputs="y:155.x-y,x:145.s? t\3Af" outputs="x*y:156.x*y" />
+  <Node _name="Select" uid="160" uid_parent="root" inputs="f:158.value,s:154.x &lt; y?,t:145.s? t\3Af" outputs="s? t\3Af:160.s? t\3Af" />
+  <Node _name="Add" uid="157" uid_parent="root" inputs="y:156.x*y,x:137.s? t\3Af" outputs="x+y:157.x+y" />
+  <Node _name="Select" uid="159" uid_parent="root" inputs="f:158.value,s:154.x &lt; y?,t:157.x+y" outputs="s? t\3Af:159.s? t\3Af" />
+  <Node _name="Unbundle By Name" uid="315" uid_parent="root" fields="status" inputs="input cluster:22711.value" outputs="status:315.status" />
+  <Node _name="Greater Or Equal?" uid="161" uid_parent="root" inputs="y:110.Min Valid RPM,x:159.s? t\3Af" outputs="x &gt;= y?:161.x &gt;= y?" />
+  <Node _name="Index Array" uid="308" uid_parent="root" inputs="array:22728.value,index:,index:,index:,index:,index:" outputs="element:308.element,element:308.element2,element:308.element3,element:308.element4,element:308.element5" />
+  <Node _name="Not" uid="316" uid_parent="root" inputs="x:315.status" outputs=".not. x?:316..not. x?" />
+  <Node _name="Select" uid="335" uid_parent="root" inputs="f:334.value,s:315.status,t:22711.value" outputs="s? t\3Af:335.s? t\3Af" />
+  <Node _name="And" uid="162" uid_parent="root" inputs="y:161.x &gt;= y?,x:154.x &lt; y?" outputs="x .and. y?:162.x .and. y?" />
+  <Node _name="Square" uid="298" uid_parent="root" inputs="x:22748.value" outputs="x^2:298.x^2" />
+  <Node _name="And" uid="164" uid_parent="root" inputs="y:163..not. x?,x:162.x .and. y?" outputs="x .and. y?:164.x .and. y?" />
+  <Node _name="Subtract" uid="299" uid_parent="root" inputs="y:298.x^2,x:297.x/y" outputs="x-y:299.x-y" />
+  <Node _name="And" uid="304" uid_parent="root" inputs="y:162.x .and. y?,x:21778.value" outputs="x .and. y?:304.x .and. y?" />
+  <Node _name="And" uid="305" uid_parent="root" inputs="y:162.x .and. y?,x:22687.value" outputs="x .and. y?:305.x .and. y?" />
+  <Node _name="Or" uid="165" uid_parent="root" inputs="y:164.x .and. y?,x:105.value" outputs="x .or. y?:165.x .or. y?" />
+  <Node _name="Max &amp; Min" uid="300" uid_parent="root" inputs="y:158.value,x:299.x-y" outputs="min(x\2Cy):,max(x\2Cy):300.max(x\2Cy)" />
+  <Node _name="Select" uid="307" uid_parent="root" inputs="f:306.element2,s:305.x .and. y?,t:22707.value" outputs="s? t\3Af:307.s? t\3Af" />
+  <Node _name="Square Root" uid="301" uid_parent="root" inputs="x:300.max(x\2Cy)" outputs="sqrt(x):301.sqrt(x)" />
+  <Node _name="Build Array" uid="310" uid_parent="root" inputs="element:306.element,element:307.s? t\3Af,element:306.element3,element:306.element4,element:306.element5,element:306.element6,element:306.element7,element:306.element8" outputs="appended array:310.appended array" />
+  <Node _name="Select" uid="313" uid_parent="root" inputs="f:109.Has Spectrum,s:165.x .or. y?,t:312.value" outputs="s? t\3Af:313.s? t\3Af" />
+  <Node _name="Build Array" uid="309" uid_parent="root" inputs="element:308.element,element:307.s? t\3Af,element:308.element2,element:308.element3,element:308.element4,element:308.element5,element:22748.value,element:301.sqrt(x)" outputs="appended array:309.appended array" />
+  <Node _name="Or" uid="314" uid_parent="root" inputs="y:304.x .and. y?,x:313.s? t\3Af" outputs="x .or. y?:314.x .or. y?" />
+  <Node _name="Select" uid="311" uid_parent="root" inputs="f:310.appended array,s:304.x .and. y?,t:309.appended array" outputs="s? t\3Af:311.s? t\3Af" />
+  <Node _name="And" uid="317" uid_parent="root" inputs="y:314.x .or. y?,x:162.x .and. y?" outputs="x .and. y?:317.x .and. y?" />
+  <Node _name="And" uid="318" uid_parent="root" inputs="y:316..not. x?,x:317.x .and. y?" outputs="x .and. y?:318.x .and. y?" />
+  <Node _name="Index Array" uid="321" uid_parent="root" inputs="array:311.s? t\3Af,index:,index:,index:,index:,index:,index:,index:,index:" outputs="element:321.element,element:321.element2,element:321.element3,element:321.element4,element:321.element5,element:321.element6,element:321.element7,element:321.element8" />
+  <Node _name="Bundle By Name" uid="332" uid_parent="root" fields="Sample Count,Last Time,Last RPM,Prev Time,Anchor Time,Anchor RPM,RPM Rate,Held Values,Has Spectrum,Was Valid,Acc SumSq,Acc N" inputs="input cluster:108.s? t\3Af,Sample Count:124.x+y,Last Time:136.s? t\3Af,Last RPM:137.s? t\3Af,Prev Time:138.s? t\3Af,Anchor Time:146.s? t\3Af,Anchor RPM:147.s? t\3Af,RPM Rate:145.s? t\3Af,Held Values:311.s? t\3Af,Has Spectrum:314.x .or. y?,Was Valid:162.x .and. y?,Acc SumSq:302.s? t\3Af,Acc N:303.s? t\3Af" outputs="output cluster:332.output cluster" />
+  <Node _name="Select" uid="320" uid_parent="root" inputs="f:158.value,s:318.x .and. y?,t:319.value" outputs="s? t\3Af:320.s? t\3Af" />
+  <Node _name="Build Array" uid="322" uid_parent="root" inputs="element:159.s? t\3Af,element:160.s? t\3Af,element:321.element,element:321.element2,element:321.element3,element:321.element4,element:321.element5,element:321.element6,element:321.element7,element:321.element8,element:292.sqrt(x),element:320.s? t\3Af" outputs="appended array:322.appended array" />
+</VI>
+<?lvmcp pane="4815"?>
+<?lvmcp paneflags="0:0900,1:0900,2:0900,3:0900,6:0800,7:0800,8:1000,9:0800,10:1000,11:1000"?>
+<?lvmcp exec IsReentrant="1" PooledReentrancy="0" IsSubroutine="0" Priority="1" PrefExecSyst="-1" SaveParallel="0" InStBit4="1"?>
+<?lvmcp calllink uid="228" tp="0" path="&lt;vilib&gt;|addons|_NISVFA|_Spectrum Processing|SVFA Power in Band (1 Ch).vi"?>
+<?lvmcp calllink uid="196" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Resample Order Tracking|OAT Order Power Spectrum (1 Channel).vi"?>
+<?lvmcp calllink uid="200" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Resample Order Tracking|OAT Order Magnitude and Phase (Even Angle Signal, 1 Channel).vi"?>
+<?lvmcp calllink uid="125" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Tach Process|OAT Analog Tacho Process (1 Tacho).vi"?>
+<?lvmcp calllink uid="166" tp="0" path="&lt;vilib&gt;|addons|Sound and Vibration|Order Analysis|Resample Order Tracking|OAT Convert to Even Angle Signal (1 Channel).vi"?>
